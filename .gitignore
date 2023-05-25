@@ -1,0 +1,9 @@
+*.pyc
+runs/
+*.npz
+*.pt
+*.tfevents*
+*.egg-info/
+resources/
+
+*/__pycache__/

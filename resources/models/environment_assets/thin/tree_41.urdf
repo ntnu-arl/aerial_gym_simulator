@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<robot name="tree_41.urdf">
+  <link name="branch_0">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+    <visual name="branch_0_visual">
+      <geometry>
+        <cylinder radius="0.02175612096959057" length="3.317059187779491"/>
+      </geometry>
+      <material name="semantic_material"/>
+      <origin xyz="0.5723971939881806 0.2425783428091894 1.5376077567840531" rpy="0.0 0.3842203972613773 0.4008484837676073"/>
+    </visual>
+    <collision name="branch_0_collision">
+      <geometry>
+        <cylinder radius="0.02175612096959057" length="3.317059187779491"/>
+      </geometry>
+      <origin xyz="0.5723971939881806 0.2425783428091894 1.5376077567840531" rpy="0.0 0.3842203972613773 0.4008484837676073"/>
+    </collision>
+  </link>
+  <material name="semantic_material">
+    <color rgba="1. 0. 0. 1."/>
+  </material>
+</robot>
