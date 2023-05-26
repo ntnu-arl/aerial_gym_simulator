@@ -1,3 +1,9 @@
+# Copyright (c) 2023, Autonomous Robots Lab, Norwegian University of Science and Technology
+# All rights reserved.
+
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree.
+
 import torch
 import pytorch3d.transforms as p3d_transforms
 from aerial_gym.utils.math import * 
