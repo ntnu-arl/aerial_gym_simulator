@@ -180,6 +180,8 @@ class asset_config:
         env_upper_bound_max = [5.0, 5.0, 5.0] # upper bound for the environment space
 ```
 
+The onboard camera in the `aerial_robot_with_obstacles.py` file can capture images from the simulated sensor. An example of RGB, depth and segmentation images can be seen below:
+![](docs/figures/onboard_camera_images.png)
 
 # Example RL training
 
