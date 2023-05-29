@@ -6,9 +6,22 @@ The repository contains two environments:
  - Quadrotors simulated in an obstacle-free environment.
  - Quadrotors (with simulated depth cameras) in an environment containing obstacles interfaced with the asset management functionality.
 
-
 These environments are intended to be simulated on the GPU to fully exploit the parallelization capabilities.
 
+## Paper
+
+The paper accompanying this simulator can be found at [this link](https://arxiv.org/abs/2305.16510).
+When using this work, please cite the following:
+```
+@misc{kulkarni2023aerial,
+      title={Aerial Gym -- Isaac Gym Simulator for Aerial Robots}, 
+      author={Mihir Kulkarni and Theodor J. L. Forgaard and Kostas Alexis},
+      year={2023},
+      eprint={2305.16510},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO}
+}
+```
 
 ## Requirements
 1. Ubuntu 20.04
