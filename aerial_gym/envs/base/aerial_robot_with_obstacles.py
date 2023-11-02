@@ -247,12 +247,6 @@ class AerialRobotWithObstacles(BaseTask):
                 self.gym.set_rigid_body_color(env_handle, env_asset_handle, 0, gymapi.MESH_VISUAL,
                         gymapi.Vec3(color[0]/255,color[1]/255,color[2]/255))
 
-            if self.enable_onboard_cameras:
-                self.camera_handles.append(cam_handle)
-                camera_tensor = self.gym.get_camera_image_gpu_tensor(self.sim, env_handle, cam_handle, gymapi.IMAGE_DEPTH)
-                torch_cam_tensor = gymtorch.wrap_tensor(camera_tensor)
-                self.camera_tensors.append(torch_cam_tensor)
-
 
             self.envs.append(env_handle)
             self.actor_handles.append(actor_handle)
