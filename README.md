@@ -62,7 +62,18 @@ When using this work, please cite the following:
     cd aerial_gym/scripts
     python3 example.py # or python3 example.py --task="quad_with_obstacles"
     ```
+## Docker
+1. Change your current path to the `isaacgym` path (e.g. `~/isaacgym`)
+2. Run this command: `wget -q  && bash install_and_setup_github_account.sh`
 
+1. Clone the Aerial Gym Simulator into the IsaacGym directory
+   `~/IsaacGym_Priview_4_Package/isaacgym$ git clone git@github.com:ntnu-arl/aerial_gym_simulator.git`
+2. Replace the Dockerfile in `~/IsaacGym_Priview_4_Package/isaacgym/docker` with the Dockerfile from
+   `aerial_gym_simulator/Docker`
+3. Copy the `run_isaac_plus_aerial.sh` from `aerial_gym_simulator/Docker` to
+   `~/IsaacGym_Priview_4_Package/isaacgym/docker`
+4. Run the `build.sh` script from the `~/IsaacGym_Priview_4_Package/isaacgym/docker` directory
+5. Run the Docker container using the `run_isaac_plus_aerial.sh` script.
 
 # Environments and Features
 
