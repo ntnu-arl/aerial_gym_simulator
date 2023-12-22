@@ -9,7 +9,7 @@ read IsaacGymPath
 
 cd $IsaacGymPath
 
-git clone git@github.com:ntnu-arl/aerial_gym_simulator.git
+git clone git@github.com:piratax007/aerial_gym_simulator.git
 
 cp aerial_gym_simulator/docker/Dockerfile docker
 
