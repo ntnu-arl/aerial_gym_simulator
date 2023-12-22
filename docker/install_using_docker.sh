@@ -17,7 +17,5 @@ bash docker/build.sh
 
 cp aerial_gym_simulator/docker/run_isaac_plus_aerial.sh docker
 
-cd ~
-
 rm install_using_docker.sh
 
