@@ -38,18 +38,18 @@ When using this work, please cite the following:
     cd isaacgym
     ./create_conta_env_rlgpu.sh
     ```
-1. Activate the conda environment in a new shell and install isaacgym (if it is not installed already):
+2. Activate the conda environment in a new shell and install isaacgym (if it is not installed already):
     ```bash
     conda activate rlgpu
     cd <path to parent folder>/isaacgym/python
     pip3 install -e .
     ```
-1. Install [PyTorch3D](https://pytorch3d.org/):
+3. Install [PyTorch3D](https://pytorch3d.org/):
     ```bash
     conda install -c fvcore -c iopath -c conda-forge fvcore iopath
     conda install -c pytorch3d pytorch3d
     ```
-1. Clone and install the Aerial Gym Simulator:
+4. Clone and install the Aerial Gym Simulator:
     ```bash
     mkdir -p ~/workspaces/aerial_gym_ws/
     cd ~/workspaces/aerial_gym_ws/
@@ -57,23 +57,16 @@ When using this work, please cite the following:
     cd aerial_gym_simulator/
     pip3 install -e .
     ```
-1. Run the example script:
+5. Run the example script:
     ```bash
     cd aerial_gym/scripts
     python3 example.py # or python3 example.py --task="quad_with_obstacles"
     ```
 ## Docker
 1. Change your current path to the `isaacgym` path (e.g. `~/isaacgym`)
-2. Run this command: `wget -q  && bash install_and_setup_github_account.sh`
-
-1. Clone the Aerial Gym Simulator into the IsaacGym directory
-   `~/IsaacGym_Priview_4_Package/isaacgym$ git clone git@github.com:ntnu-arl/aerial_gym_simulator.git`
-2. Replace the Dockerfile in `~/IsaacGym_Priview_4_Package/isaacgym/docker` with the Dockerfile from
-   `aerial_gym_simulator/Docker`
-3. Copy the `run_isaac_plus_aerial.sh` from `aerial_gym_simulator/Docker` to
-   `~/IsaacGym_Priview_4_Package/isaacgym/docker`
-4. Run the `build.sh` script from the `~/IsaacGym_Priview_4_Package/isaacgym/docker` directory
-5. Run the Docker container using the `run_isaac_plus_aerial.sh` script.
+2. Run: `wget -q https://raw.githubusercontent.com/piratax007/aerial_gym_simulator/main/docker/install_using_docker.sh && bash install_using_docker.sh`
+3. Run the Docker container: `bash docker/run_isaac_plus_aerial.sh`
+4. Test your installation by running the example script as in the previous section.
 
 # Environments and Features
 

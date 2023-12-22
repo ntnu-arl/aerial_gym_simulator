@@ -11,7 +11,13 @@ cd $IsaacGymPath
 
 git clone git@github.com:ntnu-arl/aerial_gym_simulator.git
 
-cp aerial_gym_simulator/docker/Dockerfile ../docker
+cp aerial_gym_simulator/docker/Dockerfile docker
 
-cp aerial_gym_simulator/docker/run_isaac_plus_aerial.sh
+bash docker/build.sh
+
+cp aerial_gym_simulator/docker/run_isaac_plus_aerial.sh docker
+
+cd ~
+
+rm install_using_docker.sh
 
