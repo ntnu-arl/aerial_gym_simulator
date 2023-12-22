@@ -32,8 +32,8 @@ RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
 # Can't remove package libegl-mesa0 directly (because of libegl1 which we need)
 RUN rm /usr/lib/x86_64-linux-gnu/libEGL_mesa.so.0 /usr/lib/x86_64-linux-gnu/libEGL_mesa.so.0.0.0 /usr/share/glvnd/egl_vendor.d/50_mesa.json
 
-COPY nvidia_icd.json /usr/share/vulkan/icd.d/nvidia_icd.json
-COPY 10_nvidia.json /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+COPY docker/nvidia_icd.json /usr/share/vulkan/icd.d/nvidia_icd.json
+COPY docker/10_nvidia.json /usr/share/glvnd/egl_vendor.d/10_nvidia.json
 
 WORKDIR /opt/isaacgym
 

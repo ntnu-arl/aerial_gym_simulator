@@ -13,11 +13,9 @@ git clone git@github.com:piratax007/aerial_gym_simulator.git
 
 cp aerial_gym_simulator/docker/Dockerfile docker
 
-cd docker
+bash docker/build.sh
 
-bash build.sh
-
-cp $(IsaacGymPath)/aerial_gym_simulator/docker/run_isaac_plus_aerial.sh docker
+cp aerial_gym_simulator/docker/run_isaac_plus_aerial.sh docker
 
 cd ~
 
