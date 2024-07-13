@@ -21,7 +21,7 @@ def sample_command(args):
 
     # Initialize command actions tensor
     command_actions = torch.zeros((env_cfg.env.num_envs, env_cfg.env.num_actions))
-    command_actions[:, 0] = 0.0  # Example action for axis 0
+    command_actions[:, 0] = 0.0  # Example action for axis 0 
     command_actions[:, 1] = 0.0  # Example action for axis 1
     command_actions[:, 2] = 0.0  # Example action for axis 2
     command_actions[:, 3] = 0.8  # Example action for axis 3 (e.g., throttle)

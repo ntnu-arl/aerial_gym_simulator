@@ -1,5 +1,6 @@
-# Copyright (c) 2018-2022, NVIDIA Corporation
-# All rights reserved.
+
+# Copyright (c) 2024 Mickyas Tamiru Asfaw 
+
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -26,7 +27,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/ppo/#ppo_continuous_action_isaacgympy
+# docs and experiment results can be found at https://arxiv.org/abs/1802.09477
 import os
 import random
 import time
@@ -365,3 +366,210 @@ if __name__ == "__main__":
 
     envs.close()
     writer.close()
+"""
+
+import argparse
+import time
+import random
+from isaacgym import gymapi, gymtorch
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import gym
+from torch.utils.tensorboard import SummaryWriter
+
+
+# Import your specific task registry and ReplayBuffer
+from your_task_registry import task_registry  # Replace 'your_task_registry' with the actual import
+from your_replay_buffer import ReplayBuffer  # Replace 'your_replay_buffer' with the actual import
+
+def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
+    torch.nn.init.orthogonal_(layer.weight, std)
+    torch.nn.init.constant_(layer.bias, bias_const)
+    return layer
+
+class Actor(nn.Module):
+    def __init__(self, state_dim, action_dim, max_action):
+        super(Actor, self).__init__()
+        self.l1 = layer_init(nn.Linear(state_dim, 256))
+        self.l2 = layer_init(nn.Linear(256, 256))
+        self.l3 = layer_init(nn.Linear(256, action_dim), std=0.01)
+        self.max_action = max_action
+
+    def forward(self, state):
+        a = torch.relu(self.l1(state))
+        a = torch.relu(self.l2(a))
+        return self.max_action * torch.tanh(self.l3(a))
+
+class Critic(nn.Module):
+    def __init__(self, state_dim, action_dim):
+        super(Critic, self).__init__()
+        self.l1 = layer_init(nn.Linear(state_dim + action_dim, 256))
+        self.l2 = layer_init(nn.Linear(256, 256))
+        self.l3 = layer_init(nn.Linear(256, 1))
+        self.l4 = layer_init(nn.Linear(state_dim + action_dim, 256))
+        self.l5 = layer_init(nn.Linear(256, 256))
+        self.l6 = layer_init(nn.Linear(256, 1))
+
+    def forward(self, state, action):
+        sa = torch.cat([state, action], 1)
+        q1 = torch.relu(self.l1(sa))
+        q1 = torch.relu(self.l2(q1))
+        q1 = self.l3(q1)
+        q2 = torch.relu(self.l4(sa))
+        q2 = torch.relu(self.l5(q2))
+        q2 = self.l6(q2)
+        return q1, q2
+
+class TD3:
+    def __init__(self, state_dim, action_dim, max_action, discount=0.99, tau=0.005, policy_noise=0.2, noise_clip=0.5, policy_freq=2):
+        self.actor = Actor(state_dim, action_dim, max_action).to(device)
+        self.actor_target = Actor(state_dim, action_dim, max_action).to(device)
+        self.actor_target.load_state_dict(self.actor.state_dict())
+        self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=args.learning_rate)
+        
+        self.critic = Critic(state_dim, action_dim).to(device)
+        self.critic_target = Critic(state_dim, action_dim).to(device)
+        self.critic_target.load_state_dict(self.critic.state_dict())
+        self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=args.learning_rate)
+        
+        self.max_action = max_action
+        self.discount = discount
+        self.tau = tau
+        self.policy_noise = policy_noise
+        self.noise_clip = noise_clip
+        self.policy_freq = policy_freq
+        self.total_it = 0
+
+    def select_action(self, state):
+        state = torch.FloatTensor(state.reshape(1, -1)).to(device)
+        return self.actor(state).cpu().data.numpy().flatten()
+
+    def train(self, replay_buffer, batch_size=100):
+        self.total_it += 1
+        state, action, next_state, reward, done = replay_buffer.sample(batch_size)
+        
+        with torch.no_grad():
+            noise = (torch.randn_like(action) * self.policy_noise).clamp(-self.noise_clip, self.noise_clip)
+            next_action = (self.actor_target(next_state) + noise).clamp(-self.max_action, self.max_action)
+            
+            target_Q1, target_Q2 = self.critic_target(next_state, next_action)
+            target_Q = reward + ((1 - done) * self.discount * torch.min(target_Q1, target_Q2))
+        
+        current_Q1, current_Q2 = self.critic(state, action)
+        critic_loss = nn.MSELoss()(current_Q1, target_Q) + nn.MSELoss()(current_Q2, target_Q)
+        
+        self.critic_optimizer.zero_grad()
+        critic_loss.backward()
+        self.critic_optimizer.step()
+        
+        if self.total_it % self.policy_freq == 0:
+            actor_loss = -self.critic.Q1(state, self.actor(state)).mean()
+            self.actor_optimizer.zero_grad()
+            actor_loss.backward()
+            self.actor_optimizer.step()
+            
+            for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
+                target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
+                
+            for param, target_param in zip(self.actor.parameters(), self.actor_target.parameters()):
+                target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
+
+    def save(self, filename):
+        torch.save(self.critic.state_dict(), filename + "_critic")
+        torch.save(self.critic_optimizer.state_dict(), filename + "_critic_optimizer")
+        torch.save(self.actor.state_dict(), filename + "_actor")
+        torch.save(self.actor_optimizer.state_dict(), filename + "_actor_optimizer")
+
+    def load(self, filename):
+        self.critic.load_state_dict(torch.load(filename + "_critic"))
+        self.critic_optimizer.load_state_dict(torch.load(filename + "_critic_optimizer"))
+        self.actor.load_state_dict(torch.load(filename + "_actor"))
+        self.actor_optimizer.load_state_dict(torch.load(filename + "_actor_optimizer"))
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--task", type=str, required=True, help="Task name")
+    parser.add_argument("--experiment_name", type=str, required=True, help="Experiment name")
+    parser.add_argument("--seed", type=int, default=1, help="Random seed")
+    parser.add_argument("--total_timesteps", type=int, default=1e6, help="Total timesteps")
+    parser.add_argument("--learning_rate", type=float, default=3e-4, help="Learning rate")
+    parser.add_argument("--batch_size", type=int, default=100, help="Batch size")
+    parser.add_argument("--num_envs", type=int, default=1, help="Number of environments")
+    parser.add_argument("--torch_deterministic", type=bool, default=True, help="Torch deterministic flag")
+    parser.add_argument("--track", action="store_true", help="Track experiment")
+    parser.add_argument("--wandb_project_name", type=str, help="WandB project name")
+    parser.add_argument("--wandb_entity", type=str, help="WandB entity")
+    parser.add_argument("--rl_device", type=str, default="cuda:0", help="RL device")
+    parser.add_argument("--sim_device", type=str, default="cuda:0", help="Simulation device")
+    parser.add_argument("--graphics_device_id", type=int, default=0, help="Graphics device ID")
+    parser.add_argument("--headless", action="store_true", help="Headless flag")
+    return parser.parse_args()
+
+if __name__ == "__main__":
+    args = get_args()
+    run_name = f"{args.task}__{args.experiment_name}__{args.seed}__{int(time.time())}"
+    if args.track:
+        import wandb
+        wandb.init(
+            project=args.wandb_project_name,
+            entity=args.wandb_entity,
+            sync_tensorboard=True,
+            config=vars(args),
+            name=run_name,
+            save_code=True,
+        )
+    writer = SummaryWriter(f"runs/{run_name}")
+    writer.add_text(
+        "hyperparameters",
+        "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
+    )
+
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    torch.backends.cudnn.deterministic = args.torch_deterministic
+
+    device = torch.device(args.rl_device)
+
+    envs = gym.vector.AsyncVectorEnv(
+        [task_registry.make_env(args.task, sim_device=args.sim_device, graphics_device_id=args.graphics_device_id, headless=args.headless)] * args.num_envs
+    )
+
+    assert isinstance(envs.single_action_space, gym.spaces.Box), "only continuous action space is supported"
+    assert isinstance(envs.single_observation_space, gym.spaces.Box), "only continuous observation space is supported"
+
+    max_action = float(envs.single_action_space.high[0])
+    agent = TD3(envs.single_observation_space.shape[0], envs.single_action_space.shape[0], max_action)
+
+    replay_buffer = ReplayBuffer(envs.single_observation_space.shape[0], envs.single_action_space.shape[0])
+
+    state, _ = envs.reset()
+    episode_reward = 0
+    for global_step in range(args.total_timesteps):
+        action = agent.select_action(state)
+        next_state, reward, done, _, _ = envs.step(action)
+        done_bool = float(done) if episode_reward + reward < 500 else 0
+        episode_reward += reward
+        replay_buffer.add(state, action, next_state, reward, done_bool)
+        state = next_state
+
+        if done:
+            state, _ = envs.reset()
+            episode_reward = 0
+
+        if global_step > 1000:
+            agent.train(replay_buffer, args.batch_size)
+
+        if global_step % 1000 == 0:
+            writer.add_scalar("charts/episodic_return", episode_reward, global_step)
+            if args.track:
+                wandb.log({"episodic_return": episode_reward}, step=global_step)
+
+    envs.close()
+    writer.close()
+    if args.track:
+        wandb.finish()
+
+        """
