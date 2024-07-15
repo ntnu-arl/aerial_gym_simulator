@@ -20,7 +20,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torch.functional as F
+import torch.nn.functional as F
 from torch.distributions.normal import Normal
 from torch.utils.tensorboard import SummaryWriter
 
@@ -36,7 +36,7 @@ def get_args():
         {"name": "--headless", "action": "store_true", "default": False, "help": "Force display off at all times"},
         {"name": "--horovod", "action": "store_true", "default": False, "help": "Use horovod for multi-gpu training"},
         {"name": "--rl_device", "type": str, "default": "cuda:0", "help": 'Device used by the RL algorithm, (cpu, gpu, cuda:0, cuda:1 etc..)'},
-        {"name": "--num_envs", "type": int, "default": 512, "help": "Number of environments to create. Overrides config file if provided."},
+        {"name": "--num_envs", "type": int, "default": 50, "help": "Number of environments to create. Overrides config file if provided."},# 512
         {"name": "--seed", "type": int, "default": 1, "help": "Random seed. Overrides config file if provided."},
         {"name": "--play", "required": False, "help": "only run network", "action": 'store_true'},
 
@@ -79,6 +79,39 @@ def get_args():
     if args.sim_device=='cuda':
         args.sim_device += f":{args.sim_device_id}"
     return args
+class RecordEpisodeStatisticsTorch(gym.Wrapper):
+    def __init__(self, env, device):
+        super().__init__(env)
+        self.num_envs = getattr(env, "num_envs", 1) # This sets the number of these environments; otherwise, it defaults to `1`, indicating a single environment.
+        self.device = device
+        self.episode_returns = None
+        self.episode_lengths = None
+
+    def reset(self, **kwargs):
+        observations = super().reset(**kwargs)
+        self.episode_returns = torch.zeros(self.num_envs, dtype=torch.float32, device=self.device)
+        self.episode_lengths = torch.zeros(self.num_envs, dtype=torch.int32, device=self.device)
+        self.returned_episode_returns = torch.zeros(self.num_envs, dtype=torch.float32, device=self.device)
+        self.returned_episode_lengths = torch.zeros(self.num_envs, dtype=torch.int32, device=self.device)
+        return observations
+
+    def step(self, action):
+        observations, privileged_observations, rewards, dones, infos = super().step(action)
+        
+        self.episode_returns += rewards
+        self.episode_lengths += 1
+        self.returned_episode_returns[:] = self.episode_returns
+        self.returned_episode_lengths[:] = self.episode_lengths
+        self.episode_returns *= 1 - dones
+        self.episode_lengths *= 1 - dones
+        infos["r"] = self.returned_episode_returns
+        infos["l"] = self.returned_episode_lengths
+        return (
+            observations,
+            rewards,
+            dones,
+            infos,
+        )
 
 class ReplayBuffer:
     def __init__(self, state_dim, action_dim, max_size, device):
@@ -87,21 +120,22 @@ class ReplayBuffer:
         self.ptr = 0
         self.size = 0
 
-        self.s = torch.zeros((max_size, state_dim), dtype=torch.float32, device=device)
-        self.a = torch.zeros((max_size, action_dim), dtype=torch.float32, device=device)
+        self.s = torch.zeros((max_size, *state_dim), dtype=torch.float32, device=device)
+        self.a = torch.zeros((max_size, *action_dim), dtype=torch.float32, device=device)
         self.r = torch.zeros((max_size, 1), dtype=torch.float32, device=device)
-        self.s_next = torch.zeros((max_size, state_dim), dtype=torch.float32, device=device)
+        self.s_next = torch.zeros((max_size, *state_dim), dtype=torch.float32, device=device)
         self.dw = torch.zeros((max_size, 1), dtype=torch.bool, device=device)
 
     def add(self, s, a, r, s_next, dw):
-        self.s[self.ptr] = torch.tensor(s, dtype=torch.float32, device=self.device)
-        self.a[self.ptr] = torch.tensor(a, dtype=torch.float32, device=self.device)
-        self.r[self.ptr] = torch.tensor(r, dtype=torch.float32, device=self.device)
-        self.s_next[self.ptr] = torch.tensor(s_next, dtype=torch.float32, device=self.device)
-        self.dw[self.ptr] = torch.tensor(dw, dtype=torch.bool, device=self.device)
+        for i in range(s.shape[1]):  # Iterate over each environment
+            self.s[self.ptr] = s[i]
+            self.a[self.ptr] = a[i]
+            self.r[self.ptr] = r[i]
+            self.s_next[self.ptr] = s_next[i]
+            self.dw[self.ptr] = dw[i]
 
-        self.ptr = (self.ptr + 1) % self.max_size
-        self.size = min(self.size + 1, self.max_size)
+            self.ptr = (self.ptr + 1) % self.max_size
+            self.size = min(self.size + 1, self.max_size)
 
     def sample(self, batch_size):
         ind = torch.randint(0, self.size, size=(batch_size,), device=self.device)
@@ -215,13 +249,14 @@ if __name__ == "__main__":
     # env setup
     envs, env_cfg = task_registry.make_env(name="quad", args=args)
 
-    #envs = RecordEpisodeStatisticsTorch(envs, device)  # a wrapper for recording episodic returns
+    envs = RecordEpisodeStatisticsTorch(envs, device)  # a wrapper for recording episodic returns
 
     print("num actions: ", envs.num_actions)
     print("num obs: ", envs.num_obs)
 
     agent = Agent(envs).to(device)
-    replay_buffer = ReplayBuffer(envs.num_obs, envs.num_actions, max_size=int(1e6), device=device)
+    replay_buffer = ReplayBuffer((args.num_envs, envs.num_obs), (args.num_envs, envs.num_actions), max_size=int(1e4), device=device)
+    #replay_buffer = ReplayBuffer(envs.num_obs, envs.num_actions, max_size=int(1e4), device=device)
     actor_optimizer = optim.Adam(agent.actor.parameters(), lr=args.learning_rate)
     critic_1_optimizer = optim.Adam(agent.critic_1.parameters(), lr=args.learning_rate)
     critic_2_optimizer = optim.Adam(agent.critic_2.parameters(), lr=args.learning_rate)
@@ -247,23 +282,37 @@ if __name__ == "__main__":
 
     global_step = 0
     start_time = time.time()
-    next_obs, _info = envs.reset()
+    next_obs,_info = envs.reset()#, 
     next_done = torch.zeros(args.num_envs, dtype=torch.float32).to(device)
 
     if not args.play:
         for update in range(1, args.total_timesteps // args.batch_size + 1):
             for step in range(args.num_steps):
                 global_step += 1 * args.num_envs
-                obs_tensor = torch.tensor(next_obs, dtype=torch.float32).to(device)
+                #obs_tensor = next_obs.clone().detach().to(device).view(args.num_envs,-1).to(device)
+                #obs_tensor = torch.tensor(next_obs, dtype=torch.float32).to(device)
+                obs_tensor = torch.tensor(next_obs, dtype=torch.float32).to(device).view(args.num_envs, -1)
 
                 with torch.no_grad():
-                    action = agent.get_action(obs_tensor)
-                #action_np = action.cpu().numpy()
-                action_np = action
+                    action_np = agent.get_action(obs_tensor)
+                next_obs, rewards, next_done, info = envs.step(action_np)#[step]
 
-                next_obs, rewards, next_done, infos ,next_info= envs.step(action_np)
-                replay_buffer.add(next_obs, action_np, rewards, next_obs, next_done)
+####################################### Debug ###########################################
+                
+                """print("obs:", next_obs)
+                print("rewards:", rewards)
+                print("next_done:", next_done) 
+                print("info:", info) """
 
+####################################### Debug ###########################################
+
+                replay_buffer.add(
+                    torch.tensor(next_obs, dtype=torch.float32).to(device).view(args.num_envs, -1),
+                    action_np.view(args.num_envs, -1),
+                    torch.tensor(rewards, dtype=torch.float32).to(device).view(args.num_envs, 1),
+                    torch.tensor(next_obs, dtype=torch.float32).to(device).view(args.num_envs, -1),
+                    torch.tensor(next_done, dtype=torch.float32).to(device).view(args.num_envs, 1)
+                )
                 if global_step % args.batch_size == 0:
                     for _ in range(args.num_steps):
                         s, a, r, s_next, dw = replay_buffer.sample(args.batch_size)
@@ -271,10 +320,16 @@ if __name__ == "__main__":
                         with torch.no_grad():
                             next_action, next_log_prob, next_q_value_1 ,next_q_value_2= agent.get_action_and_value(s_next)
                             min_next_value = torch.min(next_q_value_1, next_q_value_2)
-                            target_value = r + args.gamma * (1 - dw) * (min_next_value - alpha * next_log_prob)
 
-                        current_value_1 = agent.critic_1(torch.cat([s, a], -1))
-                        current_value_2 = agent.critic_2(torch.cat([s, a], -1))
+                            # Ensure the dimensions are consistent
+                            #next_log_prob = next_log_prob.unsqueeze(-1)
+                            min_next_value = min_next_value.squeeze(-1)
+
+                            target_value = r + args.gamma * (1-dw.float()) * (min_next_value - alpha * next_log_prob)
+
+
+                        current_value_1 = agent.critic_1(torch.cat([s, a], -1)).squeeze(-1)
+                        current_value_2 = agent.critic_2(torch.cat([s, a], -1)).squeeze(-1)
                         critic_1_loss = F.mse_loss(current_value_1, target_value) 
                         critic_2_loss = F.mse_loss(current_value_2, target_value)
 
@@ -288,7 +343,11 @@ if __name__ == "__main__":
 
                         # Actor Update (Update policy by one step of gradient ascent)
                         actions,log_prob, q_value_1,q_value_2 = agent.get_action_and_value(s)
-                        min_q_value= torch.min(q_value_1 ,q_value_2)
+                        min_q_value= torch.min(q_value_1 ,q_value_2).squeeze(-1)
+
+                        # Ensure log_prob dimension is consistent
+                        log_prob = log_prob.unsqueeze(-1)
+
                         actor_loss = (alpha * next_log_prob - min_q_value).mean()
 
                         actor_optimizer.zero_grad()
