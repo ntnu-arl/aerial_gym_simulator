@@ -60,7 +60,7 @@ def get_args():
 
         {"name": "--torch-deterministic-off", "action": "store_true", "default": False, "help": "if toggled, `torch.backends.cudnn.deterministic=False`"},
 
-        {"name": "--track", "action": "store_true", "default": False,"help": "if toggled, this experiment will be tracked with Weights and Biases"},
+        {"name": "--track", "action": "store_true", "default": True,"help": "if toggled, this experiment will be tracked with Weights and Biases"},# it was false by defalt but I make it to true to track the event with wandb
         {"name": "--wandb-project-name", "type":str, "default": "cleanRL", "help": "the wandb's project name"},
         {"name": "--wandb-entity", "type":str, "default": None, "help": "the entity (team) of wandb's project"},
 
@@ -120,7 +120,7 @@ def get_args():
 class RecordEpisodeStatisticsTorch(gym.Wrapper):
     def __init__(self, env, device):
         super().__init__(env)
-        self.num_envs = getattr(env, "num_envs", 1)
+        self.num_envs = getattr(env, "num_envs", 1) # This sets the number of these environments; otherwise, it defaults to `1`, indicating a single environment.
         self.device = device
         self.episode_returns = None
         self.episode_lengths = None
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     # env setup
     envs, env_cfg = task_registry.make_env(name="quad", args=args)
 
-    envs = RecordEpisodeStatisticsTorch(envs, device)
+    envs = RecordEpisodeStatisticsTorch(envs, device) # a weapper for recording episodic returns 
 
 
     print("num actions: ",envs.num_actions)

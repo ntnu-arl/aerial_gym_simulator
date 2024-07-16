@@ -156,7 +156,7 @@ if __name__ == '__main__':
 
     config_name = args['file']
 
-    print('Loading config: ', config_name)
+    print('Loading config: ', config_name) 
     with open(config_name, 'r') as stream:
         config = yaml.safe_load(stream)
     

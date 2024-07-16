@@ -30,14 +30,14 @@ class AerialRobotWithObstaclesCfg(BaseConfig):
 
     class viewer:
         ref_env = 0
-        pos = [-5, -5, 4]  # [m]
-        lookat = [0, 0, 0]  # [m]
+        pos = [-5, -5, 4]  # [m] camera position in world frame 
+        lookat = [0, 0, 0]  # [m] camera lookat in world frame (pointing direction) 
 
     class sim:
-        dt =  0.01
-        substeps = 1
-        gravity = [0., 0. , -9.81]  # [m/s^2]
-        up_axis = 1  # 0 is y, 1 is z
+        dt =  0.01 # [s] simulation time step
+        substeps = 1 # number of physics substeps per control step (dt is divided by substeps)
+        gravity = [0., 0. , -9.81]  # [m/s^2] gravity
+        up_axis = 1  # 0 is y, 1 is z (for mujoco)
 
         class physx:
             num_threads = 10
@@ -73,9 +73,10 @@ class AerialRobotWithObstaclesCfg(BaseConfig):
 
     class robot_asset:
         file = "{AERIAL_GYM_ROOT_DIR}/resources/robots/quad/model.urdf"
+        #file = "{AERIAL_GYM_ROOT_DIR}/resources/robots/quad/model_real.urdf"  # path to the robot urdf file
         name = "aerial_robot"  # actor name
         base_link_name = "base_link"
-        disable_gravity = False
+        disable_gravity = False  # disable gravity for the robot
         collapse_fixed_joints = True # merge bodies connected by fixed joints.
         fix_base_link = False # fix the base of the robot
         collision_mask = 0 # 1 to disable, 0 to enable...bitwise filter
