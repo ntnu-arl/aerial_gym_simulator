@@ -2,7 +2,7 @@
 
 ## Enabling Sensors in Simulation
 
-The sensors can be chosen and enabled or disabled bfor each robot by editing the robot config file:
+The sensors can be chosen and enabled or disabled before each robot by editing the robot config file:
 ```python
 class sensor_config:
     enable_camera = True
@@ -15,7 +15,7 @@ class sensor_config:
     imu_config = BaseImuConfig
 ```
 
-## WARP Sensors
+## Warp Sensors
 
 We develop a set of sensors using NVIDIA Warp. We create custom implementations of ray-casting based sensors to obtain depth, range, pointcloud, segmentation and surface normal information from the environment. The various sensors that are provided out-of-the-box are listed below, along with the customization options that are available.
 
@@ -95,7 +95,7 @@ Sample LiDAR renderings are shown below:
 
 ### Segmentation Camera
 
-The segmentation camera is provided combined with the depth or the LiDAR sensor. The segmentation camera provides a segmentation image of the environment. In the Isaac Gym rendering framework, the segmentation information can be embedded in each link of the asset in the environment, however for possibility of faster rendering and more flexibility, we allow our WARP environment representation to include the segmentation information per vertex of the mesh. Practically, this method hijacks the velocity field of each vertex in the mesh to encode the segmentation information. The segmentation information is then queried from a particular vertex of each face intersecting the ray cast from the sensor origin. While we provide the capbility equivalent to what is provided in the Isaac Gym rendering framework, this can easily be extended to include more information for the mesh or to have more complex segmentation information that can be assigned to vertices associated with particular faces (triangles) in the mesh as opposed to having this information limited to only each entire of the robot.
+The segmentation camera is provided combined with the depth or the LiDAR sensor. The segmentation camera provides a segmentation image of the environment. In the Isaac Gym rendering framework, the segmentation information can be embedded in each link of the asset in the environment, however for possibility of faster rendering and more flexibility, we allow our Warp environment representation to include the segmentation information per vertex of the mesh. Practically, this method hijacks the velocity field of each vertex in the mesh to encode the segmentation information. The segmentation information is then queried from a particular vertex of each face intersecting the ray cast from the sensor origin. While we provide the capbility equivalent to what is provided in the Isaac Gym rendering framework, this can easily be extended to include more information for the mesh or to have more complex segmentation information that can be assigned to vertices associated with particular faces (triangles) in the mesh.
 
 The segmentation camera is associated with the depth/range or the LiDAR sensor, and can only be enabled by setting a flag `segmentation_camera = True` in the sensor configuration file. Moreover, the segmentation camera queries the mesh directly to read the `velocities` field of the vertex data and use the first element (x-velocity field) of the first vertex of the face to encode and read the segmentation information from the mesh face.
 
@@ -164,17 +164,17 @@ class sensor_noise:
     pixel_dropout_prob = 0.01
     pixel_std_dev_multiplier = 0.01
 ```
-!!! question "Should I use WARP or Isaac Gym sensors?"
-    This depends on your use case. If you are simulating dynamic environments, Isaac Gym sensors are required. If you are using an implementation that is provided by both frameworks and you only want simulation speed, it is highly recommended to use warp. As a general observation, WARP worked faster generally and we specifically saw orders of magnitude speedups while simulating single or multiple low-dimensional sensors (such as 8x8 ToF sensors) per robot, while the Isaac Gym sensor was slightly better for our case when dealing with many complex meshes in the environment.
+!!! question "Should I use Warp or Isaac Gym sensors?"
+    This depends on your use case. If you are simulating dynamic environments, Isaac Gym sensors are required. If you are using an implementation that is provided by both frameworks and you only want simulation speed, it is highly recommended to use warp. As a general observation, Warp worked faster generally and we specifically saw orders of magnitude speedups while simulating single or multiple low-dimensional sensors (such as 8x8 ToF sensors) per robot, while the Isaac Gym sensor was slightly better for our case when dealing with many complex meshes in the environment.
 
-    However Isaac Gym sensors cannot simulate LiDARs or any custom sensor model. If you need better customizability and capability to randomize sensor paramters such as pose, or projection model of the sensors on-the-go, then our WARP implementation is recommended. Here, the position, orientation, camera matrix, ray casting direction etc can be changed or randomized at each timestep (whoaaa!!!) without introducing much delays. If you want to embed additional information in your environment itself that can be queried by the sensors, our WARP implementation is a natural optionas this allows for an immensely powerful rendering framework.
+    However Isaac Gym sensors cannot simulate LiDARs or any custom sensor model. If you need better customizability and capability to randomize sensor paramters such as pose, or projection model of the sensors on-the-fly, then our Warp implementation is recommended. Here, the position, orientation, camera matrix, ray casting direction etc can be changed or randomized at each timestep (whoaaa!!!) without introducing much delays. If you want to embed additional information in your environment itself that can be queried by the sensors, our Warp implementation is a natural optionas this allows for an immensely powerful rendering framework.
 
 ### Isaac Gym Camera sensors
 
 !!! danger "Using both Isaac Gym and Warp rendering"
-    Enabling both warp and isaacgym rendering pipelines together can cause a slowdown in the simulation and has not been extensively tested. It is recommended to use one rendering pipeline at a time.
+    Enabling both Warp and Isaac Gym rendering pipelines together can cause a slowdown in the simulation and has not been extensively tested. It is recommended to use one rendering pipeline at a time.
 
-We provide wrappers to enable the use of Isaac Gym cameras with the robots in the simulator. These camera sensors as provided as-is from the Isaac Gym interface. The sensors offered include RGB, Depth, and Segmentation and Optical Flow cameras. Isaac Gym Simulator does not provide all the customization options that we offer with the WARP-based sensors. However, we provide a standardized interface to use these sensors with the robots in the simulator.
+We provide wrappers to enable the use of Isaac Gym cameras with the robots in the simulator. These camera sensors are provided as-is from the Isaac Gym interface. The sensors offered include RGB, Depth, and Segmentation and Optical Flow cameras. Isaac Gym Simulator does not provide all the customization options that we offer with the Warp-based sensors. However, we provide a standardized interface to use these sensors with the robots in the simulator.
 
 
 ### IMU Sensor

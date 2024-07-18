@@ -203,14 +203,14 @@ Similar to the description above, [Sample Factory](https://github.com/alex-petre
     ```python
     class AerialGymVecEnv(gym.Env):
         '''
-        Wrapper for isaacgym environments to make them compatible with the sample factory.
+        Wrapper for Aerial Gym environments to make them compatible with the sample factory.
         '''
         def __init__(self, aerialgym_env, obs_key):
             self.env = aerialgym_env
             self.num_agents = self.env.num_envs
             self.action_space = convert_space(self.env.action_space)
 
-            # isaacgym_examples environments actually return dicts
+            # Aerial Gym examples environments actually return dicts
             if obs_key == "obs":
                 self.observation_space = gym.spaces.Dict(convert_space(self.env.observation_space))
             else:

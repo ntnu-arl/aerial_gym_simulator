@@ -4,12 +4,12 @@
 
 Welcome to the documentation of the Aerial Gym Simulator &nbsp;&nbsp; [:fontawesome-brands-github:](https://www.github.com/ntnu-arl/aerial_gym_simulator)
 
-The Aerial Gym Simulator is a high-fidelity physics-based simulator for training Micro Aerial Vehicle (MAV) platforms such as multirotors to learn to fly and navigate cluttered environments using learning-based methods. The environments are built upon the underlying [NVIDIA Isaac Gym](https://developer.nvidia.com/isaac-gym) simulator. We offer aerial robot models for standard planar quadrotor platforms, as well as fully-actuated platforms and multirotors with arbitrary configurations. These configurations are supported with low-level and high-level geometric controllers that reside on the GPU and provide parallelization for the simultaneous control of (hundreds of) thousands of multirotors.
+The Aerial Gym Simulator is a high-fidelity physics-based simulator for training Micro Aerial Vehicle (MAV) platforms such as multirotors to learn to fly and navigate cluttered environments using learning-based methods. The environments are built upon the underlying [NVIDIA Isaac Gym](https://developer.nvidia.com/isaac-gym) simulator. We offer aerial robot models for standard planar quadrotor platforms, as well as fully-actuated platforms and multirotors with arbitrary configurations. These configurations are supported with low-level and high-level geometric controllers that reside on the GPU and provide parallelization for the simultaneous control of thousands of multirotors.
 
-This is the *second release* of the simulator and includes a variety of new features and improvements. Task definition and environment configuration allow for fine-grained customization of all the environment entities without having to deal with large monolithic environment files. Custom rendering framework allows obtaining depth, and segmentation images at high speeds and can be used to simulate custom sensors such as LiDARs with varying properties. The simulator is open-source and is released under the [BSD-3-Clause License](https://opensource.org/licenses/BSD-3-Clause).
+This is the *second release* of the simulator and includes a variety of new features and improvements. Task definition and environment configuration allow for fine-grained customization of all the environment entities without having to deal with large monolithic environment files. A custom rendering framework allows obtaining depth, and segmentation images at high speeds and can be used to simulate custom sensors such as LiDARs with varying properties. The simulator is open-source and is released under the [BSD-3-Clause License](https://opensource.org/licenses/BSD-3-Clause).
 
 
-Aerial Gym Simulator allows you to train state-based control policies in under a minute:
+Aerial Gym Simulator allows you to train state-based control policies in under a minute,
 
 ![Aerial Gym Simulator](./gifs/Aerial%20Gym%20Position%20Control.gif)
 
@@ -17,7 +17,7 @@ And train vision-based navigation policies in under an hour:
 
 ![RL for Navigation](./gifs/rl_for_navigation_example.gif)
 
-With GPU-accelerated and customizable ray-casting based LiDAR and Camera sensors with depth and segmentation capabilities. A customized environment twin allows embedding information into the envionment meshes that can be queried with these sensors:
+Equipped with GPU-accelerated and customizable ray-casting based LiDAR and Camera sensors with depth and segmentation capabilities:
 
 ![Depth Frames 1](./gifs/camera_depth_frames.gif) ![Lidar Depth Frames 1](./gifs/lidar_depth_frames.gif)
 
@@ -27,19 +27,19 @@ With GPU-accelerated and customizable ray-casting based LiDAR and Camera sensors
 ## Features
 
 - ??? note "**Modular and Extendable Design**"
-      allowing users to easily create custom environments, robots, sensors, tasks, and controllers, and changing parameters programmatically on-the-go by modifying the [Simulation Components](./4_simulation_components.md)
+      allowing users to easily create custom environments, robots, sensors, tasks, and controllers, and changing parameters programmatically on-the-fly by modifying the [Simulation Components](./4_simulation_components.md).
 - ??? note "**Rewritten from the Ground-Up**"
       to offer very high control over each of the simulation components and capability to extensively [customize](./5_customization.md) the simulator to your needs.
 - ??? note "**High-Fidelity Physics Engine**"
       leveraging [NVIDIA Isaac Gym](https://developer.nvidia.com/isaac-gym/download), which provides a high-fidelity physics engine for simulating multirotor platforms, with the possibility of adding support for custom physics engine backends and rendering pipelines.
 - ??? note "**Parallelized Geometric Controllers**"
-      that reside on the GPU and provide parallelization for the [simultaneous control of (hundreds of) thousands of multirotor](./3_robots_and_controllers.md/#controllers) vehicles.
+      that reside on the GPU and provide parallelization for the [simultaneous control of thousands of multirotor](./3_robots_and_controllers.md/#controllers) vehicles.
 - ??? note "**Custom Rendering Framework**"
       (based on [NVIDIA Warp](https://nvidia.github.io/warp/)) used to design [custom sensors](./8_sensors_and_rendering.md/#warp-sensors) and perform parallelized kernel-based operations.
 - ??? note "**Modular and Extendable**"
       allowing users to easily create [custom environments](./5_customization.md/#custom-environments), [robots](./5_customization.md/#custom-robots), [sensors](./5_customization.md/#custom-sensors), [tasks](./5_customization.md/#custom-tasks), and [controllers](./5_customization.md/#custom-controllers).
-- ??? note "**Train RL-based control and navigation policies fast**"
-      of your choice can be added for robot learning tasks. [Includes starter resources to facilitate implementation](./6_rl_training.md).
+- ??? note "**RL-based control and navigation policies**"
+      of your choice can be added for robot learning tasks. [Includes scripts to get started with training your own robots.](./6_rl_training.md).
 
 
 !!! warning "**Support for Isaac Lab**"
@@ -50,9 +50,9 @@ Please refer to the paper detailing the previous version of our simulator to get
 
 ## Why Aerial Gym Simulator?
 
-The Aerial Gym Simulator is designed to simulate hundreds of thousands of MAVs simultaneously and comes equipped with both low and high-level controllers that are used on real-world systems. In addition, the new customized ray-casting allows for superfast rendering of the environment for tasks using depth and segmentation from the environment.
+The Aerial Gym Simulator is designed to simulate thousands of MAVs simultaneously and comes equipped with both low and high-level controllers that are used on real-world systems. In addition, the new customized ray-casting allows for superfast rendering of the environment for tasks using depth and segmentation from the environment.
 
-The optimized code in this newer version allows training for motor-command policies for robot control in under and minute and vision-based navigation policies in under an hour. Extensive examples are provided to allow users to get started with training their own policies for their custom robots quickly.
+The optimized code in this newer version allows training for motor-command policies for robot control in under a minute and vision-based navigation policies in under an hour. Extensive examples are provided to allow users to get started with training their own policies for their custom robots quickly.
 
 
 ## Citing
@@ -85,7 +85,7 @@ If you use the reinforcement learning policy provided alongside this simulator f
 ```
 
 ## Quick Links
-For you convenience, here are some quick links to the most important sections of the documentation:
+For your convenience, here are some quick links to the most important sections of the documentation:
 
 - [Installation](./2_getting_started.md/#installation)
 - [Robots and Controllers](./3_robots_and_controllers.md)

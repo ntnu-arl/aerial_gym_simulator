@@ -32,7 +32,7 @@
         # then set this environment variable
         export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
 
-        # Please add this this your .bashrc or .zshrc
+        # Please add this your .bashrc or .zshrc
         # file to avoid setting the environment variables
         # every time you want to run the simulator
         ```
@@ -44,7 +44,7 @@
     If the above example runs without any errors, the Isaac Gym installation is successful.
 
     !!! warning "Change argument parser in Isaac Gym's `gymutil.py`"
-        Before installing the Aerial Gym Simulator, one change needs to be made to the Isaac Gym installation.
+        Before installing the Aerial Gym Simulator, a change needs to be made to the Isaac Gym installation.
         The argument parser in Isaac Gym interferes with the rest of the arguments that may be needed for other learning frameworks. This can be changed by changing line 337 of `gymutil.py` in the `isaacgym` folder from
         ```python
         args = parser.parse_args()

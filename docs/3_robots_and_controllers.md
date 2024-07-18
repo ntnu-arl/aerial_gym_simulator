@@ -10,20 +10,20 @@ We provide a classic planar quadrotor design as the default choice for the robot
 
 ### Fully-acutated Octarotor
 
-We also provide a fully actuated octarotor platform based on the work in [Design, Modeling and Control of an Omni-Directional Aerial Vehicle](https://idsc.ethz.ch/content/dam/ethz/special-interest/mavt/dynamic-systems-n-control/idsc-dam/People/bdario/brescianini_dandrea_omnidirectional_aerial_vehicle.pdf) by Dario Brescianini and Raffaello D’Andrea. The default controller for this platform allows for direct motor control via thrust commands to each motor.
+We also provide a fully actuated octarotor platform based on the work in [Design, Modeling and Control of an Omni-Directional Aerial Vehicle](https://idsc.ethz.ch/content/dam/ethz/special-interest/mavt/dynamic-systems-n-control/idsc-dam/People/bdario/brescianini_dandrea_omnidirectional_aerial_vehicle.pdf) by Dario Brescianini and Raffaello D’Andrea.
 
 ![Fully-actuated Octarotor Platform](./gifs/fully_actuated_octarotor.gif)
 
 ### Arbitrary Configuration
 
-To show how to operate with arbitrary platform designs, we also provide a URDF of a multirotor platform with an unconventional configuration. This design is arrived at via optimization through evolutionary algorithms that provide a high-fitness value to robot configurations for which controllers can be learnt for setpoint tracking tasks. We also provide a learned controller for the particular platform.
+To show how to operate with arbitrary platform designs, we also provide a URDF of a multirotor platform with an unconventional configuration.
 
 ![Arbitrary Octarotor Platform](./gifs/random_octarotor_learned.gif)
 
 The above GIF shows the arbitrary platform trained using a motor-control policy to reach a goal position. 
 
 !!! warning "Using provided geometric controllers for this configuration"
-    will perform suboptimally as they assume that the center of mass for this configuration is at the root link of the robot. To account for the torque exerted about the root link beacuse of an offset center-of-mass, additional terms will be required to be added to the controller. Users are encouraged to provide these themselves for their arbitrary configurations. The controllers will work but will not exploit the controllability of the platform along other dimensions of motion. It is currently an area of active research and users are encouraged to explore learning-based solutions as well.
+    will perform suboptimally as they assume that the center of mass for this configuration is at the root link of the robot. To account for the torque exerted about the root link because of an offset center-of-mass, additional terms will be required to be added to the controller. Users are encouraged to provide these modifications themselves for their arbitrary configurations. The controllers will work but will not exploit the controllability of the platform along other dimensions of motion. It is currently an area of active research and users are encouraged to explore learning-based solutions as well.
 
 
 !!! warning "Control allocation for this configuration"
@@ -35,7 +35,7 @@ The above GIF shows the arbitrary platform trained using a motor-control policy 
 ### Parallelized Geometric Controllers
 
 
-We adapt and package controllers for underactuated planar platforms such as quadrotor, hexarotor, and octarotor. The controllers are based on the work in [Control of Complex Maneuvers for a Quadrotor UAV using Geometric Methods on SE(3)](https://arxiv.org/abs/1003.2005) by Taeyoung Lee, Melvin Leok, and N. Harris McClamroch.  We adapt the controllers to proide efficient parallelization on the GPU for the simultaneous control of (hundreds of) thousands of multirotor vehicles. The controllers are implemented in PyTorch and pre-compiled using the PyTorch JIT compiler for added speedup. The controllers are designed to be modular and can be easily extended to other platforms. We provide examples of use of this controller with a fully actuated octarotor platform and a planar quadrotor platform.
+We adapt and package controllers for underactuated planar platforms such as quadrotor, hexarotor, and octarotor. The controllers are based on the work in [Control of Complex Maneuvers for a Quadrotor UAV using Geometric Methods on SE(3)](https://arxiv.org/abs/1003.2005) by Taeyoung Lee, Melvin Leok, and N. Harris McClamroch.  We adapt the controllers to provide efficient parallelization on the GPU for the simultaneous control of thousands of multirotor vehicles. The controllers are implemented in PyTorch and pre-compiled using the PyTorch JIT compiler for added speedup. The controllers are designed to be modular and can be easily extended to other platforms. We provide examples of use of this controller with a fully actuated octarotor platform and a planar quadrotor platform.
 
 ??? warning "Use of parallelized geometric controllers with fully actuated platforms"
     is bound to produce sub-optimal results as the controllers are designed for quadrotor-like platforms that have all the axes of the motors parallel to each other. The controllers will work on fully actuated platforms but will not exploit the controllability of the platform along other dimensions of motion. It is currently an area of active research and users are encouraged to explore learning-based solutions as well.
@@ -98,7 +98,7 @@ We provide support to allocate motor forces using the control allocation matrix.
     ]
     ```
 
-You can read more about how this is used [in this blog post](https://www.cantorsparadise.com/how-control-allocation-for-multirotor-systems-works-f87aff1794a2).
+You can read more about how this concept is applied [in this blog post](https://www.cantorsparadise.com/how-control-allocation-for-multirotor-systems-works-f87aff1794a2).
 
 Given an allocation matrix and the motor commands, we can calculate the wrench (force and torque) commands for the base link as 
 
@@ -119,7 +119,7 @@ We model the simulated motors as a first-order system with randomizable time-con
 
 $$ \dot{f_i} = \frac{1}{\tau_i} (f_{ref_i} - f_i), $$
 
-where $f_i$ is the current thrust value for motor $i$, $f_{ref_i}$ is the reference thrust value from the controller, and $\tau_i$ is the time-constant of the motor. The thrust rate is clamped to a maximum value to prevent the motors from saturating. The users are encouraged to match the model to their robot platform for accurate simulation results.
+where $f_i$ is the current thrust value for motor $i$, $f_{ref_i}$ is the reference thrust value from the controller, and $\tau_i$ is the time-constant of the motor. The thrust rate is clamped to a maximum value to prevent the motors from saturating. Users are encouraged to match this model to their specific robot platform for accurate simulation results.
 
 !!! example "First order motor model"
     ```python

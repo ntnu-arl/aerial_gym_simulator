@@ -1,10 +1,10 @@
 # Simulation Components
 
-The simulator is made of composable entities that allow changing the physics engine parameters, adding various environment handling functionaities to manipulate the environment at runtime, load the assets, select robots and controllers and design custom sensors.
+The simulator is made of composable entities that allow changing the physics engine parameters, adding various environment handling functionalities to manipulate the environment at runtime, load the assets, select robots and controllers and design custom sensors.
 
 ## Registries
 
-The code contains registries for having a named mapping to various configuration files and classes. The registries allow ease of configuration through parameters and allow to mix-and-match various settings, robots, environments, sensors within the simulation. New configurations can be created on-the-go and registered to be used programmatically by the active code programmatically, without having to stop to manually configure the simulation. 
+The code contains registries for having a named mapping to various configuration files and classes. The registries allow ease of configuration through parameters and allow to mix-and-match various settings, robots, environments, sensors within the simulation. New configurations can be created on-the-fly and registered to be used programmatically by the active code, without having to stop to manually configure the simulation. 
 
 The code contains registries for the following components:
 
@@ -63,7 +63,7 @@ While the default setting of the physics engine is PhysX for this simulator, thi
 
 ## Assets
 
-Simulation assets in Aerial Gym are generally URDF files that can each have hteir own parameters for simulation. The asset configuration files for assets are stored in `config/asset_config`. In our implementation we have defined asset classes based on the type of the asset of our purposes and ground their properties together. Assets of each type can be represented through different URDF files inherently enabling randomization across environments without a further need to specify which asset is to be loaded. Just adding additional URDFs to the appropriate folder path sufficies to add them in the pool for selection fr simulation.
+Simulation assets in Aerial Gym are generally URDF files that can each have their own parameters for simulation. The asset configuration files for assets are stored in `config/asset_config`. In our implementation we have defined asset classes based on the type of the asset of our purposes and ground their properties together. Assets of each type can be represented through different URDF files inherently enabling randomization across environments without a further need to specify which asset is to be loaded. Just adding additional URDFs to the appropriate folder path suffices to add them in the pool for selection fr simulation.
 
 The parameters for each asset are derived from the `BaseAssetParams` class that includes the number of assets of that type to be loaded per environment, specifies root asset folder, specifies the position, orientation ratios and physics properties of the asset such as damping coefficients, density etc. Additional parameters can be used to specify properties such as presence of force sensors on the asset, per-link or whole body segmentation labels, etc.
 
@@ -120,7 +120,7 @@ The `BaseAssetParams` file is as follows:
 
 ## Environments
 
-Environment specification determines what are the components in a simulation environment. A configuration file can be used to select a particular robot (with it's sensors), a specified controller for thr robot and selection of obstacles that are present in the environment alongside a strategy to spawn and randomize their positions w.r.t the environment bounds. The environment configuration files are stored in `config/env_config` folder. The environment manager calls each of the environment entities to allow soecific user-coded behaviors at each timestep or to perform certain actions when the environment is reset. The environment manager is responsible for spawning the assets, robots and obstacles in the environment and managing their interactions.
+Environment specification determines what are the components in a simulation environment. A configuration file can be used to select a particular robot (with it's sensors), a specified controller for thr robot and selection of obstacles that are present in the environment alongside a strategy to spawn and randomize their positions w.r.t the environment bounds. The environment configuration files are stored in `config/env_config` folder. The environment manager calls each of the environment entities to allow specific user-coded behaviors at each timestep or to perform certain actions when the environment is reset. The environment manager is responsible for spawning the assets, robots and obstacles in the environment and managing their interactions.
 
 ??? example "Example of an Environment Configuration for an empty environment with a robot"
     ```python
@@ -228,7 +228,7 @@ In order to add assets to the environment, the `include_asset_type` dictionary c
 
 ## Tasks
 
-An environment specification determines what is populated in an independent simulation instance and how the collective simulation steps through time based on commanded actions. The task here is however slightly different. We intend to use this term of interpreting task-specific information from the environment. A task class instantiates the entire simulation with all its parallel robots and assets and therefore, has access to all the simulation information. We intend to use this class to determine how the environment is interpreted for RL tasks. For example, a given simulation instance with sim params, environment and asset specification, robot, sensors and controller specifications, can be utilied to train a policy to perform completely different tasks. Example of these could include setpoint navigation through clutter, observing a specific asset in the simulation, perching on that specific asset in simulation and so on and so forth. All these tasks can be performed with the same set of objects in the environment, but require a different interpretation of the environment data for training the RL algorithm appropriately. This can be done within the Task classes. A task can be specified in the files in the `config/task_config` folder as:
+An environment specification determines what is populated in an independent simulation instance and how the collective simulation steps through time based on commanded actions. The task here is however slightly different. We intend to use this term of interpreting task-specific information from the environment. A task class instantiates the entire simulation with all its parallel robots and assets and therefore, has access to all the simulation information. We intend to use this class to determine how the environment is interpreted for RL tasks. For example, a given simulation instance with sim params, environment and asset specification, robot, sensors and controller specifications, can be utilized to train a policy to perform completely different tasks. Example of these could include setpoint navigation through clutter, observing a specific asset in the simulation, perching on that specific asset in simulation and so on and so forth. All these tasks can be performed with the same set of objects in the environment, but require a different interpretation of the environment data for training the RL algorithm appropriately. This can be done within the Task classes. A task can be specified in the files in the `config/task_config` folder as:
 
 ??? example "Example of a Task Configuration"
     ```python
@@ -280,7 +280,7 @@ A sample task for position setpoint navigation (without sensors or obstacles) is
             # common boilerplate code here
 
             # Currently only the "observations" are sent to the actor and critic.
-            # The "priviliged_obs" are not handled so far in sample-factory
+            # The "privileged_obs" are not handled so far in sample-factory
 
             self.task_obs = {
                 "observations": torch.zeros(
@@ -307,7 +307,7 @@ A sample task for position setpoint navigation (without sensors or obstacles) is
             # this uses the action, gets observations
             # calculates rewards, returns tuples
             # In this case, the episodes that are terminated need to be
-            # first reset, and the first obseration of the new episode
+            # first reset, and the first observation of the new episode
             # needs to be returned.
 
             transformed_action = self.action_transformation_function(actions)
@@ -381,11 +381,11 @@ To add your own [custom tasks](./5_customization.md/#custom-tasks) please refer 
 ??? question "**Difference between Environment and Task**"
     A lot of different simulator implementations interchange the terminologies. In our case, we view the environment as the components that define the robot, it's physics surroundings, i.e., the assets near the robot, the parameters of the physics engine that detemine how the various entities in the simulation world interact with one another, and how sensors perceive the data via the sensor parameters.
     
-    The task on the other hand is an interpretation of the simulation world and the information provided by / collected from it to reach a particular goal that is deired by the user. The same environment can be used to train multiple tasks and the tasks can be changed without changing an environment definition.
+    The task on the other hand is an interpretation of the simulation world and the information provided by / collected from it to reach a particular goal that is desired by the user. The same environment can be used to train multiple tasks and the tasks can be changed without changing an environment definition.
     
     For example, an empty environment with a quadrotor can be used to train a position setpoint task, or a trajectory tracking task. An environment with a set of obstacles can be used to train a policy that can either navigate through the obstacles or perch on a specific asset in the environment. The task is the interpretation of the environment data for the RL algorithm to learn the desired behavior.
 
-    To relate it with a familiar environment from the OpenAI Gym suite of tasks, an "environment" in our case could refer to a CartPole world with the dynamics of the CartPole, however a "task" in our case would allow the same cartpole to be controlled to balance the pole upright, or to keep swinging the pole at a given angular rate or to have the endpoint of the pole at a given location in the environment. All of which require different formulation of rewards and observations for the RL algorithm to learn the desired behavior.
+    To relate it with a familiar environment from the OpenAI Gym suite of tasks, an "environment" in our case could refer to a CartPole world with its associated dynamics, however a "task" in our case would allow the same cartpole to be controlled to balance the pole upright, or to keep swinging the pole at a given angular rate or to have the endpoint of the pole at a given location in the environment. All of which require different formulation of rewards and observations for the RL algorithm to learn the desired behavior.
 
 ## Robots
 
