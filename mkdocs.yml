@@ -1,0 +1,143 @@
+site_name: Aerial Gym Simulator
+repo_url: https://github.com/ntnu-arl/aerial_gym_simulator
+repo_name: ntnu-arl/aerial_gym_simulator
+
+nav:
+  - Home: 'index.md'
+  - Getting Started: '2_getting_started.md'
+  - Robots and Controllers: '3_robots_and_controllers.md'
+  - Sensors and Rendering: '8_sensors_and_rendering.md'
+  - Simulation Components: '4_simulation_components.md'
+  - Customizing the Simulator: '5_customization.md'
+  - RL Training: '6_rl_training.md'
+  - FAQ & Troubleshooting: '7_FAQ_and_troubleshooting.md'
+
+
+copyright: Copyright &copy; 2024, Aerial Gym Simulator. All rights reserved.
+
+plugins:
+  - search
+
+extra_javascript:
+  - javascripts/extra.js
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - https://unpkg.com/katex@0/dist/katex.min.css
+
+# Extensions
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  # - pymdownx.emoji:
+  #     emoji_generator: !!python/name:materialx.emoji.to_svg
+  #     emoji_index: !!python/name:materialx.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          # format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - docs/overrides/.icons
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+theme:
+  name: material
+  favicon: images/arl_logo.png
+  logo: images/arl_logo.png
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Ubuntu #SansOpen Sans #Century Gothic #Roboto #Bungee Spice
+
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.instant.preview
+    - navigation.tabs.sticky
+    - navigation.tabs
+    - navigation.tracking
+    - navigation.expand
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+    - search.share
+    # - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.footnote.tooltips
+    - content.tabs.link
+    - content.tooltips
+    # - header.autohide
+    - navigation.footer
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    - toc.integrate
+  palette:
+    # 
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: orange
+      
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: orange
+
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+

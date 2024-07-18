@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<robot name="quadrotor">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.0"/>
+      <geometry>
+        <sphere radius="0.05"/>
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.18384776310850237"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.225"/>
+      <inertia ixx="0.00042249999999999997" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.00042249999999999997" iyz="0.0" izx="0.0" izy="0.0" izz="0.0008449999999999999"/>
+    </inertial>
+  </link>
+  <link name="arm_motor_0">
+    <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.18384776310850237"/>
+      </geometry>
+      <material name="Orange">
+        <color rgba="1 0.423 0.03921568627 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_0" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_0"/>
+      <origin xyz="0.065 -0.065 0.0" rpy="-1.5707963267948968 2.220446049250313e-16 -2.3561944901923453"/> 
+  </joint>
+  <link name="motor_0">
+    <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.6 0.0 0.4 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.006249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_0" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_0"/>
+    <origin xyz="0.13 -0.13 0.0" rpy="0.0 0.0 0.0"/> 
+  </joint>
+  <link name="arm_motor_1">
+    <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.18384776310850237"/>
+      </geometry>
+      <material name="Orange">
+        <color rgba="1 0.423 0.03921568627 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_1" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_1"/>
+      <origin xyz="-0.065 -0.065 0.0" rpy="1.5707963267948968 2.220446049250313e-16 -0.7853981633974482"/> 
+  </joint>
+  <link name="motor_1">
+    <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.4 0.0 0.6 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.006249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_1" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_1"/>
+    <origin xyz="-0.13 -0.13 0.0" rpy="0.0 0.0 0.0"/> 
+  </joint>
+  <link name="arm_motor_2">
+    <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.18384776310850237"/>
+      </geometry>
+      <material name="Orange">
+        <color rgba="1 0.423 0.03921568627 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_2" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_2"/>
+      <origin xyz="-0.065 0.065 0.0" rpy="1.5707963267948968 0.0 -2.3561944901923453"/> 
+  </joint>
+  <link name="motor_2">
+    <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.6 0.0 0.4 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.006249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_2" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_2"/>
+    <origin xyz="-0.13 0.13 0.0" rpy="0.0 0.0 0.0"/> 
+  </joint>
+  <link name="arm_motor_3">
+    <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.18384776310850237"/>
+      </geometry>
+      <material name="Orange">
+        <color rgba="1 0.423 0.03921568627 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_3" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_3"/>
+      <origin xyz="0.065 0.065 0.0" rpy="-1.5707963267948968 0.0 -0.7853981633974482"/> 
+  </joint>
+  <link name="motor_3">
+    <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.4 0.0 0.6 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.006249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_3" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_3"/>
+    <origin xyz="0.13 0.13 0.0" rpy="0.0 0.0 0.0"/> 
+  </joint>
+</robot>

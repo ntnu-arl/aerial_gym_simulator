@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<robot name="BlueROV">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.0" rpy="1.57079 0.0 1.57079"/>
+      <geometry>
+        <mesh scale="0.1 0.1 0.1" filename="./meshes/BlueRov2.stl"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.30000000000000004"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.3"/>
+      <inertia ixx="0.048000000000000015" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.048000000000000015" iyz="0.0" izx="0.0" izy="0.0" izz="0.048000000000000015"/>
+    </inertial>
+  </link>
+  <link name="arm_motor_0">
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_0" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_0"/>
+      <origin xyz="0.08660254037844388 0.08660254037844388 0.08660254037844388" rpy="-0.8860771237926139 0.4205343352839652 -0.4636476090008062"/> 
+  </joint>
+  <link name="motor_0">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_0" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_0"/>
+    <origin xyz="0.17320508075688776 0.17320508075688776 0.17320508075688776" rpy="0.5369911762672153 0.8339952782025826 -2.726309414768267"/> 
+  </joint>
+  <link name="arm_motor_1">
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_1" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_1"/>
+      <origin xyz="-0.08660254037844388 0.08660254037844388 0.08660254037844388" rpy="0.886077123792614 0.4205343352839652 -2.677945044588987"/> 
+  </joint>
+  <link name="motor_1">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_1" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_1"/>
+    <origin xyz="-0.17320508075688776 0.17320508075688776 0.17320508075688776" rpy="-2.191861365711223 -0.12515405937833668 -0.17271936472604107"/> 
+  </joint>
+  <link name="arm_motor_2">
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_2" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_2"/>
+      <origin xyz="0.08660254037844388 -0.08660254037844388 0.08660254037844388" rpy="-0.886077123792614 -0.420534335283965 -2.677945044588987"/> 
+  </joint>
+  <link name="motor_2">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_2" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_2"/>
+    <origin xyz="0.17320508075688776 -0.17320508075688776 0.17320508075688776" rpy="2.191861365711223 0.1251540593783369 -0.17271936472604107"/> 
+  </joint>
+  <link name="arm_motor_3">
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_3" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_3"/>
+      <origin xyz="-0.08660254037844388 -0.08660254037844388 0.08660254037844388" rpy="0.8860771237926139 -0.420534335283965 -0.4636476090008062"/> 
+  </joint>
+  <link name="motor_3">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_3" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_3"/>
+    <origin xyz="-0.17320508075688776 -0.17320508075688776 0.17320508075688776" rpy="-0.5369911762672153 -0.8339952782025827 -2.726309414768267"/> 
+  </joint>
+  <link name="arm_motor_4">
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_4" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_4"/>
+      <origin xyz="0.08660254037844388 0.08660254037844388 -0.08660254037844388" rpy="-2.2555155297971794 -0.420534335283965 -0.4636476090008062"/> 
+  </joint>
+  <link name="motor_4">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_4" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_4"/>
+    <origin xyz="0.17320508075688776 0.17320508075688776 -0.17320508075688776" rpy="-0.5369911762672153 -0.8339952782025827 -2.726309414768267"/> 
+  </joint>
+  <link name="arm_motor_5">
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_5" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_5"/>
+      <origin xyz="-0.08660254037844388 0.08660254037844388 -0.08660254037844388" rpy="2.2555155297971794 -0.420534335283965 -2.677945044588987"/> 
+  </joint>
+  <link name="motor_5">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_5" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_5"/>
+    <origin xyz="-0.17320508075688776 0.17320508075688776 -0.17320508075688776" rpy="2.191861365711223 0.1251540593783369 -0.17271936472604107"/> 
+  </joint>
+  <link name="arm_motor_6">
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_6" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_6"/>
+      <origin xyz="0.08660254037844388 -0.08660254037844388 -0.08660254037844388" rpy="-2.2555155297971794 0.4205343352839652 -2.677945044588987"/> 
+  </joint>
+  <link name="motor_6">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_6" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_6"/>
+    <origin xyz="0.17320508075688776 -0.17320508075688776 -0.17320508075688776" rpy="-2.191861365711223 -0.12515405937833668 -0.17271936472604107"/> 
+  </joint>
+  <link name="arm_motor_7">
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_arm_motor_7" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="arm_motor_7"/>
+      <origin xyz="-0.08660254037844388 -0.08660254037844388 -0.08660254037844388" rpy="2.2555155297971794 0.4205343352839652 -0.4636476090008062"/> 
+  </joint>
+  <link name="motor_7">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_motor_7" type="fixed" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="motor_7"/>
+    <origin xyz="-0.17320508075688776 -0.17320508075688776 -0.17320508075688776" rpy="0.5369911762672153 0.8339952782025826 -2.726309414768267"/> 
+  </joint>
+</robot>
