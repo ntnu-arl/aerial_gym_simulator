@@ -23,7 +23,7 @@ if __name__ == "__main__":
         device="cuda:0",
         num_envs=int(524288 / 4),
         headless=True,
-        use_warp=True,  # since there is not supposed to be a camera in the robot for this example.
+        use_warp=True,  # since there isn't supposed to be a camera in the robot for this example owing to lack of obstacles
     )
     actions = torch.zeros((env_manager.num_envs, 4)).to("cuda:0")
     env_manager.reset()

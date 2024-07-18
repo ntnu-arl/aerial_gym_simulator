@@ -20,9 +20,7 @@ if __name__ == "__main__":
         )
     ).to("cuda:0")
     actions[:] = 0.0
+    logger.info("\n\n\n\n\n\n Example of a positon setpoint task interface. \n\n\n\n\n\n")
     with torch.no_grad():
         for i in range(10000):
-            if i == 100:
-                start = time.time()
             obs, reward, terminated, truncated, info = rl_task_env.step(actions=actions)
-    end = time.time()

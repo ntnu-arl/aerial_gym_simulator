@@ -25,6 +25,9 @@ if __name__ == "__main__":
     actions = torch.zeros((env_manager.num_envs, 7)).to("cuda:0")
     actions[:, 6] = 1.0
     env_manager.reset()
+    logger.info(
+        "\n\n\n\n\n\n This script provides an example of a custom geometric position controller for a custom BlueROV robot. \n\n\n\n\n\n"
+    )
     for i in range(10000):
         if i % 500 == 0:
             logger.info(f"Step {i}, changing target setpoint.")

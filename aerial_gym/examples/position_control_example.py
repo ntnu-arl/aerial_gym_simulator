@@ -10,7 +10,7 @@ if __name__ == "__main__":
     env_manager = SimBuilder().build_env(
         sim_name="base_sim",
         env_name="empty_env",
-        robot_name="base_quadrotor",
+        robot_name="base_quadrotor",  # base_fully_actuated
         controller_name="lee_position_control",
         args=None,
         device="cuda:0",
@@ -20,6 +20,9 @@ if __name__ == "__main__":
     )
     actions = torch.zeros((env_manager.num_envs, 4)).to("cuda:0")
     env_manager.reset()
+    logger.info(
+        "\n\n\n\n\n\n This script provides an example of a geometric position controller for a standard quadrotor robot. \n\n\n\n\n\n"
+    )
     for i in range(10000):
         if i % 500 == 0:
             logger.info(f"Step {i}, changing target setpoint.")

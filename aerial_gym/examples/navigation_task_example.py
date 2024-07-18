@@ -14,6 +14,9 @@ if __name__ == "__main__":
         (rl_task_env.task_config.num_envs, rl_task_env.task_config.action_space_dim)
     ).to("cuda:0")
     actions[:, 0] = -1.0
+    logger.info(
+        "\n\n\n\n\n\n This script provides an example of the RL task interface with a zero action command. \n\n\n\n\n\n"
+    )
     with torch.no_grad():
         for i in range(10000):
             if i == 100:
