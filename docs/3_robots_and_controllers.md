@@ -26,8 +26,8 @@ The above GIF shows the arbitrary platform trained using a motor-control policy 
     will perform suboptimally as they assume that the center of mass for this configuration is at the root link of the robot. To account for the torque exerted about the root link beacuse of an offset center-of-mass, additional terms will be required to be added to the controller. Users are encouraged to provide these themselves for their arbitrary configurations. The controllers will work but will not exploit the controllability of the platform along other dimensions of motion. It is currently an area of active research and users are encouraged to explore learning-based solutions as well.
 
 
-!!! warning "Allocation matrix for this configuration"
-    is derived assuming unconstrained motor command allocation and then clamping the actions. This is a general problem when dealing with arbitrary configurations and is an area of active research. Users are encouraged to explore learning-based solutions for such platforms. The allocation matrix for the provided configuration is calculated w.r.t the root link of the robot.
+!!! warning "Control allocation for this configuration"
+    is derived assuming unconstrained motor command allocation and then clamping the actions. This is a general problem when dealing with arbitrary configurations and is an area of active research. Users are encouraged to explore learning-based solutions for such platforms. The allocation matrix for the provided configurations are calculated w.r.t the root link of the robot.
 
 
 ## Controllers
@@ -110,7 +110,7 @@ $$ \begin{bmatrix} u_1 \\ u_2 \\ u_3 \\ ... \\ u_n \end{bmatrix} = A^+  \begin{b
 
 where $A^+$ is the pseudo-inverse of the allocation matrix.
 
-!!! warning "While this works in the case of platforms such as the quadrotor or fully-actuated octarotor, it may or may not work for arbitrary configurations or it may not produce the energetically optimal allocation for efficient flight. Users are encouraged to explore learning-based solutions for such platforms."
+!!! warning "While this works in the case of platforms such as the quadrotor or fully-actuated octarotor, it may or may not work for arbitrary configurations or it may not produce efficient flight. Users are encouraged to explore learning-based solutions for such platforms."
 
 
 ## Motor Model
