@@ -4,6 +4,8 @@ runs/
 *.pt
 *.tfevents*
 *.egg-info/
-resources/
 
 */__pycache__/
+nn/
+
+train_dir/
