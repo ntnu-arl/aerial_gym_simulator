@@ -97,15 +97,27 @@ For you convenience, here are some quick links to the most important sections of
 
 
 
-
 ## Contact
 
-Mihir Kulkarni  &nbsp;&nbsp; [:fontawesome-solid-envelope:](mailto:mihirk284@gmail.com) &nbsp; [:fontawesome-brands-github:](https://github.com/mihirk284) &nbsp; [:fontawesome-brands-linkedin:](https://www.linkedin.com/in/mihir-kulkarni-6070b6135/) &nbsp; [:fontawesome-brands-twitter:](https://twitter.com/mihirk284)
+Mihir Kulkarni  &nbsp;&nbsp;&nbsp; [Email](mailto:mihirk284@gmail.com) &nbsp; [GitHub](https://github.com/mihirk284) &nbsp; [LinkedIn](https://www.linkedin.com/in/mihir-kulkarni-6070b6135/) &nbsp; [X (formerly Twitter)](https://twitter.com/mihirk284)
 
-Welf Rehberg &nbsp;&nbsp;&nbsp;&nbsp; [:fontawesome-solid-envelope:](mailto:welf.rehberg@ntnu.no) &nbsp; [:fontawesome-brands-github:](https://github.com/Zwoelf12) &nbsp; [:fontawesome-brands-linkedin:](https://www.linkedin.com/in/welfrehberg/)
+Welf Rehberg &nbsp;&nbsp;&nbsp;&nbsp; [Email](mailto:welf.rehberg@ntnu.no) &nbsp; [GitHub](https://github.com/Zwoelf12) &nbsp; [LinkedIn](https://www.linkedin.com/in/welfrehberg/)
 
-Kostas Alexis &nbsp;&nbsp;&nbsp;&nbsp; [:fontawesome-solid-envelope:](mailto:konstantinos.alexis@ntnu.no) &nbsp;  [:fontawesome-brands-github:](https://github.com/kostas-alexis) &nbsp; 
- [:fontawesome-brands-linkedin:](https://www.linkedin.com/in/kostas-alexis-67713918/) &nbsp; [:fontawesome-brands-twitter:](https://twitter.com/arlteam)
+Theodor J. L. Forgaard &nbsp;&nbsp;&nbsp; [Email](mailto:tjforgaa@stud.ntnu.no) &nbsp; [GitHb](https://github.com/tforgaard) &nbsp; [LinkedIn](https://www.linkedin.com/in/theodor-johannes-line-forgaard-665b5311a/)
 
-This work is done at the [Autonomous Robots Lab :arl-arl-logo:](https://www.autonomousrobotslab.com), [Norwegian University of Science and Technology (NTNU)](https://www.ntnu.no). For more information, visit our [Website](https://www.autonomousrobotslab.com/).
+Kostas Alexis &nbsp;&nbsp;&nbsp;&nbsp; [Email](mailto:konstantinos.alexis@ntnu.no) &nbsp;  [GitHub](https://github.com/kostas-alexis) &nbsp; 
+ [LinkedIn](https://www.linkedin.com/in/kostas-alexis-67713918/) &nbsp; [X (formerly Twitter)](https://twitter.com/arlteam)
 
+This work is done at the [Autonomous Robots Lab](https://www.autonomousrobotslab.com), [Norwegian University of Science and Technology (NTNU)](https://www.ntnu.no). For more information, visit our [Website](https://www.autonomousrobotslab.com/).
+
+
+## Acknowledgements
+This material was supported by RESNAV (AFOSR Award No. FA8655-21-1-7033) and SPEAR (Horizon Europe Grant Agreement No. 101119774).
+
+This repository utilizes some of the code and helper scripts from [https://github.com/leggedrobotics/legged_gym](https://github.com/leggedrobotics/legged_gym) and [IsaacGymEnvs](https://github.com/isaac-sim/IsaacGymEnvs).
+
+
+
+## FAQs and Troubleshooting 
+
+Please refer to our [website](https://ntnu-arl.github.io/aerial_gym_simulator/7_FAQ_and_troubleshooting/) or to the [Issues](https://github.com/ntnu-arl/aerial_gym_simulator/issues) section in the GitHub repository for more information.

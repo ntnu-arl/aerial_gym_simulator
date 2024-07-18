@@ -113,4 +113,4 @@ This repository utilizes some of the code and helper scripts from [https://githu
 
 ## FAQs and Troubleshooting 
 
-Please refer to our [website TODO](link) or to the [Issues TODO](link) section in the GitHub repository for more information.
+Please refer to our [website](https://ntnu-arl.github.io/aerial_gym_simulator/7_FAQ_and_troubleshooting/) or to the [Issues](https://github.com/ntnu-arl/aerial_gym_simulator/issues) section in the GitHub repository for more information.
