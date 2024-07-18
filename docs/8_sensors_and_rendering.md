@@ -1,5 +1,20 @@
 # Sensors and Rendering
 
+## Enabling Sensors in Simulation
+
+The sensors can be chosen and enabled or disabled bfor each robot by editing the robot config file:
+```python
+class sensor_config:
+    enable_camera = True
+    camera_config = BaseDepthCameraConfig
+
+    enable_lidar = False
+    lidar_config = BaseLidarConfig  # OSDome_64_Config
+
+    enable_imu = False
+    imu_config = BaseImuConfig
+```
+
 ## WARP Sensors
 
 We develop a set of sensors using NVIDIA Warp. We create custom implementations of ray-casting based sensors to obtain depth, range, pointcloud, segmentation and surface normal information from the environment. The various sensors that are provided out-of-the-box are listed below, along with the customization options that are available.
