@@ -1,6 +1,6 @@
 import torch
 import os
-from verifiable_learning.DepthToLatent.networks.VAE.vae import VAE
+from aerial_gym.utils.vae.VAE import VAE
 
 
 def clean_state_dict(state_dict):
@@ -8,6 +8,8 @@ def clean_state_dict(state_dict):
     for key, value in state_dict.items():
         if "module." in key:
             key = key.replace("module.", "")
+        if "dronet." in key:
+            key = key.replace("dronet.", "encoder.")
         clean_dict[key] = value
     return clean_dict
 
