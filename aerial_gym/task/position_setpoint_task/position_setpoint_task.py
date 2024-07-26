@@ -217,8 +217,8 @@ class PositionSetpointTask(BaseTask):
         )
         return compute_reward(
             pos_error_vehicle_frame,
-            angular_velocity,
             root_quats,
+            angular_velocity,
             obs_dict["crashes"],
             1.0,  # obs_dict["curriculum_level_multiplier"],
             self.actions,
