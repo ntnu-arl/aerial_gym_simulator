@@ -60,7 +60,7 @@ def get_args():
 
         {"name": "--torch-deterministic-off", "action": "store_true", "default": False, "help": "if toggled, `torch.backends.cudnn.deterministic=False`"},
 
-        {"name": "--track", "action": "store_true", "default": True,"help": "if toggled, this experiment will be tracked with Weights and Biases"},# it was false by defalt but I make it to true to track the event with wandb
+        {"name": "--track", "action": "store_true", "default": False,"help": "if toggled, this experiment will be tracked with Weights and Biases"},# it was false by defalt but I make it to true to track the event with wandb
         {"name": "--wandb-project-name", "type":str, "default": "cleanRL", "help": "the wandb's project name"},
         {"name": "--wandb-entity", "type":str, "default": None, "help": "the entity (team) of wandb's project"},
 

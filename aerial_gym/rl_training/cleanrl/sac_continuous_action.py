@@ -42,7 +42,7 @@ def get_args():
 
         {"name": "--torch-deterministic-off", "action": "store_true", "default": True, "help": "if toggled, `torch.backends.cudnn.deterministic=False`"}, # it was False for the ppo implimentation 
 
-        {"name": "--track", "action": "store_true", "default": True,"help": "if toggled, this experiment will be tracked with Weights and Biases"},
+        {"name": "--track", "action": "store_true", "default": False,"help": "if toggled, this experiment will be tracked with Weights and Biases"},
         {"name": "--wandb-project-name", "type":str, "default": "cleanRL", "help": "the wandb's project name"},
         {"name": "--wandb-entity", "type":str, "default": None, "help": "the entity (team) of wandb's project"},
 
