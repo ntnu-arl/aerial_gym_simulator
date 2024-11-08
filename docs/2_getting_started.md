@@ -13,7 +13,7 @@
         ```bash
         conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 \
          pytorch-cuda=11.7 -c pytorch -c conda-forge -c defaults
-        conda install pyyaml==6.0 tensorboard==2.13.0 -c conda-forge -c pytorch -c defaults
+        conda install pyyaml==6.0 tensorboard==2.13.0 -c conda-forge -c pytorch -c defaults -c nvidia
         # OR the newest version of PyTorch with CUDA version that supported by your driver if you like
         # conda install pytorch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 pytorch-cuda=11.8 -c pytorch -c nvidia
         conda install -c fvcore -c iopath -c conda-forge fvcore iopath
@@ -43,16 +43,16 @@
         ```
     If the above example runs without any errors, the Isaac Gym installation is successful.
 
-    !!! warning "Change argument parser in Isaac Gym's `gymutil.py`"
-        Before installing the Aerial Gym Simulator, a change needs to be made to the Isaac Gym installation.
-        The argument parser in Isaac Gym interferes with the rest of the arguments that may be needed for other learning frameworks. This can be changed by changing line 337 of `gymutil.py` in the `isaacgym` folder from
-        ```python
-        args = parser.parse_args()
-        ```
-        to
-        ```python
-        args, _ = parser.parse_known_args()
-        ```
+    **Note** "Change argument parser in Isaac Gym's `gymutil.py`"
+    Before installing the Aerial Gym Simulator, a change needs to be made to the Isaac Gym installation.
+    The argument parser in Isaac Gym interferes with the rest of the arguments that may be needed for other learning frameworks. This can be changed by changing line 337 of `gymutil.py` in the `isaacgym` folder from
+    ```python
+    args = parser.parse_args()
+    ```
+    to
+    ```python
+    args, _ = parser.parse_known_args()
+    ```
 1. Create workspace directory and install dependency in the conda environment
     ```bash
     mkdir -p ~/workspaces/aerial_gym_ws/src && cd ~/workspaces/aerial_gym_ws/src

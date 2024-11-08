@@ -87,9 +87,49 @@ env_configurations.register(
 )
 
 env_configurations.register(
+    "position_setpoint_task_sim2real",
+    {
+        "env_creator": lambda **kwargs: task_registry.make_task(
+            "position_setpoint_task_sim2real", **kwargs
+        ),
+        "vecenv_type": "AERIAL-RLGPU",
+    },
+)
+
+env_configurations.register(
+    "position_setpoint_task_acceleration_sim2real",
+    {
+        "env_creator": lambda **kwargs: task_registry.make_task(
+            "position_setpoint_task_acceleration_sim2real", **kwargs
+        ),
+        "vecenv_type": "AERIAL-RLGPU",
+    },
+)
+
+env_configurations.register(
     "navigation_task",
     {
         "env_creator": lambda **kwargs: task_registry.make_task("navigation_task", **kwargs),
+        "vecenv_type": "AERIAL-RLGPU",
+    },
+)
+
+env_configurations.register(
+    "position_setpoint_task_reconfigurable",
+    {
+        "env_creator": lambda **kwargs: task_registry.make_task(
+            "position_setpoint_task_reconfigurable", **kwargs
+        ),
+        "vecenv_type": "AERIAL-RLGPU",
+    },
+)
+
+env_configurations.register(
+    "position_setpoint_task_morphy",
+    {
+        "env_creator": lambda **kwargs: task_registry.make_task(
+            "position_setpoint_task_morphy", **kwargs
+        ),
         "vecenv_type": "AERIAL-RLGPU",
     },
 )

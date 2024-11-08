@@ -1,0 +1,144 @@
+diff --git a/aerial_gym/config/task_config/navigation_task_config.py b/aerial_gym/config/task_config/navigation_task_config.py
+index 9264d6d..bc29ce5 100644
+--- a/aerial_gym/config/task_config/navigation_task_config.py
++++ b/aerial_gym/config/task_config/navigation_task_config.py
+@@ -38,13 +38,13 @@ class task_config:
+         "z_action_diff_penalty_exponent": 5.0,
+         "yawrate_action_diff_penalty_magnitude": 0.8,
+         "yawrate_action_diff_penalty_exponent": 3.33,
+-        "x_absolute_action_penalty_magnitude": 1.6,
++        "x_absolute_action_penalty_magnitude": 0.1,
+         "x_absolute_action_penalty_exponent": 0.3,
+         "z_absolute_action_penalty_magnitude": 1.5,
+         "z_absolute_action_penalty_exponent": 1.0,
+         "yawrate_absolute_action_penalty_magnitude": 1.5,
+         "yawrate_absolute_action_penalty_exponent": 2.0,
+-        "collision_penalty": -20.0,
++        "collision_penalty": -100.0,
+     }
+ 
+     class vae_config:
+@@ -60,8 +60,8 @@ class task_config:
+         return_sampled_latent = True
+ 
+     class curriculum:
+-        min_level = 10
+-        max_level = 45
++        min_level = 15
++        max_level = 50
+         check_after_log_instances = 2048
+         increase_step = 2
+         decrease_step = 1
+@@ -75,6 +75,15 @@ class task_config:
+                 return max(current_level - self.decrease_step, self.min_level)
+             return current_level
+ 
++    # def action_transformation_function(action):
++    #     clamped_action = torch.clamp(action, -1.0, 1.0)
++    #     max_speed = 1.5  # [m/s]
++    #     max_yawrate = torch.pi / 3  # [rad/s]
++    #     processed_action = clamped_action.clone()
++    #     processed_action[:, 0:3] = max_speed*processed_action[:, 0:3]
++    #     processed_action[:, 3] = max_yawrate*processed_action[:, 3]
++    #     return processed_action
++    
+     def action_transformation_function(action):
+         clamped_action = torch.clamp(action, -1.0, 1.0)
+         max_speed = 2.0  # [m/s]
+diff --git a/aerial_gym/rl_training/rl_games/ppo_aerial_quad_navigation.yaml b/aerial_gym/rl_training/rl_games/ppo_aerial_quad_navigation.yaml
+index 89230d0..0da6318 100644
+--- a/aerial_gym/rl_training/rl_games/ppo_aerial_quad_navigation.yaml
++++ b/aerial_gym/rl_training/rl_games/ppo_aerial_quad_navigation.yaml
+@@ -1,5 +1,5 @@
+ params:  
+-  seed: 10
++  seed: 1122
+   algo:
+     name: a2c_continuous
+ 
+@@ -28,12 +28,12 @@ params:
+       initializer:
+         name: default
+         scale: 2
+-    rnn:
+-        name: lstm
+-        units: 32
+-        layers: 2
+-        before_mlp: False
+-        layer_norm: True
++    # rnn:
++    #     name: lstm
++    #     units: 32
++    #     layers: 1
++    #     before_mlp: False
++    #     layer_norm: True
+   config:
+     env_name: quad
+     env_config:
+diff --git a/aerial_gym/rl_training/sample_factory/aerialgym_examples/train_aerialgym.py b/aerial_gym/rl_training/sample_factory/aerialgym_examples/train_aerialgym.py
+index 84277cf..dc8d431 100644
+--- a/aerial_gym/rl_training/sample_factory/aerialgym_examples/train_aerialgym.py
++++ b/aerial_gym/rl_training/sample_factory/aerialgym_examples/train_aerialgym.py
+@@ -186,6 +186,9 @@ env_configs = dict(
+         max_grad_norm=1.0,
+         num_batches_per_epoch=4,
+         exploration_loss_coeff=0.0,
++        use_rnn=True,
++        rnn_size=64,
++        rnn_type="gru",
+         with_wandb=False,
+         wandb_project="quad",
+         wandb_user="mihirkulkarni",
+diff --git a/aerial_gym/task/navigation_task/navigation_task.py b/aerial_gym/task/navigation_task/navigation_task.py
+index a15cefe..89064d3 100644
+--- a/aerial_gym/task/navigation_task/navigation_task.py
++++ b/aerial_gym/task/navigation_task/navigation_task.py
+@@ -351,11 +351,22 @@ class NavigationTask(BaseTask):
+         )
+ 
+     def process_obs_for_task(self):
+-        self.task_obs["observations"][:, 0:3] = quat_rotate_inverse(
++        vec_to_tgt = quat_rotate_inverse(
+             self.obs_dict["robot_vehicle_orientation"],
+             (self.target_position - self.obs_dict["robot_position"]),
+         )
+-        self.task_obs["observations"][:, 3:7] = self.obs_dict["robot_vehicle_orientation"]
++        perturbed_vec_to_tgt = vec_to_tgt + 0.1*2*(torch.rand_like(vec_to_tgt-0.5))
++        dist_to_tgt = torch.norm(vec_to_tgt, dim=-1)
++        perturbed_unit_vec_to_tgt = perturbed_vec_to_tgt / dist_to_tgt.unsqueeze(1)
++        self.task_obs["observations"][:, 0:3] = perturbed_unit_vec_to_tgt
++        self.task_obs["observations"][:, 3] = dist_to_tgt
++        # self.task_obs["observation"][:, 3] = self.infos["successes"]
++        # self.task_obs["observations"][:, 3:7] = self.obs_dict["robot_vehicle_orientation"]
++        euler_angles = ssa(self.obs_dict["robot_euler_angles"])
++        perturbed_euler_angles = euler_angles + 0.1*(torch.rand_like(euler_angles)-0.5)
++        self.task_obs["observations"][:, 4] = perturbed_euler_angles[:,0]
++        self.task_obs["observations"][:, 5] = perturbed_euler_angles[:,1]
++        self.task_obs["observations"][:, 6] = 0.0
+         self.task_obs["observations"][:, 7:10] = self.obs_dict["robot_body_linvel"]
+         self.task_obs["observations"][:, 10:13] = self.obs_dict["robot_body_angvel"]
+         self.task_obs["observations"][:, 13:17] = self.obs_dict["robot_actions"]
+@@ -413,7 +424,7 @@ def compute_reward(
+     parameter_dict,
+ ):
+     # type: (Tensor, Tensor, Tensor, Tensor, Tensor, float, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
+-    MULTIPLICATION_FACTOR_REWARD = (1.0 + (2.0) * curriculum_progress_fraction) * 3.0
++    MULTIPLICATION_FACTOR_REWARD = (1.0 + (2.0) * curriculum_progress_fraction)
+     dist = torch.norm(pos_error, dim=1)
+     prev_dist_to_goal = torch.norm(prev_pos_error, dim=1)
+     pos_reward = exponential_reward_function(
+@@ -426,9 +437,11 @@ def compute_reward(
+         parameter_dict["very_close_to_goal_reward_exponent"],
+         dist,
+     )
+-    getting_closer_reward = parameter_dict["getting_closer_reward_multiplier"] * (
+-        prev_dist_to_goal - dist
+-    )
++
++    getting_closer = prev_dist_to_goal - dist
++    getting_closer_reward = torch.where(getting_closer > 0, parameter_dict["getting_closer_reward_multiplier"] * getting_closer,
++                                        2.0*parameter_dict["getting_closer_reward_multiplier"]*getting_closer)
++    
+     distance_from_goal_reward = (20.0 - dist) / 20.0
+     action_diff = action - prev_action
+     x_diff_penalty = exponential_penalty_function(

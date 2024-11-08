@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<robot name="quadrotor">
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0.0 0.0 1.57079"/>
+      <geometry>
+        <mesh scale="0.001 0.001 0.001" filename="./meshes/core_battery_transformed.stl"/>
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.18384776310850237"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.225"/>
+      <inertia ixx="0.00042249999999999997" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.00042249999999999997" iyz="0.0" izx="0.0" izy="0.0" izz="0.0008449999999999999"/>
+    </inertial>
+  </link>
+  <link name="arm_motor_0">
+    <visual>
+      <origin xyz="0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <!-- <cylinder radius="0.01" length="0.18384776310850237"/> -->
+        <mesh scale="0.001 0.001 0.001" filename="./meshes/arm_transformed.stl"/>
+      </geometry>
+      <material name="Orange">
+        <color rgba="1 0.423 0.03921568627 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <link name="connecting_link_arm0"/>
+  <joint name="base_link_to_connecting_link_0" type="revolute" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="connecting_link_arm0"/>
+    <origin xyz="0.04 -0.032 0.0" rpy="0.0 1.57079632679 -0.78539816339"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-0.25" upper="0.25" effort="20" velocity="10"/>
+  </joint>
+  <joint name="connecting_link_to_arm_motor_0" type="revolute" dont_collapse="false">
+    <parent link="connecting_link_arm0"/>
+    <child link="arm_motor_0"/>
+    <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.1" upper="0.1" effort="20.0" velocity="10.0"/>
+  </joint>
+  <link name="motor_0">
+    <!-- <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.6 0.0 0.4 1.0"/>
+      </material>
+    </visual> -->
+    <inertial>
+      <mass value="0.016249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="arm_to_motor_0" type="fixed" dont_collapse="false">
+    <parent link="arm_motor_0"/>
+    <child link="motor_0"/>
+    <origin xyz="0 0 0.07" rpy="0.0 -1.57079632679 0.0"/>
+  </joint>
+  <link name="arm_motor_1">
+    <visual>
+      <origin xyz="0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <!-- <cylinder radius="0.01" length="0.18384776310850237"/> -->
+        <mesh scale="0.001 0.001 0.001" filename="./meshes/arm_transformed.stl"/>
+      </geometry>
+      <material name="Orange">
+        <color rgba="1 0.423 0.03921568627 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0.09192388155" rpy="0 0 0"/>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <link name="connecting_link_arm1"/>
+  <joint name="base_link_to_connecting_link_1" type="revolute" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="connecting_link_arm1"/>
+    <origin xyz="-0.04 -0.032 0" rpy="0.0 1.57079632679 -2.35619449019"/> 
+    <axis xyz="0 1 0"/>
+    <limit lower="-0.25" upper="0.25" effort="20.0" velocity="10.0"/>
+  </joint>
+  <joint name="connecting_link_to_arm_motor_1" type="revolute" dont_collapse="false">
+    <parent link="connecting_link_arm1"/>
+    <child link="arm_motor_1"/>
+    <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.1" upper="0.1" effort="20.0" velocity="10.0"/>
+  </joint>
+  <link name="motor_1">
+    <!-- <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.4 0.0 0.6 1.0"/>
+      </material>
+    </visual> -->
+    <inertial>
+      <mass value="0.016249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="arm_to_motor_1" type="fixed" dont_collapse="false">
+    <parent link="arm_motor_1"/>
+    <child link="motor_1"/>
+    <origin xyz="0 0 0.07" rpy="0.0 -1.57079632679 0.0"/> 
+  </joint>
+  <link name="arm_motor_2">
+    <visual>
+      <origin xyz="0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <!-- <cylinder radius="0.01" length="0.18384776310850237"/> -->
+        <mesh scale="0.001 0.001 0.001" filename="./meshes/arm_transformed.stl"/>
+      </geometry>
+      <material name="Orange">
+        <color rgba="1 0.423 0.03921568627 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0.09192388155" rpy="0 0 0"/>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <link name="connecting_link_arm2"/>
+  <joint name="base_link_to_connecting_link_2" type="revolute" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="connecting_link_arm2"/>
+    <origin xyz="-0.04 0.032 0" rpy="0.0 1.57079632679 2.3561944901923453"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-0.25" upper="0.25" effort="20.0" velocity="10.0"/>
+  </joint>
+  <joint name="connecting_link_to_arm_motor_2" type="revolute" dont_collapse="false">
+    <parent link="connecting_link_arm2"/>
+    <child link="arm_motor_2"/>
+    <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.1" upper="0.1" effort="20.0" velocity="10.0"/>
+  </joint>
+  <link name="motor_2">
+    <!-- <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.6 0.0 0.4 1.0"/>
+      </material>
+    </visual> -->
+    <inertial>
+      <mass value="0.016249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="arm_to_motor_2" type="fixed" dont_collapse="false">
+    <parent link="arm_motor_2"/>
+    <child link="motor_2"/>
+    <origin xyz="0 0 0.07" rpy="0.0 -1.57079632679 0.0"/> 
+  </joint>
+  <link name="arm_motor_3">
+    <visual>
+      <origin xyz="0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <!-- <cylinder radius="0.01" length="0.18384776310850237"/> -->
+        <mesh scale="0.001 0.001 0.001" filename="./meshes/arm_transformed.stl"/>
+      </geometry>
+      <material name="Orange">
+        <color rgba="1 0.423 0.03921568627 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0.09192388155" rpy="0 0 0"/>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <link name="connecting_link_arm3"/>
+  <joint name="base_link_to_connecting_link_3" type="revolute" dont_collapse="false">
+    <parent link="base_link"/>
+    <child link="connecting_link_arm3"/>
+    <origin xyz="0.04 0.032 0" rpy="0.0 1.57079632679 0.7853981633974482"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-0.25" upper="0.25" effort="20.0" velocity="10.0"/>
+  </joint>
+  <joint name="connecting_link_to_arm_motor_3" type="revolute" dont_collapse="false">
+    <parent link="connecting_link_arm3"/>
+    <child link="arm_motor_3"/>
+    <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.1" upper="0.1" effort="20.0" velocity="10.0"/>
+  </joint>
+  <link name="motor_3">
+    <!-- <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.4 0.0 0.6 1.0"/>
+      </material>
+    </visual> -->
+    <inertial>
+      <mass value="0.016249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="arm_to_motor_3" type="fixed" dont_collapse="false">
+    <parent link="arm_motor_3"/>
+    <child link="motor_3"/>
+    <origin xyz="0 0 0.07" rpy="0.0 -1.57079632679 0.0"/>
+  </joint>
+</robot>

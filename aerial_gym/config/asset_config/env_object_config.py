@@ -120,6 +120,64 @@ class panel_asset_params(asset_state_params):
     color = [170, 66, 66]
 
 
+class tile_asset_params(asset_state_params):
+    num_assets = 1
+
+    asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/tile_meshes"
+
+    collision_mask = 1  # objects with the same collision mask will not collide
+
+    min_position_ratio = [0.3, 0.05, 0.05]  # max position as a ratio of the bounds
+    max_position_ratio = [0.85, 0.95, 0.95]  # min position as a ratio of the bounds
+
+    specified_position = [
+        -1000.0,
+        -1000.0,
+        -1000.0,
+    ]  # if > -900, use this value instead of randomizing   the ratios
+
+    min_euler_angles = [0.0, 0.0, 0.0]  # min euler angles
+    max_euler_angles = [0.0, 0.0, 0.0]  # max euler angles
+
+    min_state_ratio = [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    ]
+    max_state_ratio = [
+        0.5,
+        0.5,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    ]
+
+    keep_in_env = True
+
+    collapse_fixed_joints = True
+    per_link_semantic = False
+    semantic_id = -1  # will be assigned incrementally per instance
+    # color = [170, 66, 66]
+
+
 class thin_asset_params(asset_state_params):
     num_assets = 0
 

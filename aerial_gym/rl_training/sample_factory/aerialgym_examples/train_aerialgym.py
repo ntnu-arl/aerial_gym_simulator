@@ -4,11 +4,11 @@
 
 # isort: on
 
+from aerial_gym.registry.task_registry import task_registry
 import sys
 from typing import Dict, Optional, Tuple
 
 
-import isaacgym
 import gymnasium as gym
 import torch
 
@@ -21,8 +21,6 @@ from sample_factory.envs.env_utils import register_env
 from sample_factory.train import run_rl
 from sample_factory.utils.typing import Config, Env
 from sample_factory.utils.utils import str2bool
-
-from aerial_gym.registry.task_registry import task_registry
 
 
 class AerialGymVecEnv(gym.Env):
@@ -177,6 +175,10 @@ env_configs = dict(
     navigation_task=dict(
         train_for_env_steps=131000000000,
         encoder_mlp_layers=[256, 128, 64],
+        use_rnn=True,
+        rnn_num_layers=1,
+        rnn_size=64,
+        rnn_type="gru",
         gamma=0.98,
         rollout=32,
         learning_rate=1e-4,

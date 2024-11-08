@@ -46,9 +46,6 @@ class AssetManager:
         # better to leave this class to manipulate the state tensors.
 
     def reset(self, num_obstacles_per_env):
-        if num_obstacles_per_env < self.num_keep_in_env:
-            num_obstacles_per_env = self.num_keep_in_env
-
         self.reset_idx(torch.arange(self.env_asset_state_tensor.shape[0]), num_obstacles_per_env)
 
     def reset_idx(self, env_ids, num_obstacles_per_env=0):
@@ -70,6 +67,5 @@ class AssetManager:
         self.env_asset_state_tensor[env_ids, :, 3:7] = quat_from_euler_xyz_tensor(
             sampled_asset_state_ratio[env_ids, :, 3:6]
         )
-        self.env_asset_state_tensor[env_ids, :, 7:13] = sampled_asset_state_ratio[env_ids, :, 7:13]
         # put those obstacles not needed in the environment outside
         self.env_asset_state_tensor[env_ids, num_obstacles_per_env:, 0:3] = -1000.0

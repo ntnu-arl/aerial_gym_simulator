@@ -1,0 +1,57 @@
+diff --git a/aerial_gym/config/controller_config/lmf2_controller_config.py b/aerial_gym/config/controller_config/lmf2_controller_config.py
+index eadd798..bf27015 100644
+--- a/aerial_gym/config/controller_config/lmf2_controller_config.py
++++ b/aerial_gym/config/controller_config/lmf2_controller_config.py
+@@ -22,11 +22,11 @@ class control:
+     K_pos_tensor_min = [2.0, 2.0, 1.0]  # used for lee_position_control only
+ 
+     K_vel_tensor_max = [
+-        3.3,
+-        3.3,
+-        1.3,
++        3.4,
++        3.4,
++        1.7,
+     ]  # used for lee_position_control, lee_velocity_control only
+-    K_vel_tensor_min = [2.7, 2.7, 1.7]
++    K_vel_tensor_min = [2.5, 2.5, 1.2]
+ 
+     K_rot_tensor_max = [
+         1.85,
+@@ -38,8 +38,8 @@ class control:
+     K_angvel_tensor_max = [
+         0.5,
+         0.5,
+-        0.09,
++        0.12,
+     ]  # used for lee_position_control, lee_velocity_control and lee_attitude_control
+-    K_angvel_tensor_min = [0.4, 0.4, 0.075]
++    K_angvel_tensor_min = [0.4, 0.4, 0.09]
+ 
+     randomize_params = True
+diff --git a/aerial_gym/config/task_config/navigation_task_config.py b/aerial_gym/config/task_config/navigation_task_config.py
+index bc29ce5..b3b4d25 100644
+--- a/aerial_gym/config/task_config/navigation_task_config.py
++++ b/aerial_gym/config/task_config/navigation_task_config.py
+@@ -36,7 +36,7 @@ class task_config:
+         "x_action_diff_penalty_exponent": 3.333,
+         "z_action_diff_penalty_magnitude": 0.8,
+         "z_action_diff_penalty_exponent": 5.0,
+-        "yawrate_action_diff_penalty_magnitude": 0.8,
++        "yawrate_action_diff_penalty_magnitude": 1.0,
+         "yawrate_action_diff_penalty_exponent": 3.33,
+         "x_absolute_action_penalty_magnitude": 0.1,
+         "x_absolute_action_penalty_exponent": 0.3,
+diff --git a/aerial_gym/task/navigation_task/navigation_task.py b/aerial_gym/task/navigation_task/navigation_task.py
+index 89064d3..9a42677 100644
+--- a/aerial_gym/task/navigation_task/navigation_task.py
++++ b/aerial_gym/task/navigation_task/navigation_task.py
+@@ -355,7 +355,7 @@ class NavigationTask(BaseTask):
+             self.obs_dict["robot_vehicle_orientation"],
+             (self.target_position - self.obs_dict["robot_position"]),
+         )
+-        perturbed_vec_to_tgt = vec_to_tgt + 0.1*2*(torch.rand_like(vec_to_tgt-0.5))
++        perturbed_vec_to_tgt = vec_to_tgt + 0.2*2*(torch.rand_like(vec_to_tgt-0.5))
+         dist_to_tgt = torch.norm(vec_to_tgt, dim=-1)
+         perturbed_unit_vec_to_tgt = perturbed_vec_to_tgt / dist_to_tgt.unsqueeze(1)
+         self.task_obs["observations"][:, 0:3] = perturbed_unit_vec_to_tgt

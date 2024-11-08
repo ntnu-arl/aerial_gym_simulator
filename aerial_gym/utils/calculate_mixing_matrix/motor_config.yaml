@@ -1,0 +1,36 @@
+motor_0:
+    translation: [0.0785, -0.0785, 0.0]
+    orientation: [0.0, 0.0, 0.0, 1.0]
+    direction: 1.0
+    torque_constant: 0.01
+
+motor_1:
+    translation: [-0.0785, -0.0785, 0.0]
+    orientation: [0.0, 0.0, 0.0, 1.0]
+    direction: 1.0
+    torque_constant: 0.01
+
+motor_2:
+    translation: [-0.0785, 0.0785, 0.0]
+    orientation: [0.0, 0.0, 0.0, 1.0]
+    direction: -1.0
+    torque_constant: 0.01
+
+motor_3:
+    translation: [0.0785, 0.0785, 0.0]
+    orientation: [0.0, 0.0, 0.0, 1.0]
+    direction: -1.0
+    torque_constant: 0.01
+
+motor_4:
+    translation: [0, -0.0785, 0.0]
+    orientation: [0.0, 0.0, 0.0, 1.0]
+    direction: -1.0
+    torque_constant: 0.01
+
+
+motor_5:
+    translation: [0.0, 0.0785, 0.0]
+    orientation: [0.0, 0.0, 0.0, 1.0]
+    direction: 1.0
+    torque_constant: 0.01

@@ -13,7 +13,9 @@ class CustomFormatter(logging.Formatter):
     magenta = "\x1b[35m"
     cyan = "\x1b[36m"
     reset = "\x1b[0m"
-    format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+    format = (
+        "[%(relativeCreated)d ms][%(name)s] - %(levelname)s : %(message)s (%(filename)s:%(lineno)d)"
+    )
 
     FORMATS = {
         logging.DEBUG: cyan + format + reset,
@@ -38,6 +40,10 @@ class CustomLogger(Logger):
         self.ch.setLevel(logging.INFO)
         self.ch.setFormatter(CustomFormatter())
         self.addHandler(self.ch)
+
+    def setLoggerLevel(self, level) -> None:
+        self.setLevel(level)
+        self.ch.setLevel(level)
 
     def print_example_message(self):
         self.debug("A Debug message will look like this")

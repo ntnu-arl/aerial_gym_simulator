@@ -11,6 +11,7 @@ from aerial_gym.registry.sim_registry import sim_config_registry
 
 if __name__ == "__main__":
     sim_config_registry.register("base_sim_no_gravity", BaseSimNoGravityConfig)
+    logger.warning("This example demonstrates the use of geometric controllers for a rov.")
     env_manager = SimBuilder().build_env(
         sim_name="base_sim_no_gravity",
         env_name="empty_env",

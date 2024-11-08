@@ -13,10 +13,13 @@ import torch
 
 from aerial_gym.sensors.warp.warp_cam import WarpCam
 from aerial_gym.sensors.warp.warp_lidar import WarpLidar
+from aerial_gym.sensors.warp.warp_normal_faceID_cam import WarpNormalFaceIDCam
+from aerial_gym.sensors.warp.warp_normal_faceID_lidar import WarpNormalFaceIDLidar
 
-from aerial_gym.utils.logging import CustomLogger
+from aerial_gym.utils.logging import CustomLogger, logging
 
 logger = CustomLogger("WarpSensor")
+logger.setLoggerLevel(logging.INFO)
 
 
 class WarpSensor(BaseSensor):
@@ -36,6 +39,7 @@ class WarpSensor(BaseSensor):
             )
             logger.info("Lidar sensor initialized")
             logger.debug(f"Sensor config: {self.cfg.__dict__}")
+
         elif self.cfg.sensor_type == "camera":
             self.sensor = WarpCam(
                 num_envs=self.num_envs,
@@ -43,6 +47,24 @@ class WarpSensor(BaseSensor):
                 config=self.cfg,
             )
             logger.info("Camera sensor initialized")
+            logger.debug(f"Sensor config: {self.cfg.__dict__}")
+
+        elif self.cfg.sensor_type == "normal_faceID_lidar":
+            self.sensor = WarpNormalFaceIDLidar(
+                num_envs=self.num_envs,
+                mesh_ids_array=self.mesh_ids_array,
+                config=self.cfg,
+            )
+            logger.info("Normal FaceID Lidar sensor initialized")
+            logger.debug(f"Sensor config: {self.cfg.__dict__}")
+
+        elif self.cfg.sensor_type == "normal_faceID_camera":
+            self.sensor = WarpNormalFaceIDCam(
+                num_envs=self.num_envs,
+                mesh_ids_array=self.mesh_ids_array,
+                config=self.cfg,
+            )
+            logger.info("Normal FaceID Camera sensor initialized")
             logger.debug(f"Sensor config: {self.cfg.__dict__}")
 
         else:
@@ -87,6 +109,12 @@ class WarpSensor(BaseSensor):
             requires_grad=False,
         )
         self.sensor_local_orientation[..., 3] = 1.0
+        mean_euler_rotation = (self.sensor_min_rotation + self.sensor_max_rotation) / 2.0
+        self.sensor_local_orientation[:] = quat_from_euler_xyz(
+            mean_euler_rotation[..., 0],
+            mean_euler_rotation[..., 1],
+            mean_euler_rotation[..., 2],
+        )
         self.sensor_position = torch.zeros(
             (self.num_envs, self.num_sensors, 3),
             device=self.device,
@@ -157,8 +185,9 @@ class WarpSensor(BaseSensor):
         logger.debug("[DONE] Capturing sensor data")
 
         self.apply_noise()
-        self.apply_range_limits()
-        self.normalize_observation()
+        if self.cfg.sensor_type in ["camera", "lidar"]:
+            self.apply_range_limits()
+            self.normalize_observation()
 
     def apply_range_limits(self):
         if self.cfg.return_pointcloud == True:

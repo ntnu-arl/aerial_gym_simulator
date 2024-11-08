@@ -15,7 +15,10 @@ if __name__ == "__main__":
     ).to("cuda:0")
     actions[:, 0] = -1.0
     logger.info(
-        "\n\n\n\n\n\n This script provides an example of the RL task interface with a zero action command. \n\n\n\n\n\n"
+        "\n\n\n\n\n\n This script provides an example of the RL task interface with a zero action command in a cluttered environment."
+    )
+    logger.info(
+        "This is to indicate the kind of interface that is available to the RL algorithm and the users for interacting with a Task environment.\n\n\n\n\n"
     )
     with torch.no_grad():
         for i in range(10000):

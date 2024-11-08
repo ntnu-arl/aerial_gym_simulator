@@ -217,8 +217,8 @@ class PositionSetpointTask(BaseTask):
         )
         return compute_reward(
             pos_error_vehicle_frame,
-            root_quats,
             angular_velocity,
+            root_quats,
             obs_dict["crashes"],
             1.0,  # obs_dict["curriculum_level_multiplier"],
             self.actions,
@@ -260,16 +260,16 @@ def compute_reward(
 
     ups = quat_axis(robot_quats, 2)
     tiltage = torch.abs(1 - ups[..., 2])
-    up_reward = 1.0 / (1.0 + tiltage * tiltage)
+    up_reward = 0.2 / (0.1 + tiltage * tiltage)
 
     spinnage = torch.norm(robot_angvels, dim=1)
     ang_vel_reward = (1.0 / (1.0 + spinnage * spinnage)) * 10
 
     previous_action_penalty = torch.sum(
-        exp_penalty_func(current_action - prev_actions, 0.2, 10.0), dim=1
+        exp_penalty_func(current_action - prev_actions, 0.02, 10.0), dim=1
     )
 
-    absolute_action_penalty = torch.sum(exp_penalty_func(current_action, 0.5, 5.0), dim=1)
+    absolute_action_penalty = torch.sum(exp_penalty_func(current_action, 0.01, 5.0), dim=1)
 
     total_reward = (
         pos_reward + dist_reward + pos_reward * (up_reward + ang_vel_reward)

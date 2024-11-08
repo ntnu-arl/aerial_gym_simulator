@@ -6,8 +6,11 @@ from aerial_gym.config.sim_config.base_sim_headless_config import (
     BaseSimHeadlessConfig,
 )
 
+from aerial_gym.config.sim_config.sim_config_2ms import SimCfg2Ms
+
 sim_config_registry.register("base_sim", BaseSimConfig)
 sim_config_registry.register("base_sim_headless", BaseSimHeadlessConfig)
+sim_config_registry.register("base_sim_2ms", SimCfg2Ms)
 
 # Uncomment the following lines to register your custom sim config
 

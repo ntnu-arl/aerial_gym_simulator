@@ -13,8 +13,8 @@ class BaseSimConfig:
         min_range = 0.1
         horizontal_fov_deg = 90
         use_collision_geometry = False
-        camera_follow_transform_local_offset = [-1.0, 0.0, 0.2]  # m
-        camera_follow_position_global_offset = [-1.0, 0.0, 0.4]  # m
+        camera_follow_transform_local_offset = [-1.0, 0.0, 0.3]  # m
+        camera_follow_position_global_offset = [-1.0, 0.0, 0.3]  # m
 
     class sim:
         dt = 0.01
@@ -27,7 +27,7 @@ class BaseSimConfig:
             num_threads = 10
             solver_type = 1  # 0: pgs, 1: tgs
             num_position_iterations = 4
-            num_velocity_iterations = 2
+            num_velocity_iterations = 1
             contact_offset = 0.002  # [m]
             rest_offset = 0.001  # [m]
             bounce_threshold_velocity = 0.1  # 0.5 [m/s]

@@ -33,7 +33,7 @@ class ControllerRegistry:
         """
         return self.controller_configs[controller_name]
 
-    def make_controller(self, controller_name, num_envs, device):
+    def make_controller(self, controller_name, num_envs, device, mode="robot"):
         """
         Make a controller from the controller dictionary.
         """
@@ -44,7 +44,9 @@ class ControllerRegistry:
             )
         return (
             self.controller_classes[controller_name](
-                self.controller_configs[controller_name], num_envs, device
+                self.controller_configs[controller_name],
+                num_envs,
+                device,
             ),
             self.controller_configs[controller_name],
         )
