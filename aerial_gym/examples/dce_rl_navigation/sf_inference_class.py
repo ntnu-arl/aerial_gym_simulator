@@ -25,12 +25,12 @@ from torch import nn
 
 
 class NN_Inference_Class(nn.Module):
-    def __init__(self, num_envs, cfg: Config) -> None:
+    def __init__(self, num_envs, num_actions, num_obs, cfg: Config) -> None:
         super().__init__()
         self.cfg = load_from_checkpoint(cfg)
-        self.cfg.num_envs = 1
-        self.num_actions = 3
-        self.num_obs = 81
+        self.cfg.num_envs = num_envs
+        self.num_actions = num_actions
+        self.num_obs = num_obs
         self.num_agents = num_envs
         self.observation_space = spaces.Dict(
             dict(
@@ -78,7 +78,6 @@ class NN_Inference_Class(nn.Module):
         self.rnn_states[env_ids] = 0.0
 
     def get_action(self, obs, get_np=False, get_robot_zero=False):
-        start_time = time.time()
         with torch.no_grad():
             # put obs to device
             processed_obs = prepare_and_normalize_obs(self.actor_critic, obs)
@@ -98,8 +97,5 @@ class NN_Inference_Class(nn.Module):
         if get_robot_zero:
             actions = actions[0]
         if get_np:
-            actions_np = actions.cpu().numpy()
-        else:
-            actions_np = actions
-        # print("Time to get action:", time.time() - start_time)
-        return actions_np
+            return actions.cpu().numpy()
+        return actions

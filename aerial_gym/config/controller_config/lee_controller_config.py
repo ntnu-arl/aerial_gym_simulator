@@ -42,4 +42,4 @@ class control:
     ]  # used for lee_position_control, lee_velocity_control and lee_attitude_control
     K_angvel_tensor_min = [0.1, 0.1, 0.1]
 
-    randomize_params = True
+    randomize_params = False

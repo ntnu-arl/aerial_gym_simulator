@@ -28,6 +28,7 @@ class ForestEnvCfg:
         sample_timestep_for_latency = True  # sample the timestep for the latency noise
         perturb_observations = True
         keep_same_env_for_num_episodes = 1
+        write_to_sim_at_every_timestep = False  # write to sim at every timestep
 
         use_warp = True
         lower_bound_min = [-5.0, -5.0, -1.0]  # lower bound for the environment space

@@ -3,6 +3,7 @@ from aerial_gym.config.asset_config.env_object_config import (
     thin_asset_params,
     tree_asset_params,
     object_asset_params,
+    tile_asset_params,
 )
 from aerial_gym.config.asset_config.env_object_config import (
     left_wall,
@@ -37,6 +38,7 @@ class EnvWithObstaclesCfg:
         sample_timestep_for_latency = True  # sample the timestep for the latency noise
         perturb_observations = True
         keep_same_env_for_num_episodes = 1
+        write_to_sim_at_every_timestep = False  # write to sim at every timestep
 
         use_warp = True
         lower_bound_min = [-2.0, -4.0, -3.0]  # lower bound for the environment space
@@ -47,6 +49,7 @@ class EnvWithObstaclesCfg:
     class env_config:
         include_asset_type = {
             "panels": True,
+            "tiles": False,
             "thin": False,
             "trees": False,
             "objects": True,
@@ -54,7 +57,7 @@ class EnvWithObstaclesCfg:
             "right_wall": True,
             "back_wall": True,
             "front_wall": True,
-            "top_wall": False,
+            "top_wall": True,
             "bottom_wall": True,
         }
 
@@ -70,4 +73,5 @@ class EnvWithObstaclesCfg:
             "front_wall": front_wall,
             "bottom_wall": bottom_wall,
             "top_wall": top_wall,
+            "tiles": tile_asset_params,
         }

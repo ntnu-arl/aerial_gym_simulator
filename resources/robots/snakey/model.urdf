@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<robot name="quadrotor">
+  <link name="base_link"/>
+  <link name="link0">
+    <visual>
+      <origin xyz="0 0 0.0"/>
+      <geometry>
+        <box size="1.0 0.04 0.04"/>
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.9 0.04 0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.30"/>
+      <inertia ixx="0.00042249999999999997" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.00042249999999999997" iyz="0.0" izx="0.0" izy="0.0" izz="0.0008449999999999999"/>
+    </inertial>
+  </link>
+
+  <joint name="base_link_to_link0" type="fixed" dont_collapse="true">
+    <parent link="base_link"/>
+    <child link="link0"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="motor0">
+    <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.10" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.6 0.0 0.4 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.006249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+
+  <joint name="link0_to_motor0" type="fixed" dont_collapse="false">
+      <parent link="link0"/>
+      <child link="motor0"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="link1_virtual1"/>
+  <link name="link1_virtual2"/>
+  <link name="link1">
+    <visual>
+      <origin xyz="0 0 0.0"/>
+      <geometry>
+        <box size="1.0 0.04 0.04"/>
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.9 0.04 0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.30"/>
+      <inertia ixx="0.00042249999999999997" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.00042249999999999997" iyz="0.0" izx="0.0" izy="0.0" izz="0.0008449999999999999"/>
+    </inertial>
+  </link>
+
+  <joint name="link0_to_link1" type="revolute" dont_collapse="true">
+    <parent link="link0"/>
+    <child link="link1_virtual1"/>
+    <origin xyz="0.5 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.35619449019" upper="2.35619449019" effort="20.0" velocity="10.0"/>
+  </joint>
+
+  <joint name="vl_1" type="revolute" dont_collapse="true">
+    <parent link="link1_virtual1"/>
+    <child link="link1_virtual2"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.5" upper="0.5" effort="20.0" velocity="10.0"/>
+  </joint>
+
+  <joint name="link1_virtual_to_link1" type="fixed" dont_collapse="true">
+    <parent link="link1_virtual2"/>
+    <child link="link1"/>
+    <origin xyz="0.5 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="motor1">
+    <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.10" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.6 0.0 0.4 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.006249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+
+  <joint name="link1_to_motor1" type="fixed" dont_collapse="true">
+      <parent link="link1"/>
+      <child link="motor1"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="link2_virtual1"/>
+  <link name="link2_virtual2"/>
+  <link name="link2">
+    <visual>
+      <origin xyz="0 0 0.0"/>
+      <geometry>
+        <box size="1.0 0.04 0.04"/>
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.9 0.04 0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.30"/>
+      <inertia ixx="0.00042249999999999997" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.00042249999999999997" iyz="0.0" izx="0.0" izy="0.0" izz="0.0008449999999999999"/>
+    </inertial>
+  </link>
+
+  <joint name="link1_to_link2" type="revolute" dont_collapse="true">
+    <parent link="link1"/>
+    <child link="link2_virtual1"/>
+    <origin xyz="0.5 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.35619449019" upper="2.35619449019" effort="20.0" velocity="10.0"/>
+  </joint>
+
+  <joint name="vl2" type="revolute" dont_collapse="true">
+    <parent link="link2_virtual1"/>
+    <child link="link2_virtual2"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.5" upper="0.5" effort="20.0" velocity="10.0"/>
+  </joint>
+
+  <joint name="link2_virtual_to_link2" type="fixed" dont_collapse="true">
+    <parent link="link2_virtual2"/>
+    <child link="link2"/>
+    <origin xyz="0.5 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="motor2">
+    <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.10" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.6 0.0 0.4 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.006249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+
+  <joint name="link2_to_motor2" type="fixed" dont_collapse="false">
+      <parent link="link2"/>
+      <child link="motor2"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="link3_virtual1"/>
+  <link name="link3_virtual2"/>
+  <link name="link3">
+    <visual>
+      <origin xyz="0 0 0.0"/>
+      <geometry>
+        <box size="1.0 0.04 0.04"/>
+      </geometry>
+      <material name="White">
+        <color rgba="1 1 1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.9 0.04 0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.30"/>
+      <inertia ixx="0.00042249999999999997" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.00042249999999999997" iyz="0.0" izx="0.0" izy="0.0" izz="0.0008449999999999999"/>
+    </inertial>
+  </link>
+
+  <joint name="link2_to_link3" type="revolute" dont_collapse="true">
+    <parent link="link2"/>
+    <child link="link3_virtual1"/>
+    <origin xyz="0.5 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.35619449019" upper="2.35619449019" effort="20.0" velocity="10.0"/>
+  </joint>
+
+  <joint name="vl_3" type="revolute" dont_collapse="true">
+    <parent link="link3_virtual1"/>
+    <child link="link3_virtual2"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.5" upper="0.5" effort="20.0" velocity="10.0"/>
+  </joint>
+
+  <joint name="link3_virtual_to_link3" type="fixed" dont_collapse="true">
+    <parent link="link3_virtual2"/>
+    <child link="link3"/>
+    <origin xyz="0.5 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="motor3">
+    <visual>
+    <origin xyz=" 0 0 0 " rpy="0 0 0"/> 
+      <geometry>
+        <cylinder radius="0.10" length="0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0.6 0.0 0.4 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="0.006249999999999999"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyx="0.0" iyy="0.0" iyz="0.0" izx="0.0" izy="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+
+  <joint name="link3_to_motor3" type="fixed" dont_collapse="false">
+      <parent link="link3"/>
+      <child link="motor3"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+</robot>
+

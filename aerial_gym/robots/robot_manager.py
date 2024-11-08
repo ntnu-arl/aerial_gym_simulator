@@ -47,6 +47,10 @@ class RobotManagerIGE(BaseManager):
         self.robot_masses = torch.zeros(self.num_envs, device=self.device)
         self.robot_inertias = torch.zeros((self.num_envs, 3, 3), device=self.device)
 
+        self.dof_control_mode = "none"
+
+        self.dof_control_mode = "none"
+
         if self.use_warp == False:
             if self.cfg.sensor_config.enable_camera:
                 logger.debug("Initializing Isaac Gym camera sensor")
@@ -68,7 +72,21 @@ class RobotManagerIGE(BaseManager):
             logger.warning(
                 "Warp is enabled. Appropriate camera sensors will be spawned using warp."
             )
-            raise ValueError("Do not use both camera and lidar sensors together for now.")
+            logger.error(
+                "This error is here because you have enabled both camera and lidar sensors with warp."
+            )
+            logger.error(
+                "There is no reason for the simulation to kill itself really, but both have not been extensively tested together."
+            )
+            logger.error(
+                "if you really need to use both, just comment out the exception here and these lines and things should mostly work okay :) "
+            )
+            logger.error(
+                "You might need to declare another tensor for sensor data for the other sensor though because they currently use the same tensor."
+            )
+            raise ValueError(
+                "Both camera and lidar are enabled. But there is no reason for this error other than preventing undesired behaviors. Just comment out this error line and things should be okay."
+            )
 
             # Warp sensors are not instantiated here. They are prepared in the prepare_for_sim function as they require a ready environment to work with.
 
@@ -104,6 +122,8 @@ class RobotManagerIGE(BaseManager):
 
         self.actions = self.global_tensor_dict["robot_actions"]
         self.prev_actions = self.global_tensor_dict["robot_prev_actions"]
+
+        self.global_tensor_dict["dof_control_mode"] = self.dof_control_mode
 
         self.robot.init_tensors(self.global_tensor_dict)
 
@@ -405,6 +425,32 @@ class RobotManagerIGE(BaseManager):
             logger.debug(
                 "It's the same robot as before. Not calculating the inertia and mass again. Change this if your robot differs across envs."
             )
+
+        # Set drive mode for the robot for DOF control
+        props = self.gym.get_actor_dof_properties(env_handle, self.actor_handle)
+        try:
+            if len(props["driveMode"]) > 0:
+                if self.cfg.reconfiguration_config.dof_mode == "position":
+                    props["driveMode"].fill(gymapi.DOF_MODE_POS)
+                    for j_index in range(len(props["stiffness"])):
+                        props["stiffness"][j_index] = self.cfg.reconfiguration_config.stiffness[
+                            j_index
+                        ]
+                elif self.cfg.reconfiguration_config.dof_mode == "velocity":
+                    props["driveMode"].fill(gymapi.DOF_MODE_VEL)
+                    for j_index in range(len(props["damping"])):
+                        props["damping"][j_index] = self.cfg.reconfiguration_config.damping[j_index]
+                elif self.cfg.reconfiguration_config.dof_mode == "effort":
+                    props["driveMode"].fill(gymapi.DOF_MODE_EFFORT)
+                else:
+                    props["driveMode"].fill(gymapi.DOF_MODE_NONE)
+                self.dof_control_mode = self.cfg.reconfiguration_config.dof_mode
+                self.gym.set_actor_dof_properties(env_handle, self.actor_handle, props)
+        except Exception as e:
+            logger.error(
+                f"Something unexpected happened while setting parameters for the DOF modes of the robot. Please check if the correct reconfiguration_config params are set in the robot config file."
+            )
+            raise e
 
         self.robot_masses[env_id] = self.robot_mass
         self.robot_inertias[env_id] = self.robot_inertia

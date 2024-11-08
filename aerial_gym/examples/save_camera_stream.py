@@ -1,4 +1,5 @@
 import numpy as np
+import random
 from aerial_gym.utils.logging import CustomLogger
 
 logger = CustomLogger(__name__)
@@ -8,17 +9,18 @@ import matplotlib
 import torch
 
 if __name__ == "__main__":
-    logger.debug("this is how a debug message looks like")
-    logger.info("this is how an info message looks like")
-    logger.warning("this is how a warning message looks like")
-    logger.error("this is how an error message looks like")
-    logger.critical("this is how a critical message looks like")
+    logger.warning("\n\n\nEnvironment to save a depth/range and segmentation image.\n\n\n")
+
+    seed = 0
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    torch.cuda.manual_seed_all(seed)
 
     env_manager = SimBuilder().build_env(
         sim_name="base_sim",
         env_name="env_with_obstacles",  # "forest_env", #"empty_env", # empty_env
         robot_name="base_quadrotor",
-        controller_name="lee_position_control",
+        controller_name="lee_velocity_control",
         args=None,
         device="cuda:0",
         num_envs=2,
@@ -57,6 +59,10 @@ if __name__ == "__main__":
                 duration=100,
                 loop=0,
             )
+            # save each image individually
+            seg_frames[0].save(f"seg_frame_{i}.png")
+            depth_frames[0].save(f"depth_frame_{i}.png")
+            merged_image_frames[0].save(f"merged_image_frame_{i}.png")
             seg_frames = []
             depth_frames = []
             merged_image_frames = []
@@ -82,7 +88,6 @@ if __name__ == "__main__":
         # set colormap to plasma in matplotlib
         seg_image1_normalized_plasma = matplotlib.cm.plasma(seg_image1_normalized)
         seg_image1 = Image.fromarray((seg_image1_normalized_plasma * 255.0).astype(np.uint8))
-
         depth_image1 = Image.fromarray(image1)
         image_4d = np.zeros((image1.shape[0], image1.shape[1], 4))
         image_4d[:, :, 0] = image1
@@ -94,3 +99,8 @@ if __name__ == "__main__":
         seg_frames.append(seg_image1)
         depth_frames.append(depth_image1)
         merged_image_frames.append(Image.fromarray(merged_image.astype(np.uint8)))
+
+        # # save frame as png
+        # seg_image1.save(f"seg_image_{i}.png")
+        # depth_image1.save(f"depth_image_{i}.png")
+        # Image.fromarray(merged_image.astype(np.uint8)).save(f"merged_image_{i}.png")

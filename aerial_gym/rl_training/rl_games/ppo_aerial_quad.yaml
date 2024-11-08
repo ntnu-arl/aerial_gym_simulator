@@ -29,7 +29,7 @@ params:
         name: default
         scale: 2
   config:
-    env_name: quad
+    env_name: position_setpoint_task_sim2real
     env_config:
       num_envs: 8192
       
@@ -48,7 +48,7 @@ params:
     save_best_after: 10
     score_to_win: 100000
     grad_norm: 1.0
-    entropy_coef: 0
+    entropy_coef: 0.0001
     truncate_grads: True
     e_clip: 0.2
     clip_value: False
@@ -57,9 +57,9 @@ params:
     minibatch_size: 16384
     mini_epochs: 4
     critic_coef: 2
-    normalize_input: True
+    normalize_input: False
     bounds_loss_coef: 0.0001
-    max_epochs: 10000
+    max_epochs: 400
     normalize_value: True
     use_diagnostics: True
     value_bootstrap: True

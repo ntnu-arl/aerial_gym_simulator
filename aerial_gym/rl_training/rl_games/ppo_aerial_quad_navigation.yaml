@@ -28,12 +28,12 @@ params:
       initializer:
         name: default
         scale: 2
-    rnn:
-        name: lstm
-        units: 32
-        layers: 2
-        before_mlp: False
-        layer_norm: True
+    # rnn:
+    #     name: gru
+    #     units: 32
+    #     layers: 1
+    #     before_mlp: False
+    #     layer_norm: True
   config:
     env_name: quad
     env_config:
@@ -65,7 +65,7 @@ params:
     critic_coef: 2
     normalize_input: True
     bounds_loss_coef: 0.0001
-    max_epochs: 250
+    max_epochs: 500
     normalize_value: True
     use_diagnostics: True
     value_bootstrap: True

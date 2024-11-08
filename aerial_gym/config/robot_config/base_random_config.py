@@ -157,7 +157,7 @@ class BaseRandCfg:
         force_application_level = "motor_link"  # "motor_link" or "root_link" decides to apply combined forces acting on the robot at the root link or at the individual motor links
 
         application_mask = [1 + 8 + i for i in range(0, 8)]
-        motor_directions = [1, -1, 1, -1, 1, -1, 1, -1]
+        motor_directions = [-1, 1, -1, 1, -1, 1, -1, 1]
 
         allocation_matrix = [
             [
@@ -223,11 +223,19 @@ class BaseRandCfg:
         ]
 
         class motor_model_config:
-            motor_time_constant_min = 0.01
-            motor_time_constant_max = 0.03
+            use_rps = False
+            motor_thrust_constant_min = 0.00000926312
+            motor_thrust_constant_max = 0.00001826312
+            motor_time_constant_increasing_min = 0.01
+            motor_time_constant_increasing_max = 0.03
+            motor_time_constant_decreasing_min = 0.005
+            motor_time_constant_decreasing_max = 0.005
             max_thrust = 5.0
             min_thrust = -5.0
-            max_thrust_rate = 100.0
+            max_thrust_rate = 100000.0
             thrust_to_torque_ratio = (
                 0.01  # thrust to torque ratio is related to inertia matrix dont change
+            )
+            use_discrete_approximation = (
+                True  # Setting to false will compute f' based on difference and time constant
             )

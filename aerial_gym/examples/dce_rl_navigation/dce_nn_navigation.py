@@ -118,7 +118,7 @@ def get_network(num_envs):
     # register_aerialgym_custom_components()
     cfg = parse_aerialgym_cfg(evaluation=True)
     print("CFG is:", cfg)
-    nn_model = NN_Inference_Class(num_envs, cfg)
+    nn_model = NN_Inference_Class(num_envs, 3, 81, cfg)
     return nn_model
 
 

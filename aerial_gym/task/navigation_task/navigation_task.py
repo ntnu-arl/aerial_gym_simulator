@@ -115,7 +115,13 @@ class NavigationTask(BaseTask):
                     high=1.0,
                     shape=(self.task_config.observation_space_dim,),
                     dtype=np.float32,
-                )
+                ),
+                "image_obs": Box(
+                    low=-1.0,
+                    high=1.0,
+                    shape=(1, 135, 240),
+                    dtype=np.float32,
+                ),
             }
         )
         self.action_space = Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)
@@ -268,7 +274,8 @@ class NavigationTask(BaseTask):
 
     def process_image_observation(self):
         image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)
-        self.image_latents[:] = self.vae_model.encode(image_obs)
+        if self.task_config.vae_config.use_vae:
+            self.image_latents[:] = self.vae_model.encode(image_obs)
         # # comments to make sure the VAE does as expected
         # decoded_image = self.vae_model.decode(self.image_latents[0].unsqueeze(0))
         # image0 = image_obs[0].cpu().numpy()
@@ -336,9 +343,18 @@ class NavigationTask(BaseTask):
         self.num_task_steps += 1
         # do stuff with the image observations here
         self.process_image_observation()
+        self.post_image_reward_addition()
         if self.task_config.return_state_before_reset == False:
             return_tuple = self.get_return_tuple()
         return return_tuple
+
+    def post_image_reward_addition(self):
+        image_obs = 10.0 * self.obs_dict["depth_range_pixels"].squeeze(1)
+        image_obs[image_obs < 0] = 10.0
+        self.min_pixel_dist = torch.amin(image_obs, dim=(1, 2))
+        self.rewards[self.terminations < 0] += -exponential_reward_function(
+            4.0, 1.0, self.min_pixel_dist[self.terminations < 0]
+        )
 
     def get_return_tuple(self):
         self.process_obs_for_task()
@@ -351,18 +367,32 @@ class NavigationTask(BaseTask):
         )
 
     def process_obs_for_task(self):
-        self.task_obs["observations"][:, 0:3] = quat_rotate_inverse(
+        vec_to_tgt = quat_rotate_inverse(
             self.obs_dict["robot_vehicle_orientation"],
             (self.target_position - self.obs_dict["robot_position"]),
         )
-        self.task_obs["observations"][:, 3:7] = self.obs_dict["robot_vehicle_orientation"]
+        perturbed_vec_to_tgt = vec_to_tgt + 0.1 * 2 * (torch.rand_like(vec_to_tgt - 0.5))
+        dist_to_tgt = torch.norm(vec_to_tgt, dim=-1)
+        perturbed_unit_vec_to_tgt = perturbed_vec_to_tgt / dist_to_tgt.unsqueeze(1)
+        self.task_obs["observations"][:, 0:3] = perturbed_unit_vec_to_tgt
+        self.task_obs["observations"][:, 3] = dist_to_tgt
+        # self.task_obs["observation"][:, 3] = self.infos["successes"]
+        # self.task_obs["observations"][:, 3:7] = self.obs_dict["robot_vehicle_orientation"]
+        euler_angles = ssa(self.obs_dict["robot_euler_angles"])
+        perturbed_euler_angles = euler_angles + 0.1 * (torch.rand_like(euler_angles) - 0.5)
+        self.task_obs["observations"][:, 4] = perturbed_euler_angles[:, 0]
+        self.task_obs["observations"][:, 5] = perturbed_euler_angles[:, 1]
+        self.task_obs["observations"][:, 6] = 0.0
         self.task_obs["observations"][:, 7:10] = self.obs_dict["robot_body_linvel"]
         self.task_obs["observations"][:, 10:13] = self.obs_dict["robot_body_angvel"]
         self.task_obs["observations"][:, 13:17] = self.obs_dict["robot_actions"]
-        self.task_obs["observations"][:, 17:] = self.image_latents
+        if self.task_config.vae_config.use_vae:
+            self.task_obs["observations"][:, 17:] = self.image_latents
         self.task_obs["rewards"] = self.rewards
         self.task_obs["terminations"] = self.terminations
         self.task_obs["truncations"] = self.truncations
+
+        self.task_obs["image_obs"] = self.obs_dict["depth_range_pixels"]
 
     def compute_rewards_and_crashes(self, obs_dict):
         robot_position = obs_dict["robot_position"]
@@ -413,7 +443,7 @@ def compute_reward(
     parameter_dict,
 ):
     # type: (Tensor, Tensor, Tensor, Tensor, Tensor, float, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
-    MULTIPLICATION_FACTOR_REWARD = (1.0 + (2.0) * curriculum_progress_fraction) * 3.0
+    MULTIPLICATION_FACTOR_REWARD = 1.0 + (2.0) * curriculum_progress_fraction
     dist = torch.norm(pos_error, dim=1)
     prev_dist_to_goal = torch.norm(prev_pos_error, dim=1)
     pos_reward = exponential_reward_function(
@@ -426,9 +456,14 @@ def compute_reward(
         parameter_dict["very_close_to_goal_reward_exponent"],
         dist,
     )
-    getting_closer_reward = parameter_dict["getting_closer_reward_multiplier"] * (
-        prev_dist_to_goal - dist
+
+    getting_closer = prev_dist_to_goal - dist
+    getting_closer_reward = torch.where(
+        getting_closer > 0,
+        parameter_dict["getting_closer_reward_multiplier"] * getting_closer,
+        2.0 * parameter_dict["getting_closer_reward_multiplier"] * getting_closer,
     )
+
     distance_from_goal_reward = (20.0 - dist) / 20.0
     action_diff = action - prev_action
     x_diff_penalty = exponential_penalty_function(

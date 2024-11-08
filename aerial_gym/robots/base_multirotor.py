@@ -284,7 +284,7 @@ class BaseMultirotor(BaseRobot):
         self.robot_torque_tensors[:, 0, 0:3] += self.robot_body_angvel_drag
 
     def update_states(self):
-        self.robot_euler_angles[:] = get_euler_xyz_tensor(self.robot_orientation)
+        self.robot_euler_angles[:] = ssa(get_euler_xyz_tensor(self.robot_orientation))
         self.robot_vehicle_orientation[:] = vehicle_frame_quat_from_quat(self.robot_orientation)
         self.robot_vehicle_linvel[:] = quat_rotate_inverse(
             self.robot_vehicle_orientation, self.robot_linvel

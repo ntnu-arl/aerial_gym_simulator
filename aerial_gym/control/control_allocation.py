@@ -56,7 +56,6 @@ class ControlAllocator:
             else:
                 motor_thrusts = self.update_motor_thrusts_with_wrench(command)
             forces, torques = self.calc_motor_forces_torques_from_thrusts(motor_thrusts)
-            torques = torques * self.motor_directions[None, :, None]
 
         else:
             output_wrench = self.update_wrench(command)
@@ -111,7 +110,7 @@ class ControlAllocator:
             dim=2,
         )
         cq = self.cfg.motor_model_config.thrust_to_torque_ratio
-        motor_torques = cq * motor_forces
+        motor_torques = cq * motor_forces * (-self.motor_directions[None, :, None])
         return motor_forces, motor_torques
 
     def set_single_allocation_matrix(self, alloc_matrix):

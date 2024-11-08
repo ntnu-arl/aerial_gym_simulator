@@ -20,8 +20,8 @@ class BaseLeeController(BaseController):
     It will be inherited by the specific controller classes.
     """
 
-    def __init__(self, control_config, num_envs, device):
-        super().__init__(control_config, num_envs, device)
+    def __init__(self, control_config, num_envs, device, mode="robot"):
+        super().__init__(control_config, num_envs, device, mode)
         self.cfg = control_config
         self.num_envs = num_envs
         self.device = device

@@ -5,6 +5,7 @@ from aerial_gym.env_manager.asset_manager import AssetManager
 from aerial_gym.env_manager.warp_env_manager import WarpEnv
 from aerial_gym.env_manager.asset_loader import AssetLoader
 from aerial_gym.robots.robot_manager import RobotManagerIGE
+from aerial_gym.env_manager.obstacle_manager import ObstacleManager
 
 
 from aerial_gym.registry.env_registry import env_config_registry
@@ -160,19 +161,11 @@ class EnvManager(BaseManager):
 
         self.num_env_actions = self.cfg.env.num_env_actions
         self.global_tensor_dict["num_env_actions"] = self.num_env_actions
-        self.global_tensor_dict["env_actions"] = torch.zeros(
-            (self.num_envs, self.cfg.env.num_env_actions),
-            device=self.device,
-            requires_grad=False,
-        )
-        self.global_tensor_dict["prev_env_actions"] = torch.zeros_like(
-            self.global_tensor_dict["env_actions"]
-        )
+        self.global_tensor_dict["env_actions"] = None
+        self.global_tensor_dict["prev_env_actions"] = None
 
         self.collision_tensor = self.global_tensor_dict["crashes"]
         self.truncation_tensor = self.global_tensor_dict["truncations"]
-        self.env_actions = self.global_tensor_dict["env_actions"]
-        self.prev_env_actions = self.global_tensor_dict["prev_env_actions"]
 
         # Before we populate the environment, we need to create the ground plane
         if self.cfg.env.create_ground_plane:
@@ -271,6 +264,10 @@ class EnvManager(BaseManager):
         self.asset_manager = AssetManager(self.global_tensor_dict, self.keep_in_env)
         self.asset_manager.prepare_for_sim()
         self.robot_manager.prepare_for_sim(self.global_tensor_dict)
+        self.obstacle_manager = ObstacleManager(
+            self.IGE_env.num_assets_per_env, self.cfg, self.device
+        )
+        self.obstacle_manager.prepare_for_sim(self.global_tensor_dict)
         self.num_robot_actions = self.global_tensor_dict["num_robot_actions"]
 
     def reset_idx(self, env_ids=None):
@@ -315,11 +312,13 @@ class EnvManager(BaseManager):
     def reset(self):
         self.reset_idx(env_ids=torch.arange(self.cfg.env.num_envs))
 
-    def pre_physics_step(self, actions):
+    def pre_physics_step(self, actions, env_actions):
         # first let the robot compute the actions
         self.robot_manager.pre_physics_step(actions)
         # then the asset manager applies the actions here
-        self.asset_manager.pre_physics_step(actions)
+        self.asset_manager.pre_physics_step(env_actions)
+        # apply actions to obstacle manager
+        self.obstacle_manager.pre_physics_step(env_actions)
         # then the simulator applies them here
         self.IGE_env.pre_physics_step(actions)
         # if warp is used, the warp environment applies the actions here
@@ -331,12 +330,12 @@ class EnvManager(BaseManager):
         self.collision_tensor[:] = 0
         self.truncation_tensor[:] = 0
 
-    def simulate(self, actions):
-        self.pre_physics_step(actions)
+    def simulate(self, actions, env_actions):
+        self.pre_physics_step(actions, env_actions)
         self.IGE_env.physics_step()
-        self.post_physics_step(actions)
+        self.post_physics_step(actions, env_actions)
 
-    def post_physics_step(self, actions):
+    def post_physics_step(self, actions, env_actions):
         self.IGE_env.post_physics_step()
         self.robot_manager.post_physics_step()
         if self.use_warp:
@@ -392,8 +391,16 @@ class EnvManager(BaseManager):
         """
         self.reset_tensors()
         if env_actions is not None:
+            if self.global_tensor_dict["env_actions"] is None:
+                self.global_tensor_dict["env_actions"] = env_actions
+                self.global_tensor_dict["prev_env_actions"] = env_actions
+                self.prev_env_actions = self.global_tensor_dict["prev_env_actions"]
+                self.env_actions = self.global_tensor_dict["env_actions"]
+            logger.warning(
+                f"Env actions shape: {env_actions.shape}, Previous env actions shape: {self.env_actions.shape}"
+            )
             self.prev_env_actions[:] = self.env_actions
-            self.env_actions = env_actions
+            self.env_actions[:] = env_actions
         num_physics_step_per_env_step = max(
             math.floor(
                 random.gauss(
@@ -404,7 +411,7 @@ class EnvManager(BaseManager):
             0,
         )
         for timestep in range(num_physics_step_per_env_step):
-            self.simulate(actions)
+            self.simulate(actions, env_actions)
             self.compute_observations()
         self.sim_steps[:] = self.sim_steps[:] + 1
         self.step_counter += 1

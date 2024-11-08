@@ -1,7 +1,7 @@
 from aerial_gym.config.sensor_config.imu_config.base_imu_config import BaseImuConfig
 
 
-class imu_config(BaseImuConfig):
+class VN100Config(BaseImuConfig):
     num_sensors = 1  # number of sensors of this type. More than 1 sensor on the same link don't make sense. Can be implemented if needed for multiple different links.
 
     sensor_type = "imu"  # sensor type
@@ -22,12 +22,12 @@ class imu_config(BaseImuConfig):
         2.6541629581345176e-05,
     ]  # first 3 values for acc bias std, next 3 for gyro bias std
     imu_noise_std = [
-        0.001688956233495657,
-        0.001688956233495657,
-        0.001688956233495657,
-        0.0010679343003532472,
-        0.0010679343003532472,
-        0.0010679343003532472,
+        0.001372931,
+        0.001372931,
+        0.001372931,
+        6.108652381980153e-05,
+        6.108652381980153e-05,
+        6.108652381980153e-05,
     ]  # first 3 vaues for acc noise std, next 3 for gyro noise std
     max_measurement_value = [
         100.0,

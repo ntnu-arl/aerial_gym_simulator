@@ -158,6 +158,12 @@ def get_euler_xyz_tensor(q):
     )
 
 
+@torch.jit.script_if_tracing
+def ssa(a: torch.Tensor) -> torch.Tensor:
+    """Smallest signed angle"""
+    return torch.remainder(a + torch.pi, 2 * torch.pi) - torch.pi
+
+
 @torch.jit.script
 def quat_from_euler_xyz_tensor(euler_xyz_tensor: torch.Tensor) -> torch.Tensor:
     roll = euler_xyz_tensor[..., 0]
@@ -395,3 +401,13 @@ def tf_combine(q1, t1, q2, t2):
 @torch.jit.script
 def get_basis_vector(q, v):
     return quat_rotate(q, v)
+
+
+@torch.jit.script
+def pd_control(
+    pos_error,
+    vel_error,
+    stiffness,
+    damping,
+):
+    return stiffness * pos_error + damping * vel_error
