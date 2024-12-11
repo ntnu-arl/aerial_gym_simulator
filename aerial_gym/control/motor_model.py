@@ -10,8 +10,12 @@ class MotorModel:
         self.cfg = config
         self.device = device
         self.num_motors_per_robot = motors_per_robot
-        self.max_thrust = self.cfg.max_thrust
-        self.min_thrust = self.cfg.min_thrust
+        self.max_thrust = torch.tensor(self.cfg.max_thrust, device=self.device, dtype=torch.float32).expand(
+            self.num_envs, self.num_motors_per_robot
+        )
+        self.min_thrust = torch.tensor(self.cfg.min_thrust, device=self.device, dtype=torch.float32).expand(
+            self.num_envs, self.num_motors_per_robot
+        )
         self.motor_time_constant_increasing_min = torch.tensor(
             self.cfg.motor_time_constant_increasing_min, device=self.device
         ).expand(self.num_envs, self.num_motors_per_robot)
@@ -118,9 +122,6 @@ class MotorModel:
             self.motor_thrust_constant[env_ids] = torch_rand_float_tensor(
                 self.motor_thrust_constant_min, self.motor_thrust_constant_max
             )[env_ids]
-        self.first_order_linear_mixing_factor[env_ids] = self.mixing_factor_function(
-            self.dt, self.motor_time_constants
-        )[env_ids]
 
     def reset(self):
         self.reset_idx(torch.arange(self.num_envs, device=self.device))

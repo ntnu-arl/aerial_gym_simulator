@@ -199,6 +199,7 @@ class BaseMultirotor(BaseRobot):
         self.robot_state[env_ids, 10:13] = random_state[env_ids, 10:13]
 
         self.controller.randomize_params(env_ids=env_ids)
+        self.control_allocator.reset_idx(env_ids)
 
         # update the states after resetting because the RL agent gets the first state after reset
         self.update_states()

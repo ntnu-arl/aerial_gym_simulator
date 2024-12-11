@@ -436,6 +436,9 @@ class RobotManagerIGE(BaseManager):
                         props["stiffness"][j_index] = self.cfg.reconfiguration_config.stiffness[
                             j_index
                         ]
+                        props["damping"][j_index] = self.cfg.reconfiguration_config.damping[
+                            j_index
+                        ]
                 elif self.cfg.reconfiguration_config.dof_mode == "velocity":
                     props["driveMode"].fill(gymapi.DOF_MODE_VEL)
                     for j_index in range(len(props["damping"])):

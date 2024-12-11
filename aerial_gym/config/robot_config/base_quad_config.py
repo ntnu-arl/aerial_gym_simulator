@@ -168,16 +168,16 @@ class BaseQuadCfg:
         ]
 
         class motor_model_config:
-            use_rps = True
+            use_rps = False
 
             motor_thrust_constant_min = 0.00000926312
             motor_thrust_constant_max = 0.00001826312
 
-            motor_time_constant_increasing_min = 0.09
-            motor_time_constant_increasing_max = 0.12
+            motor_time_constant_increasing_min = 0.03
+            motor_time_constant_increasing_max = 0.03
 
-            motor_time_constant_decreasing_min = 0.03
-            motor_time_constant_decreasing_max = 0.05
+            motor_time_constant_decreasing_min = 0.04
+            motor_time_constant_decreasing_max = 0.04
 
             max_thrust = 2
             min_thrust = 0
@@ -185,5 +185,5 @@ class BaseQuadCfg:
             max_thrust_rate = 100000.0
             thrust_to_torque_ratio = 0.01
             use_discrete_approximation = (
-                False  # Setting to false will compute f' based on difference and time constant
+                True  # Setting to false will compute f' based on difference and time constant
             )
