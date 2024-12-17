@@ -178,8 +178,8 @@ def compute_reward(
 
     action_difference = prev_actions - current_action
 
-    absolute_action_reward = -0.15 * torch.sum((current_action[:, :4] - 0.711225) ** 2, dim=1)
-    action_difference_reward = torch.sum(exp_penalty_func(action_difference, 0.3, 10.0), dim=1)
+    absolute_action_reward = -0.05 * torch.sum((current_action[:, :4] - 0.711225) ** 2, dim=1)
+    action_difference_reward = torch.sum(exp_penalty_func(action_difference, 0.2, 5.0), dim=1)
 
     joint_vel_reward = torch.sum(exp_penalty_func(joint_vels, 0.30, 30.0), dim=1)
 

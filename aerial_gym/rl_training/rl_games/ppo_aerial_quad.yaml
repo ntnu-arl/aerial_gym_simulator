@@ -52,9 +52,9 @@ params:
     truncate_grads: True
     e_clip: 0.2
     clip_value: False
-    num_actors: 8192
-    horizon_length: 16
-    minibatch_size: 16384
+    num_actors: 4096
+    horizon_length: 32
+    minibatch_size: 8192
     mini_epochs: 4
     critic_coef: 2
     normalize_input: False
