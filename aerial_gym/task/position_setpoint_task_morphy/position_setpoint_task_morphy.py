@@ -163,7 +163,7 @@ def compute_reward(
     # type: (Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, float, Tensor, Tensor, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
 
     dist = torch.norm(pos_error, dim=1)
-    pos_reward = exp_func(dist, 4.0, 12.0) + exp_func(dist, 0.5, 2.0)
+    pos_reward = exp_func(dist, 4.0, 12.0) + exp_func(dist, 1.0, 3.0)
     dist_reward = (20 - dist) / 40.0  # 40
 
     ups = quat_axis(robot_quats, 2)
@@ -178,7 +178,7 @@ def compute_reward(
 
     action_difference = prev_actions - current_action
 
-    absolute_action_reward = -0.05 * torch.sum((current_action[:, :4] - 0.711225) ** 2, dim=1)
+    absolute_action_reward = -0.15 * torch.sum((current_action[:, :4] - 0.711225) ** 2, dim=1)
     action_difference_reward = torch.sum(exp_penalty_func(action_difference, 0.2, 5.0), dim=1)
 
     joint_vel_reward = torch.sum(exp_penalty_func(joint_vels, 0.30, 30.0), dim=1)
