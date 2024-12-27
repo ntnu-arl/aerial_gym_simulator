@@ -6,6 +6,7 @@ from aerial_gym.sim.sim_builder import SimBuilder
 from PIL import Image
 import matplotlib
 import torch
+import os, random
 
 seed = 0
 
@@ -15,11 +16,16 @@ if __name__ == "__main__":
     torch.manual_seed(seed)
     np.random.seed(seed)
     torch.cuda.manual_seed_all(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    random.seed(seed)
+    logger.critical("Setting seed: {}".format(seed))
+
+
 
     env_manager = SimBuilder().build_env(
         sim_name="base_sim",
         env_name="forest_env",  # "forest_env", #"empty_env", # empty_env
-        robot_name="base_quadrotor",
+        robot_name="base_quadrotor_with_faceid_normal_camera",
         controller_name="lee_velocity_control",
         args=None,
         device="cuda:0",
@@ -92,11 +98,25 @@ if __name__ == "__main__":
         seg_image1_normalized = (seg_image1 - seg_image1.min()) / (
             seg_image1.max() - seg_image1.min()
         )
+        
+        # discretize image for better visualization
+
+        seg_image1_normalized_int = (255.0 * seg_image1_normalized).astype(np.uint8)
+        seg1_image_normalized_discrete = 25 *np.mod(seg_image1_normalized_int, 10).astype(np.uint8)
 
         # set colormap to plasma in matplotlib
-        seg_image1_normalized_plasma = matplotlib.cm.plasma(seg_image1_normalized)
-        seg_image1_plasma_int = (255.0 * seg_image1_normalized_plasma).astype(np.uint8)
-        mod_image = 10 * np.mod(seg_image1_plasma_int, 25).astype(np.uint8)
+        seg_image1_normalized_plasma = matplotlib.cm.plasma(seg1_image_normalized_discrete/255.0)
+        mod_image = (255.0*seg_image1_normalized_plasma).astype(np.uint8)
+
+
+        # # set colormap to plasma in matplotlib
+        # seg_image1_normalized_plasma = matplotlib.cm.plasma(seg_image1_normalized)
+        # seg_image1_plasma_int = (255.0 * seg_image1_normalized_plasma).astype(np.uint8)
+        # # print unique values in seg_image1_normalized and their count
+        # print(np.unique(seg_image1_plasma_int), np.unique(seg_image1_plasma_int).shape)
+        # mod_image = 10 * np.mod(seg_image1_plasma_int, 26).astype(np.uint8)
+        
+        
         # set channel to opaque
         mod_image[:, :, 3] = 255
         seg_image1_discrete = Image.fromarray(mod_image)

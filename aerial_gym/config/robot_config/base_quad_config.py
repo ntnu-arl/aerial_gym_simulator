@@ -187,3 +187,33 @@ class BaseQuadCfg:
             use_discrete_approximation = (
                 True  # Setting to false will compute f' based on difference and time constant
             )
+
+class BaseQuadWithImuCfg(BaseQuadCfg):
+    class sensor_config:
+        enable_imu = True
+        imu_config = BaseImuConfig
+
+
+class BaseQuadWithCameraCfg(BaseQuadCfg):
+    class sensor_config:
+        enable_camera = True
+        camera_config = BaseDepthCameraConfig
+
+class BaseQuadWithCameraImuCfg(BaseQuadCfg):
+    class sensor_config:
+        enable_camera = True
+        camera_config = BaseDepthCameraConfig
+
+        enable_imu = True
+        imu_config = BaseImuConfig
+
+class BaseQuadWithLidarCfg(BaseQuadCfg):
+    class sensor_config:
+        enable_lidar = True
+        lidar_config = BaseLidarConfig
+
+class BaseQuadWithFaceIDNormalCameraCfg(BaseQuadCfg):
+    class sensor_config:
+        enable_camera = True
+        camera_config = BaseNormalFaceIDCameraConfig
+

@@ -25,6 +25,13 @@ from aerial_gym.robots.morphy import Morphy
 # get robot registry
 from aerial_gym.registry.robot_registry import robot_registry
 
+from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithImuCfg
+from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithCameraImuCfg
+from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithLidarCfg
+from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithFaceIDNormalCameraCfg
+
+
+
 # register the robot classes here
 robot_registry.register("base_quadrotor", BaseMultirotor, BaseQuadCfg)
 robot_registry.register("base_octarotor", BaseMultirotor, BaseOctarotorCfg)
@@ -38,3 +45,12 @@ robot_registry.register("snakey5", BaseReconfigurable, Snakey5Cfg)
 robot_registry.register("snakey6", BaseReconfigurable, Snakey6Cfg)
 robot_registry.register("base_rov", BaseROV, BaseROVCfg)
 robot_registry.register("lmf2", BaseMultirotor, LMF2Cfg)
+
+
+# register the special robot classes here for working with the examples
+robot_registry.register("base_quadrotor_with_imu", BaseMultirotor, BaseQuadWithImuCfg)
+robot_registry.register("base_quadrotor_with_camera", BaseMultirotor, BaseQuadWithCameraCfg)
+robot_registry.register("base_quadrotor_with_camera_imu", BaseMultirotor, BaseQuadWithCameraImuCfg)
+robot_registry.register("base_quadrotor_with_lidar", BaseMultirotor, BaseQuadWithLidarCfg)
+robot_registry.register("base_quadrotor_with_faceid_normal_camera", BaseMultirotor, BaseQuadWithFaceIDNormalCameraCfg)
+

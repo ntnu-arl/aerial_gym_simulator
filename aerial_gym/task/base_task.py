@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import time, torch, os, numpy as np
 
 from aerial_gym.utils.logging import CustomLogger
-
+import random
 logger = CustomLogger("base_task")
 
 
@@ -33,6 +33,7 @@ class BaseTask(ABC):
         torch.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
         os.environ["PYTHONHASHSEED"] = str(seed)
+        random.seed(seed)
 
         logger.info("Setting seed: {}".format(seed))
 

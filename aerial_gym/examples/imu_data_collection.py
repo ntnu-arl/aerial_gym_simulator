@@ -16,7 +16,7 @@ if __name__ == "__main__":
     env_manager = SimBuilder().build_env(
         sim_name="base_sim_no_gravity",
         env_name="empty_env",
-        robot_name="base_quadrotor",
+        robot_name="base_quadrotor_with_imu",
         controller_name="lee_velocity_control",
         args=None,
         device="cuda:0",

@@ -7,6 +7,7 @@ from aerial_gym.sim.sim_builder import SimBuilder
 from PIL import Image
 import matplotlib
 import torch
+import random
 
 if __name__ == "__main__":
     logger.warning("\n\n\nEnvironment to save a depth/range and segmentation image.\n\n\n")
@@ -15,11 +16,12 @@ if __name__ == "__main__":
     torch.manual_seed(seed)
     np.random.seed(seed)
     torch.cuda.manual_seed_all(seed)
+    random.seed(seed)
 
     env_manager = SimBuilder().build_env(
         sim_name="base_sim",
         env_name="env_with_obstacles",  # "forest_env", #"empty_env", # empty_env
-        robot_name="base_quadrotor",
+        robot_name="base_quadrotor_with_camera",
         controller_name="lee_velocity_control",
         args=None,
         device="cuda:0",
