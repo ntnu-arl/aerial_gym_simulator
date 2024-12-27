@@ -7,6 +7,7 @@ import isaacgym
 
 
 from aerial_gym.registry.task_registry import task_registry
+from aerial_gym.utils.helpers import parse_arguments
 
 import gym
 from gym import spaces
@@ -249,7 +250,7 @@ def get_args():
     ]
 
     # parse arguments
-    args = gymutil.parse_arguments(description="RL Policy", custom_parameters=custom_parameters)
+    args = parse_arguments(description="RL Policy", custom_parameters=custom_parameters)
 
     # name allignment
     args.sim_device_id = args.compute_device_id

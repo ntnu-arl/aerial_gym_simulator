@@ -43,6 +43,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 
 from aerial_gym.registry.task_registry import task_registry
+from aerial_gym.utils.helpers import parse_arguments
 
 
 def get_args():
@@ -219,7 +220,7 @@ def get_args():
     ]
 
     # parse arguments
-    args = gymutil.parse_arguments(description="RL Policy", custom_parameters=custom_parameters)
+    args = parse_arguments(description="RL Policy", custom_parameters=custom_parameters)
 
     args.batch_size = int(args.num_envs * args.num_steps)
     args.minibatch_size = int(args.batch_size // args.num_minibatches)
