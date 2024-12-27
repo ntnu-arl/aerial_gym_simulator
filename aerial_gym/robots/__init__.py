@@ -26,6 +26,7 @@ from aerial_gym.robots.morphy import Morphy
 from aerial_gym.registry.robot_registry import robot_registry
 
 from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithImuCfg
+from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithCameraCfg
 from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithCameraImuCfg
 from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithLidarCfg
 from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithFaceIDNormalCameraCfg

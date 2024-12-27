@@ -102,7 +102,7 @@ if __name__ == "__main__":
         # discretize image for better visualization
 
         seg_image1_normalized_int = (255.0 * seg_image1_normalized).astype(np.uint8)
-        seg1_image_normalized_discrete = 25 *np.mod(seg_image1_normalized_int, 10).astype(np.uint8)
+        seg1_image_normalized_discrete = 25 * (np.mod(seg_image1_normalized_int, 11)).astype(np.uint8)
 
         # set colormap to plasma in matplotlib
         seg_image1_normalized_plasma = matplotlib.cm.plasma(seg1_image_normalized_discrete/255.0)

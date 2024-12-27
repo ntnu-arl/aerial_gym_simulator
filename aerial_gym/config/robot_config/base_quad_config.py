@@ -189,18 +189,18 @@ class BaseQuadCfg:
             )
 
 class BaseQuadWithImuCfg(BaseQuadCfg):
-    class sensor_config:
+    class sensor_config(BaseQuadCfg.sensor_config):
         enable_imu = True
         imu_config = BaseImuConfig
 
 
 class BaseQuadWithCameraCfg(BaseQuadCfg):
-    class sensor_config:
+    class sensor_config(BaseQuadCfg.sensor_config):
         enable_camera = True
         camera_config = BaseDepthCameraConfig
 
 class BaseQuadWithCameraImuCfg(BaseQuadCfg):
-    class sensor_config:
+    class sensor_config(BaseQuadCfg.sensor_config):
         enable_camera = True
         camera_config = BaseDepthCameraConfig
 
@@ -208,12 +208,12 @@ class BaseQuadWithCameraImuCfg(BaseQuadCfg):
         imu_config = BaseImuConfig
 
 class BaseQuadWithLidarCfg(BaseQuadCfg):
-    class sensor_config:
+    class sensor_config(BaseQuadCfg.sensor_config):
         enable_lidar = True
         lidar_config = BaseLidarConfig
 
 class BaseQuadWithFaceIDNormalCameraCfg(BaseQuadCfg):
-    class sensor_config:
+    class sensor_config(BaseQuadCfg.sensor_config):
         enable_camera = True
         camera_config = BaseNormalFaceIDCameraConfig
 

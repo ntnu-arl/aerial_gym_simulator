@@ -71,7 +71,7 @@
     # or over HTTPS
     # git clone https://github.com/ntnu-arl/aerial_gym_simulator.git
 
-    cd aerial_gym
+    cd aerial_gym_simulator
     pip3 install -e .
     ```
 1. Test an example environment
