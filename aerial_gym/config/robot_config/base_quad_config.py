@@ -14,6 +14,11 @@ from aerial_gym.config.sensor_config.camera_config.base_normal_faceID_camera_con
 )
 
 
+from aerial_gym.config.sensor_config.camera_config.stereo_camera_config import (
+    StereoCameraConfig,
+)
+
+
 from aerial_gym.config.sensor_config.lidar_config.osdome_64_config import OSDome_64_Config
 from aerial_gym.config.sensor_config.imu_config.base_imu_config import BaseImuConfig
 
@@ -216,4 +221,9 @@ class BaseQuadWithFaceIDNormalCameraCfg(BaseQuadCfg):
     class sensor_config(BaseQuadCfg.sensor_config):
         enable_camera = True
         camera_config = BaseNormalFaceIDCameraConfig
+
+class BaseQuadWithStereoCameraCfg(BaseQuadCfg):
+    class sensor_config(BaseQuadCfg.sensor_config):
+        enable_camera = True
+        camera_config = StereoCameraConfig
 

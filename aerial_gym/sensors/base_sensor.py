@@ -24,7 +24,7 @@ class BaseSensor(ABC):
         self.sqrt_dt = math.sqrt(self.dt)
         self.robot_masses = global_tensor_dict["robot_mass"]
 
-        if self.cfg.sensor_type in ["lidar", "camera"]:
+        if self.cfg.sensor_type in ["lidar", "camera", "stereo_camera"]:
             # for IGE and warp sensors
             self.pixels = global_tensor_dict["depth_range_pixels"]
             if self.cfg.segmentation_camera:

@@ -1,3 +1,4 @@
+import matplotlib.image
 import numpy as np
 import random
 from aerial_gym.utils.logging import CustomLogger
@@ -21,7 +22,7 @@ if __name__ == "__main__":
     env_manager = SimBuilder().build_env(
         sim_name="base_sim",
         env_name="env_with_obstacles",  # "forest_env", #"empty_env", # empty_env
-        robot_name="base_quadrotor_with_camera",
+        robot_name="base_quadrotor_with_stereo_camera",
         controller_name="lee_velocity_control",
         args=None,
         device="cuda:0",
@@ -30,12 +31,13 @@ if __name__ == "__main__":
         use_warp=True,
     )
     actions = torch.zeros((env_manager.num_envs, 4)).to("cuda:0")
+    actions[:, 3] = 0.1
 
     env_manager.reset()
     seg_frames = []
     depth_frames = []
     merged_image_frames = []
-    for i in range(10000):
+    for i in range(101):
         if i % 100 == 0 and i > 0:
             print("i", i)
             env_manager.reset()
@@ -82,7 +84,7 @@ if __name__ == "__main__":
             logger.error("Seems like the image tensors have not been created yet.")
             logger.error("This is likely due to absence of a functional camera in the environment")
             raise e
-        seg_image1[seg_image1 <= 0] = seg_image1[seg_image1 > 0].min()
+        # seg_image1[seg_image1 <= 0] = seg_image1[seg_image1 > 0].min()
         seg_image1_normalized = (seg_image1 - seg_image1.min()) / (
             seg_image1.max() - seg_image1.min()
         )

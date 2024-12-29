@@ -47,14 +47,14 @@ if __name__ == "__main__":
             seg_frames[0].save(
                 f"seg_frames_{i}.gif",
                 save_all=True,
-                append_images=seg_frames[1:],
+                append_images=faceid_frames[1:],
                 duration=100,
                 loop=0,
             )
             depth_frames[0].save(
                 f"depth_frames_{i}.gif",
                 save_all=True,
-                append_images=depth_frames[1:],
+                append_images=normal_frames[1:],
                 duration=100,
                 loop=0,
             )
@@ -65,6 +65,13 @@ if __name__ == "__main__":
                 duration=100,
                 loop=0,
             )
+
+            # save the last frame as a PNG as well
+            seg_frames[-1].save(f"faceid_frames_{i}.png")
+            depth_frames[-1].save(f"normal_frames_{i}.png")
+
+
+
             seg_frames = []
             depth_frames = []
             merged_image_frames = []
@@ -94,28 +101,13 @@ if __name__ == "__main__":
             logger.error("Seems like the image tensors have not been created yet.")
             logger.error("This is likely due to absence of a functional camera in the environment")
             raise e
-        seg_image1[seg_image1 <= 0] = seg_image1[seg_image1 > 0].min()
-        seg_image1_normalized = (seg_image1 - seg_image1.min()) / (
-            seg_image1.max() - seg_image1.min()
-        )
         
         # discretize image for better visualization
-
-        seg_image1_normalized_int = (255.0 * seg_image1_normalized).astype(np.uint8)
-        seg1_image_normalized_discrete = 25 * (np.mod(seg_image1_normalized_int, 11)).astype(np.uint8)
-
+        seg_image1[seg_image1 > 0] = (10*np.mod(seg_image1[seg_image1 > 0], 26) + 1).astype(np.uint8)
+        seg_image1[seg_image1 <= 0] = 0
         # set colormap to plasma in matplotlib
-        seg_image1_normalized_plasma = matplotlib.cm.plasma(seg1_image_normalized_discrete/255.0)
+        seg_image1_normalized_plasma = matplotlib.cm.plasma(seg_image1/255.0)
         mod_image = (255.0*seg_image1_normalized_plasma).astype(np.uint8)
-
-
-        # # set colormap to plasma in matplotlib
-        # seg_image1_normalized_plasma = matplotlib.cm.plasma(seg_image1_normalized)
-        # seg_image1_plasma_int = (255.0 * seg_image1_normalized_plasma).astype(np.uint8)
-        # # print unique values in seg_image1_normalized and their count
-        # print(np.unique(seg_image1_plasma_int), np.unique(seg_image1_plasma_int).shape)
-        # mod_image = 10 * np.mod(seg_image1_plasma_int, 26).astype(np.uint8)
-        
         
         # set channel to opaque
         mod_image[:, :, 3] = 255

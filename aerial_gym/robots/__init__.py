@@ -25,11 +25,8 @@ from aerial_gym.robots.morphy import Morphy
 # get robot registry
 from aerial_gym.registry.robot_registry import robot_registry
 
-from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithImuCfg
-from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithCameraCfg
-from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithCameraImuCfg
-from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithLidarCfg
-from aerial_gym.config.robot_config.base_quad_config import BaseQuadWithFaceIDNormalCameraCfg
+from aerial_gym.config.robot_config.base_quad_config import *
+
 
 
 
@@ -54,4 +51,5 @@ robot_registry.register("base_quadrotor_with_camera", BaseMultirotor, BaseQuadWi
 robot_registry.register("base_quadrotor_with_camera_imu", BaseMultirotor, BaseQuadWithCameraImuCfg)
 robot_registry.register("base_quadrotor_with_lidar", BaseMultirotor, BaseQuadWithLidarCfg)
 robot_registry.register("base_quadrotor_with_faceid_normal_camera", BaseMultirotor, BaseQuadWithFaceIDNormalCameraCfg)
+robot_registry.register("base_quadrotor_with_stereo_camera", BaseMultirotor, BaseQuadWithStereoCameraCfg)
 

@@ -12,6 +12,7 @@ from aerial_gym.utils.math import (
 import torch
 
 from aerial_gym.sensors.warp.warp_cam import WarpCam
+from aerial_gym.sensors.warp.warp_stereo_cam import WarpStereoCam
 from aerial_gym.sensors.warp.warp_lidar import WarpLidar
 from aerial_gym.sensors.warp.warp_normal_faceID_cam import WarpNormalFaceIDCam
 from aerial_gym.sensors.warp.warp_normal_faceID_lidar import WarpNormalFaceIDLidar
@@ -42,6 +43,15 @@ class WarpSensor(BaseSensor):
 
         elif self.cfg.sensor_type == "camera":
             self.sensor = WarpCam(
+                num_envs=self.num_envs,
+                mesh_ids_array=self.mesh_ids_array,
+                config=self.cfg,
+            )
+            logger.info("Camera sensor initialized")
+            logger.debug(f"Sensor config: {self.cfg.__dict__}")
+        
+        elif self.cfg.sensor_type == "stereo_camera":
+            self.sensor = WarpStereoCam(
                 num_envs=self.num_envs,
                 mesh_ids_array=self.mesh_ids_array,
                 config=self.cfg,
@@ -185,7 +195,7 @@ class WarpSensor(BaseSensor):
         logger.debug("[DONE] Capturing sensor data")
 
         self.apply_noise()
-        if self.cfg.sensor_type in ["camera", "lidar"]:
+        if self.cfg.sensor_type in ["camera", "lidar", "stereo_camera"]:
             self.apply_range_limits()
             self.normalize_observation()
 
