@@ -47,14 +47,14 @@ if __name__ == "__main__":
             seg_frames[0].save(
                 f"seg_frames_{i}.gif",
                 save_all=True,
-                append_images=faceid_frames[1:],
+                append_images=seg_frames[1:],
                 duration=100,
                 loop=0,
             )
             depth_frames[0].save(
                 f"depth_frames_{i}.gif",
                 save_all=True,
-                append_images=normal_frames[1:],
+                append_images=depth_frames[1:],
                 duration=100,
                 loop=0,
             )
