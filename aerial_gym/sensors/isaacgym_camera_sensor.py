@@ -87,6 +87,7 @@ class IsaacGymCameraSensor(BaseSensor):
         if len(self.cam_handles) == env_id:
             self.depth_tensors.append([])
             self.segmentation_tensors.append([])
+            self.color_tensors.append([])
         self.cam_handle = self.gym.create_camera_sensor(env_handle, self.camera_properties)
         self.cam_handles.append(self.cam_handle)
         self.gym.attach_camera_to_body(
@@ -110,6 +111,13 @@ class IsaacGymCameraSensor(BaseSensor):
                 )
             )
         )
+        self.color_tensors[env_id].append(
+            gymtorch.wrap_tensor(
+                self.gym.get_camera_image_gpu_tensor(
+                    self.sim, env_handle, self.cam_handle, gymapi.IMAGE_COLOR
+                )
+            )
+        )
         # self.color_tensors.append(gymtorch.wrap_tensor(self.gym.get_camera_image_gpu_tensor(self.sim, env_handle, self.cam_handle, gymapi.IMAGE_COLOR)))
         logger.debug(f"Camera sensor added to env {env_handle} and actor {actor_handle}")
 
@@ -126,7 +134,7 @@ class IsaacGymCameraSensor(BaseSensor):
         super().init_tensors(global_tensor_dict)
 
         # At some point, RGB cam support for Warp would be added on our end. Please use Isaac Gym's native RGB Camera till then.
-        # self.color_tensors = global_tensor_dict["color_tensor"]
+        self.rgb_pixels = global_tensor_dict["rgb_pixels"]
 
     def capture(self):
         """
@@ -140,6 +148,7 @@ class IsaacGymCameraSensor(BaseSensor):
             for cam_id in range(self.cfg.num_sensors):
                 # the depth values are in -ve z axis, so we need to flip it to positive
                 self.pixels[env_id, cam_id] = -self.depth_tensors[env_id][cam_id]
+                self.rgb_pixels[env_id, cam_id] = self.color_tensors[env_id][cam_id]
                 if self.cfg.segmentation_camera:
                     self.segmentation_pixels[env_id, cam_id] = self.segmentation_tensors[env_id][
                         cam_id
@@ -174,10 +183,10 @@ class IsaacGymCameraSensor(BaseSensor):
         if self.cfg.sensor_noise.enable_sensor_noise == True:
             logger.debug("Applying sensor noise")
             self.pixels[:] = torch.normal(
-                mean=self.pixels, std=self.cfg.pixel_std_dev_multiplier * self.pixels
+                mean=self.pixels, std=self.cfg.sensor_noise.pixel_std_dev_multiplier * self.pixels
             )
             self.pixels[
-                torch.bernoulli(torch.ones_like(self.pixels) * self.cfg.pixel_dropout_prob) > 0
+                torch.bernoulli(torch.ones_like(self.pixels) * self.cfg.sensor_noise.pixel_dropout_prob) > 0
             ] = self.cfg.near_out_of_range_value
 
     def reset_idx(self, env_ids):

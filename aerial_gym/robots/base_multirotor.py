@@ -263,7 +263,7 @@ class BaseMultirotor(BaseRobot):
         )
         self.robot_body_vel_drag_quadratic = (
             -self.body_vel_quadratic_damping_coefficient
-            * self.robot_body_linvel.abs()
+            * torch.norm(self.robot_body_linvel, dim=-1).unsqueeze(-1)
             * self.robot_body_linvel
         )
         self.robot_body_vel_drag = (
