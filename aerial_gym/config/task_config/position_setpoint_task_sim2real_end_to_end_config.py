@@ -1,11 +1,10 @@
 import torch
-from aerial_gym.utils.math import torch_interpolate_ratio
 
 EVAL = True
 
 if EVAL == False:
     class task_config:
-        seed = 56 #46 #36 #16 #26 #56
+        seed = 56 #16 #26 #36 #46 #56
         sim_name = "base_sim"
         env_name = "empty_env"
         robot_name = "tinyprop"
@@ -18,7 +17,7 @@ if EVAL == False:
         privileged_observation_space_dim = 0
         action_space_dim = 4
         observation_space_dim = 15
-        episode_len_steps = 600 #2000 #800 for dt = 0.01  # real physics time for simulation is this value multiplied by sim.dt
+        episode_len_steps = 600 
         return_state_before_reset = False
         reward_parameters = { }
         crash_dist = 1.5
@@ -38,7 +37,7 @@ else:
         sim_name = "base_sim"
         env_name = "empty_env"
         robot_name = "tinyprop"
-        controller_name = "no_control" #"split_architecture"
+        controller_name = "no_control" 
         args = {}
         num_envs = 4096
         use_warp = False
@@ -47,7 +46,7 @@ else:
         privileged_observation_space_dim = 0
         action_space_dim = 4
         observation_space_dim = 15 
-        episode_len_steps = 10000 #2000 #800 for dt = 0.01  # real physics time for simulation is this value multiplied by sim.dt
+        episode_len_steps = 10000 
         return_state_before_reset = False
         reward_parameters = { }
         

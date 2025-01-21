@@ -9,31 +9,9 @@ from aerial_gym.config.sensor_config.camera_config.base_depth_camera_config impo
 from aerial_gym.config.sensor_config.lidar_config.base_lidar_config import (
     BaseLidarConfig,
 )
-from aerial_gym.config.sensor_config.lidar_config.osdome_64_config import OSDome_64_Config
 from aerial_gym.config.sensor_config.imu_config.base_imu_config import BaseImuConfig
 
-from aerial_gym.utils.robot_model import RobotModel, RobotParameter
-
 from aerial_gym import AERIAL_GYM_DIRECTORY
-
-pars = RobotParameter()
-
-pars.config_name = "tinyprop"
-pars.cq = 0.01
-pars.frame_mass = 0.321
-pars.motor_directions = [1, -1, 1, -1]
-pars.motor_masses = [0.013, 0.013, 0.013, 0.013]
-max_width = 0.16
-pars.motor_orientations = [[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
-pars.motor_translations = [[max_width,-max_width,0],
-                        [-max_width,-max_width,0],
-                        [-max_width,max_width,0],
-                        [max_width,max_width,0]]
-
-pars.max_u = 1.2
-pars.min_u = 0.2
-
-rm = RobotModel(pars)
 
 class TinyPropCfg:
 
@@ -159,27 +137,19 @@ class TinyPropCfg:
         use_collision_mesh_instead_of_visual = False  # does nothing for the robot
         
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/robots/tinyprop"
-                    
-        robot_model = rm
         
 
     class control_allocator_config:
         force_application_level = "motor_link"
-        num_motors = rm.n_motors
-
-        application_mask = rm.motor_mask
-        motor_directions = rm.motor_directions.tolist()
-
-        allocation_matrix = rm.actuator_mixing_matrix
-        
-        # application_mask = [5,6,7,8]
-        # motor_directions = [1, -1, 1, -1]
-        # allocation_matrix = [[ 0., 0., 0., 0.],
-        #                      [ 0., 0., 0., 0.],
-        #                      [ 1., 1., 1., 1.],
-        #                      [-0.16, -0.16, 0.16, 0.16],
-        #                      [-0.16, 0.16, 0.16, -0.16],
-        #                      [-0.01, 0.01, -0.01, 0.01]]
+        num_motors = 4
+        application_mask = [5,6,7,8]
+        motor_directions = [1, -1, 1, -1]
+        allocation_matrix = [[ 0., 0., 0., 0.],
+                             [ 0., 0., 0., 0.],
+                             [ 1., 1., 1., 1.],
+                             [-0.16, -0.16, 0.16, 0.16],
+                             [-0.16, 0.16, 0.16, -0.16],
+                             [-0.01, 0.01, -0.01, 0.01]]
 
         class motor_model_config:
             use_rps = True
@@ -194,4 +164,4 @@ class TinyPropCfg:
             max_thrust_rate = 100000.0
             thrust_to_torque_ratio = 0.01
             use_discrete_approximation = True
-            integration_scheme = "euler" #"rk4" #"euler"
+            integration_scheme = "rk4" #"euler"

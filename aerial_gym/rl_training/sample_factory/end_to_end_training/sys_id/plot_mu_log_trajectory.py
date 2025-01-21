@@ -12,12 +12,6 @@ if __name__ == "__main__":
     transformation_1 = np.array([[1.0, 0.0, 0.0], [0.0, -1.0, 0.0], [0.0, 0.0, -1.0]])
     transformation_2 = np.array([[0.0, 1.0, 0.0], [-1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
     
-    #exp_name = "2024-11-26-10-15_small_noise_for_all_yaw_fix_working_comp_in_sim_corrected_scaling"
-    #exp_name = "2024-11-20-16-22_pid_hover"
-    #exp_name = "ete_seed_16_2025-1-15-13-21"
-    #exp_name = "ete_seed_26_2025-1-15-13-27"
-    #exp_name = "ete_seed_36_2025-1-15-13-51"
-    #exp_name = "ete_seed_46_2025-1-15-14-00"
     exp_name = "ete_seed_56_2025-1-15-14-06"
     
     # Load data
@@ -93,12 +87,6 @@ if __name__ == "__main__":
     
     f_interp = np.array([f_0_interp, f_1_interp, f_2_interp, f_3_interp])
     
-    print("m1: {}\n".format(np.mean(f_0_interp)), 
-          "m2: {}\n".format(np.mean(f_1_interp)), 
-          "m3: {}\n".format(np.mean(f_2_interp)), 
-          "m4: {}\n".format(np.mean(f_3_interp)),
-          "mean all: {}".format(np.mean(np.mean(f_interp))))
-    
     setpoint_positions = np.array([[0.,0.,1.],[-.7,-.7,1.],[.7,-.7,1.],[.7,.7,1.],[-.7,.7,1.],[-.7,-.7,1.],[0.,0.,1.]])
     
     fig = plt.figure()
@@ -110,35 +98,3 @@ if __name__ == "__main__":
     ax.set_zlabel('Z')
     
     plt.savefig("3d_traj.pdf")
-    
-#     fig, axs = plt.subplots(3, 2)
-#     axs[0,0].plot(time_points, pos_enu_interp.T)
-#     axs[0,0].legend(["x", "y", "z"])
-#     axs[0,0].set_title("Position")
-#     axs[0,0].set_xlabel("Time")
-#     axs[0,0].set_ylabel("Position")
-    
-#     axs[0,1].plot(time_points,lin_vel_enu_interp.T)
-#     axs[0,1].legend(["x", "y", "z"])
-#     axs[0,1].set_title("Velocity")
-#     axs[0,1].set_xlabel("Time")
-#     axs[0,1].set_ylabel("Velocity")
-    
-#     axs[1,0].plot(time_points,ang_enu_interp)
-#     axs[1,0].legend(["x", "y", "z"])
-#     axs[1,0].set_title("Angles")
-#     axs[1,0].set_xlabel("Time")
-#     axs[1,0].set_ylabel("Angles")
-    
-#     axs[1,1].plot(time_points,ang_vel_enu_interp.T)
-#     axs[1,1].set_title("Angular Velocity")
-#     axs[1,1].set_xlabel("Time")
-#     axs[1,1].set_ylabel("Angular Velocity")
-#     axs[1,1].legend(["x", "y", "z"])
-    
-#     axs[2,0].plot(time_points,f_interp.T)
-#     axs[2,0].set_title("Actions motor commands")
-#     axs[2,0].set_xlabel("Time")
-#     axs[2,0].set_ylabel("Action")
-#     axs[2,0].legend(["u1", "u2", "u3", "u4"])
-    

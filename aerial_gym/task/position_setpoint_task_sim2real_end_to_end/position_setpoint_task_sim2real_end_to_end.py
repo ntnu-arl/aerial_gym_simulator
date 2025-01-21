@@ -1,6 +1,6 @@
 from aerial_gym.task.base_task import BaseTask
 from aerial_gym.sim.sim_builder import SimBuilder
-from pytorch3d.transforms import euler_angles_to_matrix, matrix_to_quaternion, matrix_to_rotation_6d, quaternion_to_matrix, matrix_to_euler_angles
+from pytorch3d.transforms import euler_angles_to_matrix, matrix_to_rotation_6d, quaternion_to_matrix, matrix_to_euler_angles
 import torch
 import numpy as np
 
@@ -8,7 +8,6 @@ from aerial_gym.utils.math import *
 
 from aerial_gym.utils.logging import CustomLogger
 
-import gymnasium as gym
 from gym.spaces import Dict, Box
 
 logger = CustomLogger("position_setpoint_task")
@@ -208,7 +207,7 @@ class PositionSetpointTaskSim2RealEndToEnd(BaseTask):
         pos_noise = torch.normal(mean=torch.zeros_like(self.obs_dict["robot_position"]), std=0.001) * sim_with_noise
         obs_pos_noisy = (self.target_position - self.obs_dict["robot_position"]) + pos_noise
         
-        or_noise = torch.normal(mean=torch.zeros_like(self.obs_dict["robot_orientation"][:,:3]), std=torch.pi/1032) * sim_with_noise #512
+        or_noise = torch.normal(mean=torch.zeros_like(self.obs_dict["robot_orientation"][:,:3]), std=torch.pi/1032) * sim_with_noise 
         or_quat = self.obs_dict["robot_orientation"][:,[3, 0, 1, 2]]
         or_euler = matrix_to_euler_angles(quaternion_to_matrix(or_quat), "ZYX")[:, [2, 1, 0]]
         obs_or_euler_noisy = or_euler + or_noise
@@ -216,7 +215,7 @@ class PositionSetpointTaskSim2RealEndToEnd(BaseTask):
         lin_vel_noise = torch.normal(mean=torch.zeros_like(self.obs_dict["robot_linvel"]), std=0.002) * sim_with_noise
         obs_linvel_noisy = self.obs_dict["robot_linvel"] + lin_vel_noise
         
-        ang_vel_noise = torch.normal(mean=torch.zeros_like(self.obs_dict["robot_body_angvel"]), std=0.001) * sim_with_noise #0.005
+        ang_vel_noise = torch.normal(mean=torch.zeros_like(self.obs_dict["robot_body_angvel"]), std=0.001) * sim_with_noise
         ang_vel_noisy = self.obs_dict["robot_body_angvel"] + ang_vel_noise
         
         self.task_obs["obs"][:, 0:3] = obs_pos_noisy
@@ -281,7 +280,7 @@ def compute_reward(
     prev_target_dist = torch.norm(prev_pos_error, dim=1)
 
     pos_error[:,2] = pos_error[:,2]*11. 
-    pos_reward = torch.sum(exp_func(pos_error[:, :3], 10., 10.0), dim=1) + torch.sum(exp_func(pos_error[:, :3], 2.0, 2.0), dim=1) #35
+    pos_reward = torch.sum(exp_func(pos_error[:, :3], 10., 10.0), dim=1) + torch.sum(exp_func(pos_error[:, :3], 2.0, 2.0), dim=1)
 
     ups = quat_axis(quats, 2)
     tiltage = 1 - ups[..., 2]

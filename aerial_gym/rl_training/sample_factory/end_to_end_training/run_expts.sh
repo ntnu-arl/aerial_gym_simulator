@@ -1,5 +1,0 @@
-CUDA_VISIBLE_DEVICES=1 python3 enjoy_16.py --env=position_setpoint_task_sim2real_end_to_end --experiment=tiny_prop_test_2 --load_checkpoint_kind="best"
-CUDA_VISIBLE_DEVICES=1 python3 enjoy_26.py --env=position_setpoint_task_sim2real_end_to_end --experiment=tiny_prop_test_2 --load_checkpoint_kind="best"
-CUDA_VISIBLE_DEVICES=1 python3 enjoy_36.py --env=position_setpoint_task_sim2real_end_to_end --experiment=tiny_prop_test_2 --load_checkpoint_kind="best"
-CUDA_VISIBLE_DEVICES=1 python3 enjoy_46.py --env=position_setpoint_task_sim2real_end_to_end --experiment=tiny_prop_test_2 --load_checkpoint_kind="best"
-CUDA_VISIBLE_DEVICES=1 python3 enjoy_56.py --env=position_setpoint_task_sim2real_end_to_end --experiment=tiny_prop_test_2 --load_checkpoint_kind="best"

@@ -37,21 +37,16 @@ class ModelDeploy(nn.Module):
         for l_or_a in self.control_stack:
             x = l_or_a(x)
         
-        #x = self.rescale_actions(x)
-        
         return x
 
-def convert_model_to_script_model(nn_model_full, robot_model):
+def convert_model_to_script_model(nn_model_full, max_u, min_u, n_motors):
     
-    # Deployment of torch models for robotics applications:
-    # https://pytorch.org/blog/model-serving-in-pyorch/
-    
-    max_u = torch.tensor(robot_model.max_u).to(torch.float).cpu()
-    min_u = torch.tensor(robot_model.min_u).to(torch.float).cpu()
+    max_u = torch.tensor(max_u).to(torch.float).cpu()
+    min_u = torch.tensor(min_u).to(torch.float).cpu()
 
     lims = { "max_u": max_u, "min_u": min_u}
 
-    nn_model_deploy = ModelDeploy([15, 32, 24, robot_model.n_motors], lims)
+    nn_model_deploy = ModelDeploy([15, 32, 24, n_motors], lims)
 
     nn_model_deploy.control_stack[0].weight.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.obs.mlp_head[0].weight.data
     nn_model_deploy.control_stack[0].bias.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.obs.mlp_head[0].bias.data
@@ -61,8 +56,8 @@ def convert_model_to_script_model(nn_model_full, robot_model):
     nn_model_deploy.control_stack[4].bias.data[:] = nn_model_full.actor_critic.action_parameterization.distribution_linear.bias.data
     
     sm = torch.jit.script(nn_model_deploy)
-    torch.jit.save(sm, "./deployment/deployed_models/" + robot_model.cfg_name + ".pt")
+    torch.jit.save(sm, "./deployment/deployed_models/tinyprop.pt")
 
-    print('Size normal (B):', os.path.getsize("./deployment/deployed_models/" + robot_model.cfg_name + ".pt"))
+    print('Size normal (B):', os.path.getsize("./deployment/deployed_models/tinyprop.pt"))
     
     return sm

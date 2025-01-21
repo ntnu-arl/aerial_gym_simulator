@@ -1,23 +1,15 @@
-import os
-import yaml
 import matplotlib.pyplot as plt
-import gym
 import numpy as np
 
 from aerial_gym.rl_training.sample_factory.end_to_end_training.helper import parse_aerialgym_cfg
 
-from aerial_gym.utils.robot_model import RobotModel, RobotParameter
-from aerial_gym.sim.sim_builder import SimBuilder
-from aerial_gym import AERIAL_GYM_DIRECTORY
-
 from aerial_gym.utils.logging import CustomLogger
-from aerial_gym.utils.helpers import get_args
 from aerial_gym.registry.task_registry import task_registry
 
 from aerial_gym.rl_training.sample_factory.end_to_end_training.enjoy_ros import NN_Inference_ROS
 from aerial_gym.rl_training.sample_factory.end_to_end_training.deployment.convert_model import convert_model_to_script_model
 
-from pytorch3d.transforms import rotation_6d_to_matrix, matrix_to_euler_angles, quaternion_to_matrix, matrix_to_rotation_6d, euler_angles_to_matrix
+from pytorch3d.transforms import rotation_6d_to_matrix, matrix_to_euler_angles
 
 from aerial_gym.registry.robot_registry import robot_registry
 from aerial_gym.registry.env_registry import env_config_registry
@@ -25,12 +17,8 @@ from aerial_gym.registry.env_registry import env_config_registry
 logger = CustomLogger(__name__)
 
 import torch
-import torch.nn as nn
 
 from tqdm import tqdm as tqdm
-
-import scipy.fftpack as fft_pack
-from scipy.signal import butter, lfilter, freqz
     
 def test_policy_script_export():
     
@@ -50,7 +38,9 @@ def test_policy_script_export():
     _, robot_config = robot_registry.make_robot(
             robot_name, controller_name, env_config_registry.get_env_config(env_cfg.env_name), "cuda:0")
     
-    robot_model = robot_config.robot_asset.robot_model
+    n_motors = robot_config.control_allocator_config.num_motors
+    min_u = robot_config.control_allocator_config.motor_model_config.min_thrust
+    max_u = robot_config.control_allocator_config.motor_model_config.max_thrust
     
     pos_list = []
     pos_err_list = []
@@ -64,18 +54,15 @@ def test_policy_script_export():
 
     nn_model = NN_Inference_ROS(cfg, env_cfg)
     
-    #model_deploy = convert_model_to_script_model(nn_model, robot_model).cpu()
-    model_name = "tinyprop_seed_16"
-    model_deploy = torch.load("./sim_rollouts/deployed_models/" + model_name + ".pt").cpu()
+    model_deploy = convert_model_to_script_model(nn_model, max_u, min_u, n_motors).cpu()
     
-    n_crashes = 0
-    total_runs = 0
-    
-    dt = 0.004
+    dt = 0.01
     reset_time = 5
     n_steps = int(reset_time*7/dt)
     reset_counter = 1
     
+    n_crashes = 0
+    total_runs = 0
     for i in range(n_steps):
         
         obs["obs"][:,:3] = goals[reset_counter-1] + obs["obs"][:,:3]
@@ -99,7 +86,7 @@ def test_policy_script_export():
         
         ang_vel_list.append(obs["obs"].squeeze().cpu()[12:15].detach().numpy().tolist())
 
-        actions_real =  actions_motor_commands * (robot_model.max_u - robot_model.min_u)/2 + (robot_model.max_u + robot_model.min_u)/2
+        actions_real =  actions_motor_commands * (max_u - min_u)/2 + (max_u + min_u)/2
         
         action_motor_command_list.append(actions_real.detach().squeeze().cpu().numpy().tolist())
         
@@ -110,21 +97,6 @@ def test_policy_script_export():
                 break        
     
     print("crash rate: ", n_crashes/total_runs)
-    
-    def ndarray_representer(dumper: yaml.Dumper, array: np.ndarray) -> yaml.Node:
-        return dumper.represent_list(array.tolist())
-
-    yaml.add_representer(np.ndarray, ndarray_representer)
-    
-    data = {"positions":np.array(pos_list),
-            "velocities":np.array(vel_list),
-            "orientations":np.array(ori_list),
-            "angular_velocities": np.array(ang_vel_list),
-            "actions":np.array(action_motor_command_list),
-            "set_points":np.array(goals.cpu())}
-    
-    with open("./sim_rollouts/" + model_name + '.yml', 'w') as outfile:
-        yaml.dump(data, outfile, default_flow_style=False)
     
     plot_results(pos_list, pos_err_list, vel_list, ori_list, 
                  ang_vel_list, action_motor_command_list, goals.cpu().numpy().tolist(), dt)
@@ -167,54 +139,11 @@ def plot_results(pos_list, pos_err_list, vel_list, ori_list,
     axs[2,0].set_ylabel("Action")
     axs[2,0].legend(["u1", "u2", "u3", "u4"])
     
-    
-    yf_u1 = fft_pack.fft(np.array(action_motor_command_list)[:,0])
-    yf_u2 = fft_pack.fft(np.array(action_motor_command_list)[:,1])
-    yf_u3 = fft_pack.fft(np.array(action_motor_command_list)[:,2])
-    yf_u4 = fft_pack.fft(np.array(action_motor_command_list)[:,3])
-    
-    yf_ang_vel_x = fft_pack.fft(np.array(ang_vel_list)[:,0])
-    yf_ang_vel_y = fft_pack.fft(np.array(ang_vel_list)[:,1])
-    yf_ang_vel_z = fft_pack.fft(np.array(ang_vel_list)[:,2])
-
-    xf = np.linspace(0.0, 1.0/(2.0*dt), n_steps//2)
-    
-    fig, ax = plt.subplots(1, 3)
-    ax[0].plot(xf, 2.0/n_steps * np.abs(yf_ang_vel_x[0:n_steps//2]))
-    ax[0].set_title("Angular Velocity x")
-    ax[0].set_xlabel("Frequency")
-    ax[0].set_ylabel("Amplitude")
-    ax[1].plot(xf, 2.0/n_steps * np.abs(yf_ang_vel_y[0:n_steps//2]))
-    ax[1].set_title("Angular Velocity y")
-    ax[1].set_xlabel("Frequency")
-    ax[2].plot(xf, 2.0/n_steps * np.abs(yf_ang_vel_z[0:n_steps//2]))
-    ax[2].set_title("Angular Velocity z")
-    ax[2].set_xlabel("Frequency")
-    
-    fig, ax = plt.subplots(2, 2)
-    ax[0,0].plot(xf[1:], 2.0/n_steps * np.abs(yf_u1[1:n_steps//2]))
-    ax[0,0].set_title("u1")
-    ax[0,0].set_xlabel("Frequency")
-    ax[0,0].set_ylabel("Amplitude")
-    ax[0,1].plot(xf[1:], 2.0/n_steps * np.abs(yf_u2[1:n_steps//2]))
-    ax[0,1].set_title("u2")
-    ax[0,1].set_xlabel("Frequency")
-    ax[0,1].set_ylabel("Amplitude")
-    ax[1,0].plot(xf[1:], 2.0/n_steps * np.abs(yf_u3[1:n_steps//2]))
-    ax[1,0].set_title("u3")
-    ax[1,0].set_xlabel("Frequency")
-    ax[1,0].set_ylabel("Amplitude")
-    ax[1,1].plot(xf[1:], 2.0/n_steps * np.abs(yf_u4[1:n_steps//2]))
-    ax[1,1].set_title("u4")
-    ax[1,1].set_xlabel("Frequency")
-    ax[1,1].set_ylabel("Amplitude")
-    
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot(np.array(pos_list)[:,0], np.array(pos_list)[:,1], np.array(pos_list)[:,2])
     ax.scatter(np.array(goals)[:,0], np.array(goals)[:,1], np.array(goals)[:,2], c='r', marker='o')
     plt.show()
-
     
 if __name__ == "__main__":
     
