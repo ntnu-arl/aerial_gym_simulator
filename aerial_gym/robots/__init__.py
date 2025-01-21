@@ -13,6 +13,7 @@ from aerial_gym.config.robot_config.morphy_stiff_config import MorphyStiffCfg
 from aerial_gym.config.robot_config.snakey_config import SnakeyCfg
 from aerial_gym.config.robot_config.snakey5_config import Snakey5Cfg
 from aerial_gym.config.robot_config.snakey6_config import Snakey6Cfg
+from aerial_gym.config.robot_config.tinyprop_config import TinyPropCfg
 
 from aerial_gym.config.robot_config.lmf2_config import LMF2Cfg
 
@@ -26,9 +27,6 @@ from aerial_gym.robots.morphy import Morphy
 from aerial_gym.registry.robot_registry import robot_registry
 
 from aerial_gym.config.robot_config.base_quad_config import *
-
-
-
 
 # register the robot classes here
 robot_registry.register("base_quadrotor", BaseMultirotor, BaseQuadCfg)
@@ -44,6 +42,7 @@ robot_registry.register("snakey6", BaseReconfigurable, Snakey6Cfg)
 robot_registry.register("base_rov", BaseROV, BaseROVCfg)
 robot_registry.register("lmf2", BaseMultirotor, LMF2Cfg)
 
+robot_registry.register("tinyprop", BaseMultirotor, TinyPropCfg)
 
 # register the special robot classes here for working with the examples
 robot_registry.register("base_quadrotor_with_imu", BaseMultirotor, BaseQuadWithImuCfg)

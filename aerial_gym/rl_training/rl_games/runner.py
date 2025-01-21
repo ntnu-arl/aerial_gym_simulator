@@ -29,7 +29,7 @@ class ExtractObsWrapper(gym.Wrapper):
 
     def reset(self, **kwargs):
         observations, *_ = super().reset(**kwargs)
-        return observations["observations"]
+        return observations["obs"]
 
     def step(self, action):
         observations, rewards, terminated, truncated, infos = super().step(action)
@@ -41,7 +41,7 @@ class ExtractObsWrapper(gym.Wrapper):
         )
 
         return (
-            observations["observations"],
+            observations["obs"],
             rewards,
             dones,
             infos,
@@ -130,6 +130,16 @@ env_configurations.register(
     {
         "env_creator": lambda **kwargs: task_registry.make_task(
             "position_setpoint_task_morphy", **kwargs
+        ),
+        "vecenv_type": "AERIAL-RLGPU",
+    },
+)
+
+env_configurations.register(
+    "position_setpoint_task_sim2real_end_to_end",
+    {
+        "env_creator": lambda **kwargs: task_registry.make_task(
+            "position_setpoint_task_sim2real_end_to_end", **kwargs
         ),
         "vecenv_type": "AERIAL-RLGPU",
     },
