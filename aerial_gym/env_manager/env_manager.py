@@ -278,7 +278,7 @@ class EnvManager(BaseManager):
         # then reset the asset managet that respositions assets within the environment
         # then reset the warp environment if it is being used that reads the state tensors from the assets and transforms meshes
         # finally reset the robot manager that resets the robot state tensors and the sensors
-        logger.debug(f"Resetting environments {env_ids}.")
+        # logger.debug(f"Resetting environments {env_ids}.")
         self.IGE_env.reset_idx(env_ids)
         self.asset_manager.reset_idx(env_ids, self.global_tensor_dict["num_obstacles_in_env"])
         if self.cfg.env.use_warp:

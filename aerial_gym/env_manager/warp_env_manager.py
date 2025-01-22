@@ -40,18 +40,18 @@ class WarpEnv(BaseManager):
     def reset_idx(self, env_ids):
         if self.global_vertex_counter == 0:
             return
-        logger.debug("Updating vertex maps per env")
+        # logger.debug("Updating vertex maps per env")
         self.vertex_maps_per_env_updated[:] = tf_apply(
             self.unfolded_env_vec_root_tensor[self.CONST_GLOBAL_VERTEX_TO_ASSET_INDEX_TENSOR, 3:7],
             self.unfolded_env_vec_root_tensor[self.CONST_GLOBAL_VERTEX_TO_ASSET_INDEX_TENSOR, 0:3],
             self.VERTEX_MAPS_PER_ENV_ORIGINAL[:],
         )
-        logger.debug("[DONE] Updating vertex maps per env")
+        # logger.debug("[DONE] Updating vertex maps per env")
 
-        logger.debug("Refitting warp meshes")
+        # logger.debug("Refitting warp meshes")
         for i in env_ids:
             self.warp_mesh_per_env[i].refit()
-        logger.debug("[DONE] Refitting warp meshes")
+        # logger.debug("[DONE] Refitting warp meshes")
 
     def pre_physics_step(self, action):
         pass

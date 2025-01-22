@@ -167,21 +167,21 @@ class IsaacGymCameraSensor(BaseSensor):
 
     def apply_range_limits(self):
         """ """
-        logger.debug("Applying range limits")
+        # logger.debug("Applying range limits")
         self.pixels[self.pixels > self.cfg.max_range] = self.cfg.far_out_of_range_value
         self.pixels[self.pixels < self.cfg.min_range] = self.cfg.near_out_of_range_value
-        logger.debug("[DONE] Applying range limits")
+        # logger.debug("[DONE] Applying range limits")
 
     def normalize_observation(self):
         if self.cfg.normalize_range and self.cfg.pointcloud_in_world_frame == False:
-            logger.debug("Normalizing pointcloud values")
+            # logger.debug("Normalizing pointcloud values")
             self.pixels[:] = self.pixels / self.cfg.max_range
         if self.cfg.pointcloud_in_world_frame == True:
             logger.error("Pointcloud is in world frame. Not supported for this sensor")
 
     def apply_noise(self):
         if self.cfg.sensor_noise.enable_sensor_noise == True:
-            logger.debug("Applying sensor noise")
+            # logger.debug("Applying sensor noise")
             self.pixels[:] = torch.normal(
                 mean=self.pixels, std=self.cfg.sensor_noise.pixel_std_dev_multiplier * self.pixels
             )

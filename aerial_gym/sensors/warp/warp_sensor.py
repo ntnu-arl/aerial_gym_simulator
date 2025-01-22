@@ -186,13 +186,13 @@ class WarpSensor(BaseSensor):
             quat_mul(self.sensor_local_orientation, self.sensor_data_frame_quat),
         )
 
-        logger.debug(
-            f"Sensor position: {self.sensor_position[0]}, Sensor orientation: {self.sensor_orientation[0]}"
-        )
+        # logger.debug(
+        #     f"Sensor position: {self.sensor_position[0]}, Sensor orientation: {self.sensor_orientation[0]}"
+        # )
 
-        logger.debug("Capturing sensor data")
+        # logger.debug("Capturing sensor data")
         self.sensor.capture()
-        logger.debug("[DONE] Capturing sensor data")
+        # logger.debug("[DONE] Capturing sensor data")
 
         self.apply_noise()
         if self.cfg.sensor_type in ["camera", "lidar", "stereo_camera"]:
@@ -203,7 +203,7 @@ class WarpSensor(BaseSensor):
         if self.cfg.return_pointcloud == True:
             # if pointcloud is in the world frame, the pointcloud range will not be normalized
             if self.cfg.pointcloud_in_world_frame == False:
-                logger.debug("Pointcoud is not in world frame")
+                # logger.debug("Pointcoud is not in world frame")
                 self.pixels[
                     self.pixels.norm(dim=4, keepdim=True).expand(-1, -1, -1, -1, 3)
                     > self.cfg.max_range
@@ -212,26 +212,32 @@ class WarpSensor(BaseSensor):
                     self.pixels.norm(dim=4, keepdim=True).expand(-1, -1, -1, -1, 3)
                     < self.cfg.min_range
                 ] = self.cfg.near_out_of_range_value
-                logger.debug("[DONE] Clipping pointcloud values to sensor range")
+                # logger.debug("[DONE] Clipping pointcloud values to sensor range")
         else:
-            logger.debug("Pointcloud is in world frame")
+            # logger.debug("Pointcloud is in world frame")
             self.pixels[self.pixels > self.cfg.max_range] = self.cfg.far_out_of_range_value
             self.pixels[self.pixels < self.cfg.min_range] = self.cfg.near_out_of_range_value
-            logger.debug("[DONE] Clipping pointcloud values to sensor range")
+            # logger.debug("[DONE] Clipping pointcloud values to sensor range")
 
     def normalize_observation(self):
         if self.cfg.normalize_range and self.cfg.pointcloud_in_world_frame == False:
-            logger.debug("Normalizing pointcloud values")
+            # logger.debug("Normalizing pointcloud values")
             self.pixels[:] = self.pixels / self.cfg.max_range
-        if self.cfg.pointcloud_in_world_frame == True:
-            logger.debug("Pointcloud is in world frame. not normalizing")
+        # if self.cfg.pointcloud_in_world_frame == True:
+        #     logger.debug("Pointcloud is in world frame. not normalizing")
 
     def apply_noise(self):
         if self.cfg.sensor_noise.enable_sensor_noise == True:
-            logger.debug("Applying sensor noise")
+            # logger.debug("Applying sensor noise")
+            sensor_noise_params = self.cfg.sensor_noise
+            std_a = sensor_noise_params.std_a
+            std_b = sensor_noise_params.std_b
+            std_c = sensor_noise_params.std_c
+            mean_offset = sensor_noise_params.mean_offset
+            std_val = std_a * self.pixels**2 + std_b * self.pixels + std_c
             self.pixels[:] = torch.normal(
-                mean=self.pixels,
-                std=self.cfg.sensor_noise.pixel_std_dev_multiplier * self.pixels,
+                mean= (self.pixels - mean_offset),
+                std=std_val
             )
             self.pixels[
                 torch.bernoulli(
