@@ -56,7 +56,7 @@ if __name__ == "__main__":
     env_manager = SimBuilder().build_env(
         sim_name="base_sim_2ms",
         env_name="empty_env_2ms",
-        robot_name="morphy",
+        robot_name="morphy_fixed_base",
         controller_name="no_control",
         args=None,
         device="cuda:0",

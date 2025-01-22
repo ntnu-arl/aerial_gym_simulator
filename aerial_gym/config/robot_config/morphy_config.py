@@ -206,3 +206,20 @@ class MorphyCfg:
             max_thrust_rate = 100000.0
             thrust_to_torque_ratio = 0.01
             use_discrete_approximation = True
+
+
+class MorphyFixedBaseCfg(MorphyCfg):
+    class robot_asset(MorphyCfg.robot_asset):
+        fix_base_link = True
+    
+    class reconfiguration_config(MorphyCfg.reconfiguration_config):
+        # morphy config for arm SysID
+        init_state_min = [
+            [0.29, 0.0, 0.29, 0.0, 0.29, 0.0, 0.29, 0.0], # position state
+            [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0] # velocity state
+        ]
+
+        init_state_max = [
+            [0.29, 0.0, 0.29, 0.0, 0.29, 0.0, 0.29, 0.0], # position state
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # velocity state
+        ]
