@@ -1,0 +1,2 @@
+timestamp,lat,lon,icao_address,altitude,heading,hor_velocity,ver_velocity,flags,squawk,altitude_type,callsign[0],callsign[1],callsign[2],callsign[3],callsign[4],callsign[5],callsign[6],callsign[7],callsign[8],emitter_type,tslc,uas_id[0],uas_id[1],uas_id[2],uas_id[3],uas_id[4],uas_id[5],uas_id[6],uas_id[7],uas_id[8],uas_id[9],uas_id[10],uas_id[11],uas_id[12],uas_id[13],uas_id[14],uas_id[15],uas_id[16],uas_id[17]
+0,0.0,0.0,0,0.0,0.0,0.0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

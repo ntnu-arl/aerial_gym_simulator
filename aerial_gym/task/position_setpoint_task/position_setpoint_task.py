@@ -152,7 +152,7 @@ class PositionSetpointTask(BaseTask):
     def step(self, actions):
         self.counter += 1
         self.prev_actions[:] = self.actions
-        self.actions = actions
+        self.actions = 3.0*actions
 
         # this uses the action, gets observations
         # calculates rewards, returns tuples
@@ -205,6 +205,7 @@ class PositionSetpointTask(BaseTask):
     def compute_rewards_and_crashes(self, obs_dict):
         robot_position = obs_dict["robot_position"]
         target_position = self.target_position
+        robot_linvel = obs_dict["robot_linvel"]
         robot_vehicle_orientation = obs_dict["robot_vehicle_orientation"]
         robot_orientation = obs_dict["robot_orientation"]
         target_orientation = torch.zeros_like(robot_orientation, device=self.device)
@@ -217,8 +218,9 @@ class PositionSetpointTask(BaseTask):
         )
         return compute_reward(
             pos_error_vehicle_frame,
-            angular_velocity,
+            robot_linvel,
             root_quats,
+            angular_velocity,
             obs_dict["crashes"],
             1.0,  # obs_dict["curriculum_level_multiplier"],
             self.actions,
@@ -242,6 +244,7 @@ def exp_penalty_func(x, gain, exp):
 @torch.jit.script
 def compute_reward(
     pos_error,
+    lin_vels,
     robot_quats,
     robot_angvels,
     crashes,
@@ -250,8 +253,33 @@ def compute_reward(
     prev_actions,
     parameter_dict,
 ):
-    # type: (Tensor, Tensor, Tensor, Tensor, float, Tensor, Tensor, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
+    # type: (Tensor, Tensor, Tensor, Tensor, Tensor, float, Tensor, Tensor, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
 
+    # target_dist = torch.norm(pos_error[:, :3], dim=1)
+
+    # pos_error[:,2] = pos_error[:,2]*11. #11. #9.
+    # pos_reward = torch.sum(exp_func(pos_error[:, :3], 35., 10.0), dim=1) + torch.sum(exp_func(pos_error[:, :3], 2.0, 2.0), dim=1) 
+
+    # ups = quat_axis(robot_quats, 2)
+    # tiltage = 1 - ups[..., 2]
+    # upright_reward = exp_func(tiltage, 2.5, 5.0) # nominal system
+    
+    # forw = quat_axis(robot_quats, 0)
+    # alignment = 1 - forw[..., 0]
+    # alignment_reward = exp_func(alignment, 6., 5.0) #6 nominal system
+
+    # angvel_reward = torch.sum(exp_func(robot_angvels, .3 , 10.0), dim=1) #.3
+    # vel_reward = torch.sum(exp_func(lin_vels, 1., 5.0), dim=1) 
+    
+    # action_input_offset = current_action
+    # action_input_offset[:, 2] = current_action[:,2] - 0.586
+    # action_cost = torch.sum(exp_penalty_func(action_input_offset, 0.1, 10.0), dim=1) 
+
+    # reward = (pos_reward * (alignment_reward + vel_reward + angvel_reward) + (angvel_reward + vel_reward + upright_reward + pos_reward + action_cost)) / 100.0
+      
+    # crashes[:] = torch.where(target_dist > 1.5, torch.ones_like(crashes), crashes) #1.5
+    # reward[:] = torch.where(crashes == 1, -5.0, reward)
+    
     dist = torch.norm(pos_error, dim=1)
 
     pos_reward = exp_func(dist, 3.0, 8.0) + exp_func(dist, 0.5, 1.0)
@@ -279,5 +307,7 @@ def compute_reward(
     crashes[:] = torch.where(dist > 8.0, torch.ones_like(crashes), crashes)
 
     total_reward[:] = torch.where(crashes > 0.0, -20 * torch.ones_like(total_reward), total_reward)
+    
+    
 
     return total_reward, crashes

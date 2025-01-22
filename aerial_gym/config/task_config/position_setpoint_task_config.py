@@ -5,10 +5,10 @@ class task_config:
     seed = 1
     sim_name = "base_sim"
     env_name = "empty_env"
-    robot_name = "base_quadrotor"
-    controller_name = "lee_attitude_control"
+    robot_name = "tinyprop"
+    controller_name = "no_control"
     args = {}
-    num_envs = 16
+    num_envs = 4096
     use_warp = False
     headless = False
     device = "cuda:0"

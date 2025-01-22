@@ -24,12 +24,12 @@ class TinyPropCfg:
             -np.pi/6,
             -np.pi,
             1.0,
-            -1,
-            -1,
-            -1,
-            -1,
-            -1,
-            -1,
+            -0.5,
+            -0.5,
+            -0.5,
+            -0.5,
+            -0.5,
+            -0.5,
         ]
         max_init_state = [
             .7,
@@ -39,12 +39,12 @@ class TinyPropCfg:
             np.pi/6,
             np.pi,
             1.0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
         ]
 
     class sensor_config:
@@ -141,18 +141,14 @@ class TinyPropCfg:
     class control_allocator_config:
         force_application_level = "motor_link"
         num_motors = 4
-
-        application_mask = [5, 6, 7, 8]
+        application_mask = [5,6,7,8]
         motor_directions = [1, -1, 1, -1]
-
-        allocation_matrix = [
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [1, 1, 1, 1],
-            [-1, 1, -1, 1],
-            [1, -1, 1, -1],
-            [-1, 1, -1, 1],
-        ]
+        allocation_matrix = [[ 0., 0., 0., 0.],
+                             [ 0., 0., 0., 0.],
+                             [ 1., 1., 1., 1.],
+                             [-0.16, -0.16, 0.16, 0.16],
+                             [-0.16, 0.16, 0.16, -0.16],
+                             [-0.01, 0.01, -0.01, 0.01]]
 
         class motor_model_config:
             use_rps = True
@@ -167,3 +163,4 @@ class TinyPropCfg:
             max_thrust_rate = 100000.0
             thrust_to_torque_ratio = 0.01
             use_discrete_approximation = True
+            integration_scheme = "rk4" #"euler"

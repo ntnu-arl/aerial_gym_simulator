@@ -15,19 +15,19 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     logger.print_example_message()
     start = time.time()
-    seed = 0
+    seed = 42
     torch.manual_seed(seed)
     np.random.seed(seed)
     torch.cuda.manual_seed(seed)
 
     plt.style.use("seaborn-v0_8-colorblind")
     rl_task_env = task_registry.make_task(
-        "position_setpoint_task_morphy",
+        "position_setpoint_task",
         # "position_setpoint_task_acceleration_sim2real",
         # other params are not set here and default values from the task config file are used
         seed=seed,
         headless=False,
-        num_envs=16,
+        num_envs=512,
         use_warp=True,
     )
     rl_task_env.reset()
@@ -42,7 +42,8 @@ if __name__ == "__main__":
             rl_task_env.task_config.observation_space_dim,
             rl_task_env.task_config.action_space_dim,
             # "networks/morphy_policy_for_rigid_airframe.pth"
-            "networks/morphy_policy_for_flexible_airframe_joint_aware.pth",
+            "../../rl_training/rl_games/runs/gen_ppo_08-17-53-15/nn/gen_ppo.pth"
+            # "networks/morphy_policy_for_flexible_airframe_joint_aware.pth",
         )
         .to("cuda:0")
         .eval()

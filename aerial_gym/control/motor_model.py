@@ -10,6 +10,10 @@ class MotorModel:
         self.cfg = config
         self.device = device
         self.num_motors_per_robot = motors_per_robot
+        self.integration_scheme = config.integration_scheme
+        if self.integration_scheme not in ["euler", "rk4"]:
+            # set the default scheme to rk4 if unspecified
+            self.integration_scheme = "rk4"
         self.max_thrust = torch.tensor(self.cfg.max_thrust, device=self.device, dtype=torch.float32).expand(
             self.num_envs, self.num_motors_per_robot
         )
@@ -89,22 +93,45 @@ class MotorModel:
         )
         mixing_factor = self.mixing_factor_function(self.dt, motor_time_constants)
         if self.cfg.use_rps:
-            self.current_motor_thrust[:] = compute_thrust_with_rpm_time_constant_rk4(
-                ref_thrust,
-                self.current_motor_thrust,
-                mixing_factor,
-                self.motor_thrust_constant,
-                self.max_rate,
-                self.dt,
-            )
+            if self.integration_scheme == "euler":
+                self.current_motor_thrust[:] = compute_thrust_with_rpm_time_constant(
+                    ref_thrust,
+                    self.current_motor_thrust,
+                    mixing_factor,
+                    self.motor_thrust_constant,
+                    self.max_rate,
+                    self.dt,
+                )
+            elif self.integration_scheme == "rk4":
+                self.current_motor_thrust[:] = compute_thrust_with_rpm_time_constant_rk4(
+                    ref_thrust,
+                    self.current_motor_thrust,
+                    mixing_factor,
+                    self.motor_thrust_constant,
+                    self.max_rate,
+                    self.dt,
+                )
+            else:
+                raise ValueError("integration scheme unknown")
         else:
-            self.current_motor_thrust[:] = compute_thrust_with_force_time_constant_rk4(
-                ref_thrust,
-                self.current_motor_thrust,
-                mixing_factor,
-                self.max_rate,
-                self.dt,
-            )
+            if self.integration_scheme == "euler":
+                self.current_motor_thrust[:] = compute_thrust_with_force_time_constant(
+                    ref_thrust,
+                    self.current_motor_thrust,
+                    mixing_factor,
+                    self.max_rate,
+                    self.dt,
+                )
+            elif self.integration_scheme == "rk4":
+                self.current_motor_thrust[:] = compute_thrust_with_force_time_constant_rk4(
+                    ref_thrust,
+                    self.current_motor_thrust,
+                    mixing_factor,
+                    self.max_rate,
+                    self.dt,
+                )
+            else:
+                raise ValueError("integration scheme unknown")
         return self.current_motor_thrust
 
     def reset_idx(self, env_ids):
