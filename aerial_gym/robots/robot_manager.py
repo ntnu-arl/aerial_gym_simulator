@@ -146,6 +146,18 @@ class RobotManagerIGE(BaseManager):
                     requires_grad=False,
                 )
                 self.global_tensor_dict["depth_range_pixels"] = self.image_tensor
+                self.rgb_image_tensor = torch.zeros(
+                    (
+                        self.num_envs,
+                        self.cfg.sensor_config.camera_config.num_sensors,
+                        self.cfg.sensor_config.camera_config.height,
+                        self.cfg.sensor_config.camera_config.width,
+                        4,
+                    ),
+                    device=self.device,
+                    requires_grad=False,
+                )
+                self.global_tensor_dict["rgb_pixels"] = self.rgb_image_tensor
 
                 if self.cfg.sensor_config.camera_config.segmentation_camera:
                     self.segmentation_tensor = torch.zeros(

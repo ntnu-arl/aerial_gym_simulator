@@ -1,5 +1,4 @@
 import numpy as np
-import pickle
 
 from aerial_gym import AERIAL_GYM_DIRECTORY
 
@@ -9,9 +8,9 @@ from aerial_gym.config.sensor_config.camera_config.base_depth_camera_config impo
 from aerial_gym.config.sensor_config.lidar_config.base_lidar_config import (
     BaseLidarConfig,
 )
+from aerial_gym.config.sensor_config.lidar_config.osdome_64_config import OSDome_64_Config
 from aerial_gym.config.sensor_config.imu_config.base_imu_config import BaseImuConfig
 
-from aerial_gym import AERIAL_GYM_DIRECTORY
 
 class TinyPropCfg:
 
@@ -155,7 +154,7 @@ class TinyPropCfg:
             use_rps = True
             motor_thrust_constant_min = 0.00001286412
             motor_thrust_constant_max = 0.00001286412
-            motor_time_constant_increasing_min = 0.047 #0.017
+            motor_time_constant_increasing_min = 0.047
             motor_time_constant_increasing_max = 0.047
             motor_time_constant_decreasing_min = 0.047
             motor_time_constant_decreasing_max = 0.047

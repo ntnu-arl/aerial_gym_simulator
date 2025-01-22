@@ -65,6 +65,12 @@ class BaseLidarConfig(BaseSensorConfig):
     nominal_orientation_euler_deg = [0.0, 0.0, 0.0]
 
     class sensor_noise:
-        enable_sensor_noise = False
-        pixel_dropout_prob = 0.01
-        pixel_std_dev_multiplier = 0.01
+        enable_sensor_noise = True
+        # noise model Gaussian with mean and std
+        # std = is a*x^2 + b*x + c, where 'x' is pixel range value
+        # mean value of sampled Gaussian noise can be offset from zero
+        std_a = 0.00001
+        std_b = 0.00001
+        std_c = 0.00001
+        mean_offset = -0.05
+        pixel_dropout_prob = 0.0

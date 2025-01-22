@@ -179,12 +179,12 @@ class BaseROV(BaseRobot):
             self.env_bounds_min, self.env_bounds_max, random_state[:, 0:3]
         )[env_ids]
 
-        logger.debug(
-            f"Random state: {random_state[0]}, min init state: {self.min_init_state[0]}, max init state: {self.max_init_state[0]}"
-        )
-        logger.debug(
-            f"env_bounds_min: {self.env_bounds_min[0]}, env_bounds_max: {self.env_bounds_max[0]}"
-        )
+        # logger.debug(
+        #     f"Random state: {random_state[0]}, min init state: {self.min_init_state[0]}, max init state: {self.max_init_state[0]}"
+        # )
+        # logger.debug(
+        #     f"env_bounds_min: {self.env_bounds_min[0]}, env_bounds_max: {self.env_bounds_max[0]}"
+        # )
 
         # quat conversion is handled separately
         self.robot_state[env_ids, 3:7] = quat_from_euler_xyz_tensor(random_state[env_ids, 3:6])
@@ -210,13 +210,13 @@ class BaseROV(BaseRobot):
             self.cfg.disturbance.prob_apply_disturbance
             * torch.ones((self.num_envs), device=self.device)
         )
-        logger.debug(
-            f"Applying disturbance to {disturbance_occurence.sum().item()} out of {self.num_envs} environments"
-        )
-        logger.debug(
-            f"Shape of disturbance tensors: {self.robot_force_tensors.shape}, {self.robot_torque_tensors.shape}"
-        )
-        logger.debug(f"Disturbance shape: {disturbance_occurence.unsqueeze(1).shape}")
+        # logger.debug(
+        #     f"Applying disturbance to {disturbance_occurence.sum().item()} out of {self.num_envs} environments"
+        # )
+        # logger.debug(
+        #     f"Shape of disturbance tensors: {self.robot_force_tensors.shape}, {self.robot_torque_tensors.shape}"
+        # )
+        # logger.debug(f"Disturbance shape: {disturbance_occurence.unsqueeze(1).shape}")
         self.robot_force_tensors[:, 0, 0:3] += torch_rand_float_tensor(
             -self.max_force_and_torque_disturbance[:, 0:3],
             self.max_force_and_torque_disturbance[:, 0:3],

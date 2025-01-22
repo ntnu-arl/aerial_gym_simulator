@@ -91,9 +91,9 @@ class BaseLeeController(BaseController):
 
     def randomize_params(self, env_ids):
         if self.cfg.randomize_params == False:
-            logger.debug(
-                "Randomization of controller parameters is disabled based on config setting."
-            )
+            # logger.debug(
+            #     "Randomization of controller parameters is disabled based on config setting."
+            # )
             return
         self.K_pos_tensor_current[env_ids] = torch_rand_float_tensor(
             self.K_pos_tensor_min[env_ids], self.K_pos_tensor_max[env_ids]
@@ -110,9 +110,9 @@ class BaseLeeController(BaseController):
 
     def compute_acceleration(self, setpoint_position, setpoint_velocity):
         position_error_world_frame = setpoint_position - self.robot_position
-        logger.debug(
-            f"position_error_world_frame: {position_error_world_frame}, setpoint_position: {setpoint_position}, robot_position: {self.robot_position}"
-        )
+        # logger.debug(
+        #     f"position_error_world_frame: {position_error_world_frame}, setpoint_position: {setpoint_position}, robot_position: {self.robot_position}"
+        # )
         setpoint_velocity_world_frame = quat_rotate(
             self.robot_vehicle_orientation, setpoint_velocity
         )

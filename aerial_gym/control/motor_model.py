@@ -11,6 +11,9 @@ class MotorModel:
         self.device = device
         self.num_motors_per_robot = motors_per_robot
         self.integration_scheme = config.integration_scheme
+        if self.integration_scheme not in ["euler", "rk4"]:
+            # set the default scheme to rk4 if unspecified
+            self.integration_scheme = "rk4"
         self.max_thrust = torch.tensor(self.cfg.max_thrust, device=self.device, dtype=torch.float32).expand(
             self.num_envs, self.num_motors_per_robot
         )
@@ -116,7 +119,6 @@ class MotorModel:
                     ref_thrust,
                     self.current_motor_thrust,
                     mixing_factor,
-                    self.motor_thrust_constant,
                     self.max_rate,
                     self.dt,
                 )
@@ -125,7 +127,6 @@ class MotorModel:
                     ref_thrust,
                     self.current_motor_thrust,
                     mixing_factor,
-                    self.motor_thrust_constant,
                     self.max_rate,
                     self.dt,
                 )
