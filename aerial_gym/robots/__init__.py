@@ -28,6 +28,7 @@ from aerial_gym.registry.robot_registry import robot_registry
 
 from aerial_gym.config.robot_config.base_quad_config import *
 
+
 # register the robot classes here
 robot_registry.register("base_quadrotor", BaseMultirotor, BaseQuadCfg)
 robot_registry.register("base_octarotor", BaseMultirotor, BaseOctarotorCfg)
@@ -51,4 +52,6 @@ robot_registry.register("base_quadrotor_with_camera_imu", BaseMultirotor, BaseQu
 robot_registry.register("base_quadrotor_with_lidar", BaseMultirotor, BaseQuadWithLidarCfg)
 robot_registry.register("base_quadrotor_with_faceid_normal_camera", BaseMultirotor, BaseQuadWithFaceIDNormalCameraCfg)
 robot_registry.register("base_quadrotor_with_stereo_camera", BaseMultirotor, BaseQuadWithStereoCameraCfg)
+
+robot_registry.register("tinyprop", BaseMultirotor, TinyPropCfg)
 
