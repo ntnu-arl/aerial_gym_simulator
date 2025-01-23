@@ -36,15 +36,6 @@ from aerial_gym.config.task_config.navigation_task_config import (
     task_config as navigation_task_config,
 )
 
-
-from aerial_gym.config.task_config.position_setpoint_task_rpm_config import (
-    task_config as position_setpoint_task_rpm_config,
-)
-
-from aerial_gym.task.position_setpoint_task_rpm.position_setpoint_task_rpm import (
-    PositionSetpointTaskRPM,
-)
-
 from aerial_gym.registry.task_registry import task_registry
 
 
@@ -99,10 +90,6 @@ task_registry.register_task(
     "position_setpoint_task_morphy",
     PositionSetpointTaskMorphy,
     position_setpoint_task_config_morphy,
-)
-
-task_registry.register_task(
-    "position_setpoint_task_rpm", PositionSetpointTaskRPM, position_setpoint_task_rpm_config
 )
 
 
