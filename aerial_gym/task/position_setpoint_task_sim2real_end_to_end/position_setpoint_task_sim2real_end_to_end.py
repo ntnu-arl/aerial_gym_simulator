@@ -97,7 +97,7 @@ class PositionSetpointTaskSim2RealEndToEnd(BaseTask):
         self.prev_pos_error = torch.zeros((self.sim_env.num_envs, 3), device=self.device, requires_grad=False)
 
         self.observation_space = Dict(
-            {"obs": Box(low=-1.0, high=1.0, shape=(self.task_config.observation_space_dim,), dtype=np.float32)}
+            {"observations": Box(low=-1.0, high=1.0, shape=(self.task_config.observation_space_dim,), dtype=np.float32)}
         )
         self.action_space = Box(
             low=-1.0,
@@ -113,7 +113,7 @@ class PositionSetpointTaskSim2RealEndToEnd(BaseTask):
         # The "priviliged_obs" are not handled so far in sample-factory
 
         self.task_obs = {
-            "obs": torch.zeros(
+            "observations": torch.zeros(
                 (self.sim_env.num_envs, self.task_config.observation_space_dim),
                 device=self.device,
                 requires_grad=False,
@@ -218,11 +218,11 @@ class PositionSetpointTaskSim2RealEndToEnd(BaseTask):
         ang_vel_noise = torch.normal(mean=torch.zeros_like(self.obs_dict["robot_body_angvel"]), std=0.001) * sim_with_noise
         ang_vel_noisy = self.obs_dict["robot_body_angvel"] + ang_vel_noise
         
-        self.task_obs["obs"][:, 0:3] = obs_pos_noisy
+        self.task_obs["observations"][:, 0:3] = obs_pos_noisy
         or_matr_with_noise = euler_angles_to_matrix(obs_or_euler_noisy[:, [2, 1, 0]], "ZYX")
-        self.task_obs["obs"][:, 3:9] = matrix_to_rotation_6d(or_matr_with_noise) 
-        self.task_obs["obs"][:, 9:12] = obs_linvel_noisy
-        self.task_obs["obs"][:, 12:15] = ang_vel_noisy
+        self.task_obs["observations"][:, 3:9] = matrix_to_rotation_6d(or_matr_with_noise) 
+        self.task_obs["observations"][:, 9:12] = obs_linvel_noisy
+        self.task_obs["observations"][:, 12:15] = ang_vel_noisy
 
         self.task_obs["rewards"] = self.rewards
         self.task_obs["terminations"] = self.terminations

@@ -5,8 +5,8 @@ class task_config:
     seed = 1
     sim_name = "base_sim"
     env_name = "empty_env"
-    robot_name = "tinyprop"
-    controller_name = "no_control"
+    robot_name = "base_quadrotor"
+    controller_name = "lee_attitude_control"
     args = {}
     num_envs = 4096
     use_warp = False

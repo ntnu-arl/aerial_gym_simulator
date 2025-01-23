@@ -27,7 +27,7 @@ if __name__ == "__main__":
         # other params are not set here and default values from the task config file are used
         seed=seed,
         headless=False,
-        num_envs=512,
+        num_envs=24,
         use_warp=True,
     )
     rl_task_env.reset()
@@ -42,7 +42,7 @@ if __name__ == "__main__":
             rl_task_env.task_config.observation_space_dim,
             rl_task_env.task_config.action_space_dim,
             # "networks/morphy_policy_for_rigid_airframe.pth"
-            "../../rl_training/rl_games/runs/gen_ppo_08-17-53-15/nn/gen_ppo.pth"
+            "networks/attitude_policy.pth"
             # "networks/morphy_policy_for_flexible_airframe_joint_aware.pth",
         )
         .to("cuda:0")
@@ -60,7 +60,8 @@ if __name__ == "__main__":
                 start = time.time()
             obs, reward, terminated, truncated, info = rl_task_env.step(actions=actions)
             start_time = time.time()
-            actions[:] = torch.clamp(model.forward(obs["observations"]), -1.0, 1.0)
+            actions[:] = model.forward(obs["observations"])
 
             end_time = time.time()
+            
     end = time.time()
