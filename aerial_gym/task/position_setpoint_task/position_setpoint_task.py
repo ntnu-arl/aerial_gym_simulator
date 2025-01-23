@@ -205,6 +205,7 @@ class PositionSetpointTask(BaseTask):
     def compute_rewards_and_crashes(self, obs_dict):
         robot_position = obs_dict["robot_position"]
         target_position = self.target_position
+        robot_linvel = obs_dict["robot_linvel"]
         robot_vehicle_orientation = obs_dict["robot_vehicle_orientation"]
         robot_orientation = obs_dict["robot_orientation"]
         target_orientation = torch.zeros_like(robot_orientation, device=self.device)
@@ -217,8 +218,9 @@ class PositionSetpointTask(BaseTask):
         )
         return compute_reward(
             pos_error_vehicle_frame,
-            angular_velocity,
+            robot_linvel,
             root_quats,
+            angular_velocity,
             obs_dict["crashes"],
             1.0,  # obs_dict["curriculum_level_multiplier"],
             self.actions,
@@ -242,6 +244,7 @@ def exp_penalty_func(x, gain, exp):
 @torch.jit.script
 def compute_reward(
     pos_error,
+    lin_vels,
     robot_quats,
     robot_angvels,
     crashes,
@@ -250,34 +253,30 @@ def compute_reward(
     prev_actions,
     parameter_dict,
 ):
-    # type: (Tensor, Tensor, Tensor, Tensor, float, Tensor, Tensor, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
-
+    # type: (Tensor, Tensor, Tensor, Tensor, Tensor, float, Tensor, Tensor, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
+    
     dist = torch.norm(pos_error, dim=1)
 
-    pos_reward = exp_func(dist, 3.0, 8.0) + exp_func(dist, 0.5, 1.0)
+    pos_reward = exp_func(dist, 3.0, 8.0) + exp_func(dist, 2.0, 4.0)
 
-    dist_reward = (20 - dist) / 40.0  # 40
+    dist_reward = (20 - dist) / 40.0  
 
     ups = quat_axis(robot_quats, 2)
     tiltage = torch.abs(1 - ups[..., 2])
     up_reward = 0.2 / (0.1 + tiltage * tiltage)
 
     spinnage = torch.norm(robot_angvels, dim=1)
-    ang_vel_reward = (1.0 / (1.0 + spinnage * spinnage)) * 10
-
-    previous_action_penalty = torch.sum(
-        exp_penalty_func(current_action - prev_actions, 0.02, 10.0), dim=1
-    )
-
-    absolute_action_penalty = torch.sum(exp_penalty_func(current_action, 0.01, 5.0), dim=1)
+    ang_vel_reward = (1.0 / (1.0 + spinnage * spinnage)) * 3
 
     total_reward = (
         pos_reward + dist_reward + pos_reward * (up_reward + ang_vel_reward)
-    )  # + previous_action_penalty + absolute_action_penalty
+    )
     total_reward[:] = curriculum_level_multiplier * total_reward
 
     crashes[:] = torch.where(dist > 8.0, torch.ones_like(crashes), crashes)
 
     total_reward[:] = torch.where(crashes > 0.0, -20 * torch.ones_like(total_reward), total_reward)
+    
+    
 
     return total_reward, crashes

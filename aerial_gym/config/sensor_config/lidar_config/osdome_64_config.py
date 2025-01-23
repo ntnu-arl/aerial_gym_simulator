@@ -25,5 +25,9 @@ class OSDome_64_Config(BaseLidarConfig):
 
     class sensor_noise:
         enable_sensor_noise = False
-        pixel_dropout_prob = 0.01
-        pixel_std_dev_multiplier = 0.01
+        std_a = 0.00038089
+        std_b = -0.00343351
+        std_c = 0.01553284
+        mean_offset = -0.025
+        pixel_dropout_prob = 0.0
+

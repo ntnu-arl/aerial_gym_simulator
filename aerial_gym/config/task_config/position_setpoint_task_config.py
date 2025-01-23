@@ -8,7 +8,7 @@ class task_config:
     robot_name = "base_quadrotor"
     controller_name = "lee_attitude_control"
     args = {}
-    num_envs = 16
+    num_envs = 4096
     use_warp = False
     headless = False
     device = "cuda:0"

@@ -14,6 +14,11 @@ from aerial_gym.config.sensor_config.camera_config.base_normal_faceID_camera_con
 )
 
 
+from aerial_gym.config.sensor_config.camera_config.stereo_camera_config import (
+    StereoCameraConfig,
+)
+
+
 from aerial_gym.config.sensor_config.lidar_config.osdome_64_config import OSDome_64_Config
 from aerial_gym.config.sensor_config.imu_config.base_imu_config import BaseImuConfig
 
@@ -168,13 +173,13 @@ class BaseQuadCfg:
         ]
 
         class motor_model_config:
-            use_rps = False
+            use_rps = True
 
             motor_thrust_constant_min = 0.00000926312
             motor_thrust_constant_max = 0.00001826312
 
-            motor_time_constant_increasing_min = 0.03
-            motor_time_constant_increasing_max = 0.03
+            motor_time_constant_increasing_min = 0.04
+            motor_time_constant_increasing_max = 0.04
 
             motor_time_constant_decreasing_min = 0.04
             motor_time_constant_decreasing_max = 0.04
@@ -216,4 +221,9 @@ class BaseQuadWithFaceIDNormalCameraCfg(BaseQuadCfg):
     class sensor_config(BaseQuadCfg.sensor_config):
         enable_camera = True
         camera_config = BaseNormalFaceIDCameraConfig
+
+class BaseQuadWithStereoCameraCfg(BaseQuadCfg):
+    class sensor_config(BaseQuadCfg.sensor_config):
+        enable_camera = True
+        camera_config = StereoCameraConfig
 

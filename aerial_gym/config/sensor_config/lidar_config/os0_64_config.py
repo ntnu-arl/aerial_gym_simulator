@@ -7,5 +7,8 @@ class OS_0_64_Config(OS_0_128_Config):
 
     class sensor_noise:
         enable_sensor_noise = False
-        pixel_dropout_prob = 0.01
-        pixel_std_dev_multiplier = 0.01
+        std_a = 3.36239104e-05
+        std_b = -3.17199061e-04
+        std_c = 9.61903860e-03
+        mean_offset = -0.025
+        pixel_dropout_prob = 0.0

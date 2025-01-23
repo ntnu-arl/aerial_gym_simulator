@@ -6,6 +6,10 @@ from aerial_gym.task.position_setpoint_task_sim2real.position_setpoint_task_sim2
     PositionSetpointTaskSim2Real,
 )
 
+from aerial_gym.task.position_setpoint_task_sim2real_end_to_end.position_setpoint_task_sim2real_end_to_end import (
+    PositionSetpointTaskSim2RealEndToEnd,
+)
+
 from aerial_gym.task.position_setpoint_task_acceleration_sim2real.position_setpoint_task_acceleration_sim2real import (
     PositionSetpointTaskAccelerationSim2Real,
 )
@@ -20,6 +24,10 @@ from aerial_gym.config.task_config.position_setpoint_task_sim2real_config import
     task_config as position_setpoint_task_sim2real_config,
 )
 
+from aerial_gym.config.task_config.position_setpoint_task_sim2real_end_to_end_config import (
+    task_config as position_setpoint_task_sim2real_end_to_end_config,
+)
+
 from aerial_gym.config.task_config.position_setpoint_task_acceleration_sim2real_config import (
     task_config as position_setpoint_task_acceleration_sim2real_config,
 )
@@ -27,6 +35,7 @@ from aerial_gym.config.task_config.position_setpoint_task_acceleration_sim2real_
 from aerial_gym.config.task_config.navigation_task_config import (
     task_config as navigation_task_config,
 )
+
 from aerial_gym.registry.task_registry import task_registry
 
 
@@ -37,6 +46,12 @@ task_registry.register_task(
     "position_setpoint_task_sim2real",
     PositionSetpointTaskSim2Real,
     position_setpoint_task_sim2real_config,
+)
+
+task_registry.register_task(
+    "position_setpoint_task_sim2real_end_to_end",
+    PositionSetpointTaskSim2RealEndToEnd,
+    position_setpoint_task_sim2real_end_to_end_config,
 )
 
 task_registry.register_task(

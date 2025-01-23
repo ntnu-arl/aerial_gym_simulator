@@ -24,6 +24,10 @@ class EMA:
 num_envs = 16
 
 if __name__ == "__main__":
+    start = time.time()
+    rl_task_env = task_registry.make_task("navigation_task", headless=False, num_envs=num_envs)
+
+
     logger.warning(
         "\n\nExample file simulating a Sample Factory trained policy in cluttered environments using a Task Definition for navigation."
     )
@@ -33,9 +37,6 @@ if __name__ == "__main__":
     logger.warning(
         "Please make sure a camera sensor is enabled on the robot as per specifications of the task.\n\n"
     )
-    start = time.time()
-    rl_task_env = task_registry.make_task("navigation_task", headless=False, num_envs=num_envs)
-
     rl_model = RL_Nav_Interface(num_envs=num_envs)
     action_filter = EMA(0.8)
 

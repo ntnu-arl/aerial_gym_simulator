@@ -29,7 +29,7 @@ class LeePositionController(BaseLeeController):
             setpoint_position=command_actions[:, 0:3],
             setpoint_velocity=torch.zeros_like(self.robot_vehicle_linvel),
         )
-        logger.debug(f"accel: {self.accel}, command_actions: {command_actions}")
+        # logger.debug(f"accel: {self.accel}, command_actions: {command_actions}")
         forces = (self.accel - self.gravity) * self.mass
         # thrust command is transformed by the body orientation's z component
         self.wrench_command[:, 2] = torch.sum(
