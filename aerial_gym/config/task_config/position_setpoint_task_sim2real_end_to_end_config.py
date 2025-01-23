@@ -1,6 +1,6 @@
 import torch
 
-EVAL = True
+EVAL = False
 
 if EVAL == False:
     class task_config:

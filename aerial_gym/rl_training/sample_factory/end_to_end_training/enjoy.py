@@ -65,26 +65,26 @@ def test_policy_script_export():
     total_runs = 0
     for i in range(n_steps):
         
-        obs["obs"][:,:3] = goals[reset_counter-1] + obs["obs"][:,:3]
+        obs["observations"][:,:3] = goals[reset_counter-1] + obs["observations"][:,:3]
         
-        actions_motor_commands = model_deploy(obs["obs"].squeeze().cpu()).unsqueeze(0).to("cuda")
+        actions_motor_commands = model_deploy(obs["observations"].squeeze().cpu()).unsqueeze(0).to("cuda")
             
         obs, _, crashes, successes, _ = env.step(actions=actions_motor_commands)
         
         n_crashes += torch.sum(crashes)
         total_runs += torch.sum(crashes) + torch.sum(successes)
     
-        pos_list.append((-obs["obs"].squeeze().cpu()[0:3].detach().numpy()).tolist())
-        pos_err_list.append((goals[reset_counter-1].cpu() + obs["obs"].squeeze().cpu()[0:3]).detach().numpy().tolist())
+        pos_list.append((-obs["observations"].squeeze().cpu()[0:3].detach().numpy()).tolist())
+        pos_err_list.append((goals[reset_counter-1].cpu() + obs["observations"].squeeze().cpu()[0:3]).detach().numpy().tolist())
         
-        ori_6d = obs["obs"].squeeze().cpu()[3:9].detach()
+        ori_6d = obs["observations"].squeeze().cpu()[3:9].detach()
         ori_matrix = rotation_6d_to_matrix(ori_6d)
         ori_euler = matrix_to_euler_angles(ori_matrix, "XYZ")
         ori_list.append(ori_euler.detach().numpy().tolist())
 
-        vel_list.append(obs["obs"].squeeze().cpu()[9:12].detach().numpy().tolist())
+        vel_list.append(obs["observations"].squeeze().cpu()[9:12].detach().numpy().tolist())
         
-        ang_vel_list.append(obs["obs"].squeeze().cpu()[12:15].detach().numpy().tolist())
+        ang_vel_list.append(obs["observations"].squeeze().cpu()[12:15].detach().numpy().tolist())
 
         actions_real =  actions_motor_commands * (max_u - min_u)/2 + (max_u + min_u)/2
         

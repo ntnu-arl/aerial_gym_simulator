@@ -48,10 +48,10 @@ def convert_model_to_script_model(nn_model_full, max_u, min_u, n_motors):
 
     nn_model_deploy = ModelDeploy([15, 32, 24, n_motors], lims)
 
-    nn_model_deploy.control_stack[0].weight.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.obs.mlp_head[0].weight.data
-    nn_model_deploy.control_stack[0].bias.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.obs.mlp_head[0].bias.data
-    nn_model_deploy.control_stack[2].weight.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.obs.mlp_head[2].weight.data
-    nn_model_deploy.control_stack[2].bias.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.obs.mlp_head[2].bias.data
+    nn_model_deploy.control_stack[0].weight.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.observations.mlp_head[0].weight.data
+    nn_model_deploy.control_stack[0].bias.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.observations.mlp_head[0].bias.data
+    nn_model_deploy.control_stack[2].weight.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.observations.mlp_head[2].weight.data
+    nn_model_deploy.control_stack[2].bias.data[:] = nn_model_full.actor_critic.actor_encoder.encoders.observations.mlp_head[2].bias.data
     nn_model_deploy.control_stack[4].weight.data[:] = nn_model_full.actor_critic.action_parameterization.distribution_linear.weight.data
     nn_model_deploy.control_stack[4].bias.data[:] = nn_model_full.actor_critic.action_parameterization.distribution_linear.bias.data
     
