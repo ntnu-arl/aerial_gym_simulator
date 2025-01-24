@@ -34,7 +34,7 @@ if EVAL == False:
 else:
     class task_config:
         seed = 41
-        sim_name = "base_sim"
+        sim_name = "base_sim_4ms"
         env_name = "empty_env"
         robot_name = "tinyprop"
         controller_name = "no_control" 
