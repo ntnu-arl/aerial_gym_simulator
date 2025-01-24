@@ -88,11 +88,20 @@ class IsaacGymEnv(BaseManager):
 
         logger.info("Fixing devices")
         args.sim_device = self.device
-        if self.simulator_params.use_gpu_pipeline == "False":
+        self.sim_device_type, self.sim_device_id = gymutil.parse_device_str(args.sim_device)
+        if self.sim_device_type == "cpu" and self.simulator_params.use_gpu_pipeline == True:
+            logger.warning(
+                "The use_gpu_pipeline is set to True in the sim_config, but the device is set to CPU. Running the simulation on the CPU."
+            )
+            self.simulator_params.use_gpu_pipeline = False
+        if self.simulator_params.use_gpu_pipeline == False:
             logger.critical(
                 "The use_gpu_pipeline is set to False, this will result in slower simulation times"
             )
-        self.sim_device_type, self.sim_device_id = gymutil.parse_device_str(args.sim_device)
+        else:
+            logger.info(
+                "Using GPU pipeline for simulation."
+            )
         logger.info(
             "Sim Device type: {}, Sim Device ID: {}".format(
                 self.sim_device_type, self.sim_device_id
