@@ -52,15 +52,16 @@ The optimized code in this newer version allows training for motor-command polic
 When referencing the Aerial Gym Simulator in your research, please cite the following paper
 
 ```bibtex
-@misc{kulkarni2023aerialgymisaac,
-      title={Aerial Gym -- Isaac Gym Simulator for Aerial Robots}, 
-      author={Mihir Kulkarni and Theodor J. L. Forgaard and Kostas Alexis},
-      year={2023},
-      eprint={2305.16510},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2305.16510}, 
-}
+@ARTICLE{kulkarni2025@aerialgym,
+  author={Kulkarni, Mihir and Rehberg, Welf and Alexis, Kostas},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={Aerial Gym Simulator: A Framework for Highly Parallelized Simulation of Aerial Robots}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-8},
+  keywords={Robots;Robot sensing systems;Rendering (computer graphics);Physics;Engines;Navigation;Training;Motors;Planning;Autonomous aerial vehicles;Aerial Systems: Perception and Autonomy;Machine Learning for Robot Control;Reinforcement Learning},
+  doi={10.1109/LRA.2025.3548507}}
 ```
 
 If you use the reinforcement learning policy provided alongside this simulator for navigation tasks, please cite the following paper:
