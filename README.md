@@ -67,15 +67,17 @@ When referencing the Aerial Gym Simulator in your research, please cite the foll
 If you use the reinforcement learning policy provided alongside this simulator for navigation tasks, please cite the following paper:
 
 ```bibtex
-@misc{kulkarni2024reinforcementlearningcollisionfreeflight,
-      title={Reinforcement Learning for Collision-free Flight Exploiting Deep Collision Encoding}, 
-      author={Mihir Kulkarni and Kostas Alexis},
-      year={2024},
-      eprint={2402.03947},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2402.03947}, 
-}
+@INPROCEEDINGS{kulkarni2024@dceRL,
+  author={Kulkarni, Mihir and Alexis, Kostas},
+  booktitle={2024 IEEE International Conference on Robotics and Automation (ICRA)}, 
+  title={Reinforcement Learning for Collision-free Flight Exploiting Deep Collision Encoding}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={15781-15788},
+  keywords={Image coding;Navigation;Supervised learning;Noise;Robot sensing systems;Encoding;Odometry},
+  doi={10.1109/ICRA57147.2024.10610287}}
+
 ```
 
 ## Quick Links
