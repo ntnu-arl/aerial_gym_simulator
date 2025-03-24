@@ -158,7 +158,7 @@ def get_euler_xyz_tensor(q):
     )
 
 
-@torch.jit.script_if_tracing
+@torch.jit.script
 def ssa(a: torch.Tensor) -> torch.Tensor:
     """Smallest signed angle"""
     return torch.remainder(a + torch.pi, 2 * torch.pi) - torch.pi
