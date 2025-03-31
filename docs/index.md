@@ -60,13 +60,13 @@ When referencing the Aerial Gym Simulator in your research, please cite the foll
 
 ```bibtex
 @misc{kulkarni2023aerialgymisaac,
-      title={Aerial Gym -- Isaac Gym Simulator for Aerial Robots}, 
+      title={Aerial Gym -- Isaac Gym Simulator for Aerial Robots},
       author={Mihir Kulkarni and Theodor J. L. Forgaard and Kostas Alexis},
       year={2023},
       eprint={2305.16510},
       archivePrefix={arXiv},
       primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2305.16510}, 
+      url={https://arxiv.org/abs/2305.16510},
 }
 ```
 
@@ -74,13 +74,13 @@ If you use the reinforcement learning policy provided alongside this simulator f
 
 ```bibtex
 @misc{kulkarni2024reinforcementlearningcollisionfreeflight,
-      title={Reinforcement Learning for Collision-free Flight Exploiting Deep Collision Encoding}, 
+      title={Reinforcement Learning for Collision-free Flight Exploiting Deep Collision Encoding},
       author={Mihir Kulkarni and Kostas Alexis},
       year={2024},
       eprint={2402.03947},
       archivePrefix={arXiv},
       primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2402.03947}, 
+      url={https://arxiv.org/abs/2402.03947},
 }
 ```
 
@@ -93,6 +93,7 @@ For your convenience, here are some quick links to the most important sections o
 - [RL Training](./6_rl_training.md)
 - [Simulation Components](./4_simulation_components.md)
 - [Customization](./5_customization.md)
+- [Sim2Real Deployment](./9_sim2real.md)
 - [FAQs and Troubleshooting](./7_FAQ_and_troubleshooting.md)
 
 
@@ -105,7 +106,7 @@ Welf Rehberg &nbsp;&nbsp;&nbsp;&nbsp; [Email](mailto:welf.rehberg@ntnu.no) &nbsp
 
 Theodor J. L. Forgaard &nbsp;&nbsp;&nbsp; [Email](mailto:tjforgaa@stud.ntnu.no) &nbsp; [GitHb](https://github.com/tforgaard) &nbsp; [LinkedIn](https://www.linkedin.com/in/theodor-johannes-line-forgaard-665b5311a/)
 
-Kostas Alexis &nbsp;&nbsp;&nbsp;&nbsp; [Email](mailto:konstantinos.alexis@ntnu.no) &nbsp;  [GitHub](https://github.com/kostas-alexis) &nbsp; 
+Kostas Alexis &nbsp;&nbsp;&nbsp;&nbsp; [Email](mailto:konstantinos.alexis@ntnu.no) &nbsp;  [GitHub](https://github.com/kostas-alexis) &nbsp;
  [LinkedIn](https://www.linkedin.com/in/kostas-alexis-67713918/) &nbsp; [X (formerly Twitter)](https://twitter.com/arlteam)
 
 This work is done at the [Autonomous Robots Lab](https://www.autonomousrobotslab.com), [Norwegian University of Science and Technology (NTNU)](https://www.ntnu.no). For more information, visit our [Website](https://www.autonomousrobotslab.com/).
@@ -118,6 +119,6 @@ This repository utilizes some of the code and helper scripts from [https://githu
 
 
 
-## FAQs and Troubleshooting 
+## FAQs and Troubleshooting
 
 Please refer to our [website](https://ntnu-arl.github.io/aerial_gym_simulator/7_FAQ_and_troubleshooting/) or to the [Issues](https://github.com/ntnu-arl/aerial_gym_simulator/issues) section in the GitHub repository for more information.

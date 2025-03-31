@@ -2,6 +2,11 @@ import numpy as np
 import os
 import yaml
 
+import sys
+
+# Add the correct path to system path
+sys.path.insert(0, '/home/itk/Desktop/dev_sindre/aerial_gym_simulator_sindre')
+
 
 import isaacgym
 
@@ -196,7 +201,7 @@ def get_args():
         {
             "name": "--num_envs",
             "type": int,
-            "default": "1024",
+            "default": "8192",
             "help": "Number of environments to create. Overrides config file if provided.",
         },
         {
