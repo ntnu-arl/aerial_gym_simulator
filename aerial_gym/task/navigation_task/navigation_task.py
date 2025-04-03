@@ -173,6 +173,10 @@ class NavigationTask(BaseTask):
             max=self.obs_dict["env_bounds_max"][env_ids],
             ratio=target_ratio[env_ids],
         )
+        
+        # Populate sim_env visual targets positions
+        self.sim_env.visual_targets = [target_pos.tolist() for target_pos in self.target_position]
+        
         # logger.warning(f"reset envs: {env_ids}")
         self.infos = {}
         return
