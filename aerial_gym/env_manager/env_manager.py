@@ -386,7 +386,7 @@ class EnvManager(BaseManager):
             visual_targets = None
         else: 
             visual_targets = self.visual_targets
-        self.IGE_env.render_viewer()
+        self.IGE_env.render_viewer(visual_targets)
 
     def post_reward_calculation_step(self):
         envs_to_reset = self.reset_terminated_and_truncated_envs()
