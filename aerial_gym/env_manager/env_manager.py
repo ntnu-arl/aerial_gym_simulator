@@ -45,6 +45,7 @@ class EnvManager(BaseManager):
         num_envs=None,
         use_warp=None,
         headless=None,
+        are_targets_visualized:bool=None
     ):
         self.robot_name = robot_name
         self.controller_name = controller_name
@@ -61,6 +62,12 @@ class EnvManager(BaseManager):
 
         self.num_envs = self.cfg.env.num_envs
         self.use_warp = self.cfg.env.use_warp
+        
+        # Flag to indicating if the targets are shown in the render 
+        self.are_targets_visualized = are_targets_visualized
+        
+        # List of xyz positions of target locations for the robot
+        self.visual_targets = None
 
         self.asset_manager = None
         self.tensor_manager = None
@@ -375,6 +382,10 @@ class EnvManager(BaseManager):
 
     def render_viewer(self):
         # render viewer GUI
+        if self.are_targets_visualized == False:
+            visual_targets = None
+        else: 
+            visual_targets = self.visual_targets
         self.IGE_env.render_viewer()
 
     def post_reward_calculation_step(self):
