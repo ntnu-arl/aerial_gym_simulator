@@ -1,0 +1,984 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="2_getting_started/">
+      
+      
+      <link rel="icon" href="images/arl_logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>Aerial Gym Simulator</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.4af4bdda.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Ubuntu";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#aerial-gym-simulator" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Aerial Gym Simulator" class="md-header__button md-logo" aria-label="Aerial Gym Simulator" data-md-component="logo">
+      
+  <img src="images/arl_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Aerial Gym Simulator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ntnu-arl/aerial_gym_simulator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ntnu-arl/aerial_gym_simulator
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="2_getting_started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="3_robots_and_controllers/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Robots and Controllers
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="8_sensors_and_rendering/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Sensors and Rendering
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="4_simulation_components/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Simulation Components
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="5_customization/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Customizing the Simulator
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="6_rl_training/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  RL Training
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="7_FAQ_and_troubleshooting/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  FAQ & Troubleshooting
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Aerial Gym Simulator" class="md-nav__button md-logo" aria-label="Aerial Gym Simulator" data-md-component="logo">
+      
+  <img src="images/arl_logo.png" alt="logo">
+
+    </a>
+    Aerial Gym Simulator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ntnu-arl/aerial_gym_simulator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ntnu-arl/aerial_gym_simulator
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-aerial-gym-simulator" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Aerial Gym Simulator?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#citing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Citing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Links
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contact
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acknowledgements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Acknowledgements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faqs-and-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      FAQs and Troubleshooting
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="2_getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="3_robots_and_controllers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Robots and Controllers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="8_sensors_and_rendering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sensors and Rendering
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="4_simulation_components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simulation Components
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="5_customization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Customizing the Simulator
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="6_rl_training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RL Training
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="7_FAQ_and_troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ & Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+    
+      
+    
+    <a href="https://github.com/ntnu-arl/aerial_gym_simulator/raw/master/docs/index.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<p><a href="https://opensource.org/licenses/BSD-3-Clause"><img alt="License" src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" /></a> <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a></p>
+<h1 id="aerial-gym-simulator"><a href="./"><span class="twemoji"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="153.60001"
+   height="221.12"
+   viewBox="0 0 153.60001 221.12"
+   sodipodi:docname="arl_logo.svg"
+   inkscape:version="1.3.2 (1:1.3.2+202311252150+091e20ef0f)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="3.8533995"
+     inkscape:cx="69.419224"
+     inkscape:cy="117.9478"
+     inkscape:window-width="2491"
+     inkscape:window-height="1403"
+     inkscape:window-x="69"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g1" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g1">
+    <image
+       width="153.60001"
+       height="221.12"
+       preserveAspectRatio="none"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAKzCAYAAADGJt5RAAAACXBIWXMAAC4jAAAuIwF4pT92AABd&#10;SklEQVR4nO3dd5wU5eE/8M9s373eO8cdHAdIUYoKgkgTUBDs2HuLokmMLfrVaDSJscWSWKNRYyxR&#10;QCWAClhAUEDp7QApR7vett22+f0B+AM87nbvZveZmf28Xy9fwWNn5pPzdj/3zDzzjCTLMoiIiCi2&#10;DKIDEBERxSMWMBERkQAsYCIiIgFYwERERAKwgImIiARgARMREQnAAiYiIhKABUxERCQAC5iIiEgA&#10;FjAREZEALGAiIiIBWMBEREQCsICJiIgEYAETEREJwAImIiISgAVMREQkgEl0gEhJkiQ6ApHuzfvy&#10;h+QWp+fKi6aMeEF0FqJokGVZdARIaggRCRYwUcdmzl061en2Tne5vNNaXB5bi9ODFpcHLU4PXG4v&#10;nC4vWpxuOF1eBILB4+5nzYLn+YYjXVJD97GAiTTmsec+kBcuXoMWlwc+nz9qx+lRnIeZ//w933Ck&#10;S2roPl4DJtKYBd+sRl1Dc1TLFwAunHLaH6N6AKI4xwIm0pj6xpaoH8Nus+CSaaMejPqBiOIYC5hI&#10;Q96Z9dWzsTjOpDFDYnEYorjGAibSkBWrt94ei+M89NtLeO2XKMpYwEQa8sOabVE/Rr/exVE/BhGx&#10;gIk0pdnpjvoxLpoyYnjUD0JELGAirXjzg4Uzo32M5EQHpk44dVm0j0NELGAizVi+uuLcaB9jypkn&#10;R/sQRHQIC5hII35ctz2q+5ckCXf/6nxOviKKERYwkUa4Pa1R3f/QgWVR3T8RHY0FTKQBr/3n87XR&#10;PsarT87g6JcohljARBqwfHVF/2juPzM9OZq7J6I2sICJNGDNhh1R3f+5k4ZFdf9E9EssYCIN8Lb6&#10;orZvg8GA266ZzNPPRDHGAiZSuZfemtcQzf2PPLlvNHdPRMfBAiZSue9XVaRGc//PPXoTR79EArCA&#10;iVRu3eadUdt3QW5G1PZNRO1jAROpnN8fiNq+zz/7tJVR2zkRtYsFTKRiz7/+qRytfZtNRlx3yfih&#10;0do/EbWPBUykYstXVURt3+NGnhi1fRNRx1jARCq2oWJ31Pb9l/uv5uQrIoFYwEQqFgyGorLfHsV5&#10;UdkvEYWPBUykUk+/PDtq138vmHzaE9HaNxGFhwVMpFLLV0fn+q/dZsGl5466Oyo7J6KwsYCJVGrL&#10;9r1R2e+k0YOjsl8iigwLmEilQqHoXP996M5LOfmKSAVYwEQq9PjfP4zK9d9+vYujsVsi6gQWMJEK&#10;rVi9NSr7vXDyiDFR2TERRYwFTKRC23buV3yfyYkOTJt46peK75iIOoUFTKRCsqz8Gegp409WfJ9E&#10;1HksYCKVefRv7yvevpIk4e5bz+fkKyIVYQETqcyKKNz/O2RgT8X3SURdwwImUpmde6oV3+drT97O&#10;0S+RyrCAiVRkzoIVig9VM9KSld4lESmABUykIitWVyh+/9G5k4YpvUsiUgALmEhFlL7/12AwYMa1&#10;k3n6mUiFWMBEKrL3QJ2i+xtxcl9F90dEymEBE6nErHnLJiq9z+cfvYmjXyKVYgETqcSK1VvnKbm/&#10;/Jx0JXdHRApjAROpxIo1yt7/e/7Zp61TdIdEpCgWMJFKVNc2KbYvs8mI6y89c4BiOyQixbGAiVTg&#10;g0+X3Kbk/saOPFHJ3RFRFLCAiVRgxeqK55Xc3+P3X83JV0QqxwImUoGVa7Yptq/S4lzF9kVE0cMC&#10;JlKB+sYWxfZ14eQRTyi2MyKKGhYwkWDvzPrqWaX2ZbdZcOm5o+5Wan9EFD0sYCLBVqzeertS+5o4&#10;erBSuyKiKGMBEwn2g4LXf/9w56WcfEWkESxgIsGanW5F9nNCeTdF9kNEscECJhLozQ8WzlRqXxdO&#10;HjFJqX0RUfSxgIkEWr664lwl9pOUaMe5k4bNV2JfRBQbkizLojNERJJ4iYv0Y9iU38luT2uX92Oz&#10;WpCbnaZAImDiGYO8t1x1ll2RnRGplBq6zyQ6AFE8U6J8AcDb6sPOyqou70eSJLB8iWKDp6CJBHnt&#10;P5+vFZ3hWGNHDBQdgShusICJBFm+uqK/6AxHkiQJTz10Ha/xEMUIC5hIkDUbdoiOcJThQ/uIjkAU&#10;V1jARIJ4W32iIxzlH3+6haNfohhiARMJ8NJb8xpEZzjS4AE9RUcgijssYCIBvl9VkSo6w5Fef/oO&#10;jn6JYowFTCTAus07RUf4Wd9eXMKSSAQWMJEAfn9AdISfvfuPuzj6JRKABUwUY8+//qn4JXgO6VGc&#10;JzoCUdxiARPF2PJVFaIj/Oy6S8cXic5AFK9YwEQxtqFit+gIAIDC/EycPXboHtE5iOIVC5goxoLB&#10;kOgIAIBrLx43XXQGonjGAiaKoadfnq2K6785mak4/+zT3hedgyiesYCJYmj5anVc/73ywjEvi85A&#10;FO9YwEQxtGX7XtERkJaSiMvPH32z6BxE8Y4FTBRDoZD467+Xn3/GOtEZiAiQZFkVl6TCJklcM4Di&#10;1z/f/WLFc//8ZEhnt09MsOPbj//KNxHFPTV0H0fARBqya091p8sXAKZPHalUFCLqIhYwkYbsqKzq&#10;9LZ2mwUzrp3C0S+RSrCAiTRk5+7OF/B5Zw1XMAkRdRULmEhDmp3uTm1nNptw96/O5+iXSEVYwERx&#10;YMr4k0VHIKJjsICJNOKDT5fc1pntjEYDHvrtJRz9EqkMC5hII3burnq+M9tNOGOQ0lGISAEsYCKN&#10;6MwMaEmS8Of7ruLol0iFWMBEGtGZAh49vH8UkhCREljARBpxoLoh4m2eefgGjn6JVIoFTKQRkS6d&#10;N2xw7yglISIlsICJNGDuwpVZkW7z0uO3cvRLpGIsYCIN2FFZVR3J6088oTRaUYhIISxgIg3YEeES&#10;lG8++xuOfolUjgVMpAE7I5gB3aesKIpJiEgpLGAiDdi1tybs17734t0c/RJpAAuYSAN8Pn9Yryvp&#10;lhPlJESkFBYwkY5cN318P9EZiCg8LGAilXvzg4Uzw3ldQW4Gppx5yoZo5yEiZbCAiVRuR2XVueG8&#10;7uqLx82IdhYiUg4LmEjlwrkFKTM9GRdNGfFCDOIQkUJYwEQqF85DGK68cMysGEQhIgWxgIlUrqnZ&#10;1e7fpyQn4KoLx54XozhEpBAWMJHGXXbuGZE/p5CIhGMBE6nYh3O+vbK9v09w2HDTFRNzY5WHiJTD&#10;AiZSsR2VVW+29/cXTRkRqyhEpDAWMJGKtTcBy2ox49c3TOWyk0QaxQImUrGd7dyCdN5Zw2OYhIiU&#10;xgImUrF9VfVtft1sMuLe2y7g6JdIw1jARComy3KbX588/uQYJyEipbGAiVRq/pc/WNv6usFgwB/u&#10;vJSjXyKNYwETqdSO3VWNbX39zFEnxTgJEUUDC5hIpXZUVtmO/ZokSXj8/qs5+iXSARYwkUq19RCG&#10;Uafycb9EesECJlKpXXuqf/G1Z/94I0e/RDrBAiZSqVaf/6h/P+WkXoKSEFE0sICJNOKVJ2Zw9Euk&#10;IyxgIhV668NF7x757wP6loiKQkRRwgImUqEdu6umH/nvbz/3W45+iXSGBUykQjuPeAhDr9ICgUmI&#10;KFpYwEQqdOQtSP995V6Ofol0iAVMpEINTU4AQPfCbMFJiChaWMBEKnbN9PFjRGcgouhgAROpzMx5&#10;y6YCQG52GqZNPPVL0XmIKDpYwEQqs2PXgdkAcM3F4x4QHIWIoogFTKQyOyqrkJGWjOlTT39MdBYi&#10;ih4WMJHK7KiswhUXjF4oOgcRRRcLmEhlnE4Prrl43DjROYgouljARCozferpXtEZiCj6JFmWRWeI&#10;iCRxTQIiIuoaNXQfR8BEREQCsICJiIgEYAETEREJYBIdgIjix6x5yya63N5pLU7PVbdcdZZddB4i&#10;kTgJi4i65PYHXpYP1DTC5fbA6fLC6fIiEAy2u016ahK+/PBPfDOTMGroPo6AiahLvv5ufcTbnHfW&#10;MHz5YRTCEGkIrwETUad9OOfbKyPdxmAwYMa1Uzj6pbjHETDpysBxM35xXslkNMLhsMJhtyLRYUOC&#10;wwaH3YqEBBsSD/3ZYbeyFDph+eqKNyPd5oxh/bDq82ikIdIWFjDpSkZaEuoaWo76WiAYRHOLG80t&#10;7na3fWfmV89edt4Zd0Qzn96sXLM14m2eefgG/qJDBJ6CJp2ZOuHUTm+7fFXF7QpGiQvH/rLTkZJu&#10;OVFKQqQ9LGDSlTuuP0fq7Ez5H9ZtUziNvr07++tHIt1m+tTT+YxjokNYwKQ7pw4q79R2LU6Pwkn0&#10;bcXqrf8XyesddiufcUx0BBYw6c5Lj9/a6WuMr7/3xRIls+jZigiv/0458+QoJSHSJhYw6VJmenKn&#10;tlu+quI0haPoVkeT2o4kSRJ+P+MiTr4iOgILmHRp2sRhndpu9YafFE6iT299uOjdSF4/dGBZtKIQ&#10;aRYLmHRpxrWTOzUZy+P1RSGN/qxYvXV6JK9/9ckZHP0SHYMFTLo1fGifTm330lvzGhSOojs/rA1/&#10;xnhOVloUkxBpFwuYdOsff7qlU6Ou5asrUhWOojsutzfs11405bR1UYxCpFksYNK1nMzUiLdZu2mn&#10;4jn05J/vfrEi3NeazSZcf+mEAdHMQ6RVXIqSdO3cScO8L709zxbJNn5/IFpxwvbCG3PkH9dtx9Yd&#10;+46abSxJEvKy0zCwbwlOP7Vf9lljh9TEOtuK1RVDwn3tmaefhJXzopmGSLv4PGDSvZPOvEMOhUIR&#10;bXPdJeNx+3XnxPSH7dMvlp/w5gcL12/dsS/sbZKTHLjsvDMab75iUswutJ46+U453MlqaxY8zzcs&#10;qZIauo+noEn3Rp7cN+Jtlq+K/CEDXXHRTY/LDzz+dkTlCxy8F/fFN+emTrzsoZh9moRbvn17dYty&#10;EiJtYwGT7j336E0Rj8I2bt0djSi/8O+Pvnxp0IQ75C3b93RpP/ur6nHSmXfIb/534UyForXp5bfn&#10;Hwj3tdOnjhwezSxEWscCpriQmx3ZGdpgMLJT1p3x1Euz5CdenHmTUscKhUJ4+uXZ5z7/+pyojYaX&#10;r64I63FGqckJmDrh1GXRykGkByxgigvnTRpeFek2T7w4M2pF9vLb8w+89eGiqOz7tf98hndmffVs&#10;NPYd7gzxaZM6txIZUTxhAVNcuOmKiblGY2Q/7stXVUQpDfDiW3Oj+mDcp1+aHZVnG/t8/g5fYzAY&#10;8JsbpnLyFVEHWMAUN04/tV9Er490QlS4Jlz6oBztGZiBYBBTr3lU0YO88EZ4p7ZPP+UEJQ9LpFss&#10;YIobf3v4hohGZdEoydf+8/naA9WxWelyZ2UV3pmp3KnoFavDmxn+7B9v5OiXKAwsYIorBbkZEb3+&#10;sWffV7SF//XBgv5K7q8jb/53kWKnotdv3tXha4oLs5U6HJHusYAprpx31vCI1iVeHuaoLxxv/nfh&#10;zBanR7H9haOqRrnRdiAY7PA1F58z8jnFDkikcyxgiivXX3rmAJPRGPbrd1ZGPHn6uL74evW5iu0s&#10;Aq/8e37HQ9cOPPPqxx2eCXDYrbjsvDPu6OqxiOIF14KmuHPGaf2x4JvVYb/+fwtXFJ49dmjXVsoA&#10;sGlrZVd30Skbtuzu8pJUK1Z3PCM8PS0Jz772SYdFfcf1sV3ik0itWMAUd5568Dpp4LgZYV/bXb6q&#10;ohJAl0sjnFO40bB7X9ef17Bpa8e/f+zZV4vX3/uiy8ciihc8BU1xqTA/M+zXRvN+4Fioqmns8j4i&#10;fZjF8Qzo012R/RDpAQuY4tIFZ5+2MNzX7quqj2aUqAv34QnH89d/fKTYTPC3n7+Tp5+JDmEBU1y6&#10;5uJx48ym8CdjzZy3bGpXjvf+x4t/15Xtu6Kro9dw7//tSO+ehYrsh0gvWMAUt8aMGBj2a5evqpjd&#10;lWNdPHXkk13ZvitSkhO6tL1SK4K9/9I9HP0SHYEFTHHrrw9cE3YhhDMLWK2GD+7dpe2VWBGspFtU&#10;l74m0iTOgibdOXH87YqvtVxb39zlfTjsVrg9rQqkicygAT1ndHbbPz3/gfz+x4u7nOG6S87sN/v1&#10;B7q8HyI94QiYdCdaDwN47+Nv7u/K9sOH9lEqSkQumjLihc5uq8QM8MK8DEwZf/KGLu+ISGdYwKQ7&#10;zz16U1SuNa5YvfXRrmz/1IPXxfwa6MC+JV3a3mI2o7xH4XH/SUq0d7iPay4ef1WXQhDpFE9Bky4N&#10;G9wby37YrOg+V6zp+mzgbgVZ2L236wtjhOut537bpdL/4OX2J05dd+dz8sp2vi85mam4YPJpb3Ul&#10;A5FecQRMuvTS47cqPtpsanZ1eR+3Xn22TYEoYenXuzjqx9i1p7rdv7/q4rF8OAPRcbCASbcG9e+p&#10;+D7f+nDRu13ZfuLowa0jTu6rVJzjMpuMeOeF30X9lHd7k9My0pJw2bl8OAPR8bCASbfeeOYOxQto&#10;+aqK6V3dx9//dIuUk5WmRJzjuve2C2Ny3bW92eaXnz/621hkINIqFjDpmtKnYX9ct12R/Xz+7iNS&#10;ahcXyDieW648qzEW113nLlyZdby/S0504Nrp40dEOwORlrGASdeUPg3rcnsV29fXM/8i5eekK7Y/&#10;o9GAe2694Imbr5wU3eH1ITv3VB33YcmXnjtKuW8UkU6xgEn3ynsouwbxa//5bK1S+5r3zsPSuJEn&#10;dnk/RQVZ+PGzZ6VLzx11d9dThWfXnpo2f7lx2K245aqzOr4/iSjOSUqvGBRtksTlZCly4Tz/t6wk&#10;HyPDWMSjZ0le0dljh3b8gNwIXTHjKXntpp2d2nbNgudj/sa4+ObH5c3bfvltuObicfj1DVP5RiVV&#10;U0P38T5gigsl3XKwY/dxz5gCAFJTEnDH9ecIK463n79TeuO9BQv+9trHY0VliERbtyBZLWaWL1GY&#10;eAqa4sL1l04o6+g1P+1qv6Bj4Zrp48aJzhCutp4zfP7ZwwUkIdImFjDFhcnjhm4rzM9s9zV1DV1/&#10;4EI8M5tNuOfWCzj6JQoTC5jixnXTx08TnUEvPvhk8W3Hfm3K+JNFRCHSLBYwxY3zzhr+cUcLYMya&#10;t2xijOJo2s7K6ueP/Hej0YCHfnsJR79EEWABU1y5dvq4dh9Ku2N31bxYZVFSe4tiRMPOPUdfL580&#10;enAsD0+kCyxgiivTp57+WEZa8nH//qfdB2KYRjluT+ukWB7vyBnQkiThsXuv5OiXKEIsYIo7V100&#10;Ztbx/m5HpfiZ0AZD5G9Ltze2BbyvquHnP48dOTCWhybSDRYwxZ2rLhx73vHWYd67vy7GaX7JbrNE&#10;vI3b0xrTa9ehUAjAwdHvUw9ex9EvUSewgCkuXX7+6DafIq+G1XESHNaIt3F7WlOVT9KxcFYOI6K2&#10;sYApLt1w2YReSYltL1c878sfjn+ROAYctsgL2ONpjUKStr32n89/Xgv7+Udv4uiXqJNYwBS3Lpk2&#10;qs2v79h9oDG2SY5mt0dewC537Ap4157q/gBwykm9YnZMIj1iAVPcuvXqsyVHG2W3Y3eV0FFdW5k6&#10;4vbGroB3HpoB/coTMzj6JeoCFjDFtQun/PKZ8R09tCHaEhy2iLdxx/AU9K491RjYtyRmxyPSKxYw&#10;xbXf3jhNslrMR31tZxtP+YmlzoyAY3kNuKnZhbee+y1Hv0RdxAKmuHfsE3z8/oCgJAc5OncbUhSS&#10;tK1PWVHMjkWkZyxginv33HqBZDar59HYnZmEFasCnj3/u9HvvXg3R79ECmABEwE458xTjvr3N95f&#10;sEBQlM5NwopRARsNktjz80Q6wgImAvDgb6ZLRuP/fzv8tOvAWFFZEhy2hZFu44pRAU8585QNMTkQ&#10;URxgARMdctaYIT//WeRMaIfNOj/SbURftyaiyLGAiQ559J4rpMMPQhD5UAaH3aLJRyISUWRYwERH&#10;GH/6iQAAp8sjLANP8xLFBxYw0RH++sA1kiRxki8RRR8LmOgYo4b1AwC8O/vrRwRHISIdYwETHePZ&#10;R26UAOCn3VX/JzoLEekXC5ioDcOH9MGO3QdExyAiHWMBE7Xhxb/8ShL9UIZIzV24Mkt0BiIKHwuY&#10;6Di6F+WIjhARt6d1kugMRBQ+FjDRcfzzqduFTYc+clWucLm9LGAiLWEBE6lQJ9eDnhiFKEQUJSxg&#10;IhVy2DpVwKnKJyGiaGEBE6mQwxF5AXti+ExgIuo6FjCRCqn5kYREpAwWMJEKdaaAY/VIQiJSBguY&#10;SIU6eQ04CkmIKFpYwEQq1JkRMK8BE2kLC5hIhRwOW8TbcARMpC0sYCIVctgtEW/DAibSFhYwkQo5&#10;7FY50m1YwETawgImUiGHzTov0m3cXl80ohBRlLCAiVTI4bBFXMA+nz8aUYgoSljARCrksFvni85A&#10;RNHFAiZSocnjhm4TnYGIoosFTEREJAALmIiISAAWMBERkQAsYCIiIgFYwEQ6Mm/RymTRGYgoPCxg&#10;Ih1xuVunic5AROFhAROplNlkjHgbt7d1UhSiEFEUsICJVMreiUcSuj2tE6MQhYiigAVMpFKdeSaw&#10;29OaqnwSIooGFjCRSnWmgD18IhKRZrCAiVSqkyPgKCQhomhgAROpVAILmEjXWMBEKtWpSVh8JjCR&#10;ZrCAiVTKbrVEvE2L0xuFJEQUDSbRAYiobR5fMOJt9lY14sEXF8hHfs1gkGC3muGwmeGwWVamJtme&#10;PH/sCe8rFpSIOkWSZbnjV6mIJEmiIxBFxYcL1l95oM75Zm2jC6GQjDWr1mLnTzsi2kdSchLGjB8T&#10;8bFtVhNy0pNW5mYknnv2yPI9Ee+ASGPU0H0sYCIB5i7ZkrX7QFNFVZ0zNRgKtfma9WvXY/vW7RHt&#10;15GQgPETxykREQ6bBd1yU564dNLAuxXZIZGKqKH7WMBEMfL6xz8sqTzQdNrxCvdYmzZsQsXmioiO&#10;YbXZMPHsCZ2J16HkRBt6dcsYfM6oPj9G5QBEMaSG7mMBE0XR8+8tk2saXJ3adsumLdi8cXNE25jN&#10;Zpx1zlmdOl4kLGYjyoszb7xwfP9Xo34woihQQ/exgIkU9vcPvpOr6pxd3s+2im3YsG5DRNsYDAZM&#10;OXdKl48dCZvFhP5luf2mnN47srBEAqmh+1jARAr4aOGGizdsr3ovEAzv9HI4ftq+A+tWr414u6nn&#10;T1UsQ6Tys5Ibb77g5DRhAYjCpIbuYwETdcHLHy0/sLe6OSca+961YxdW/7g64u0mT5sMozHyRxkq&#10;yWGz4N5rTueblVRLDd3H+4CJOuGZd76VG5o92FvdHLVjGDpZoqFQSHgBu70+PPjiAtlsMuKk8ryy&#10;yaf33iY0EJEKcQRMFIGn3l4iN8Votal9e/dhxXcrIt5uwtkTYLPZopCo80xGA4b0Lcg+a0R5jegs&#10;RIA6RsBcipIoDM+886384IsLYla+AGAwdG4Uq4LPlV8IBEP4bl1l9R9f/VKF6YjE4AiYqB2vzFyx&#10;a09VUzcRx25qbMLXi76O6Df1EwacgJ5lPaOYShlJCVbcdeVIvplJGDV0HwuYqA0zF22YuqbiwGzR&#10;74/amlr8uHIVPG53u69LSEzAgBMHIDsnO0bJlFGYk7L7xvOGFovOQfFH9HsbYAET/cJf3vhadnv9&#10;omP8LBgMonL3Huzfuw+NDY3w+XyQJAl2hx1p6enIL8hDXn6eZt8bBoOEP9w0VpvhSbPU0H0sYKJD&#10;3pqz6t1tlXXTRefoiCwDenwbZKQ6cMclw3X4/4zUSA3dxwImAvDYP7+SW30B0THinkGS8IebORqm&#10;6FND97GAKa79d8H6G9ZtPfCK6Bx0tILs5Kqbzj85V3QO0i81dB8LmOLW0/9eIje2xO62IoqM1WzC&#10;/defwTc8RYUauo8FTHHpkVcWyUqu20zRM3xgN9vE4b1aRecgfVFD97GAKa7M/mrj6B837VskOgdF&#10;pnt+2rfXTh08QnQO0g81dB8LmOLGq7NWVlQeaCwTnYM6Jy3Zjt9cdho/AEgRaug+FjDFhb/9Z6lc&#10;39T+YhakfnarGfddO4ofAtRlaug+FjDpntoW1qCuMRkNePDGMfwgoC5RQ/exgEnXHn3tS9nnD4qO&#10;QQqTJAkP835h6gI1dB+fhkS69cgri1i+OiXLMh56aaH4T1CiLmABky49/DJvM9I7WZbx4IsLWMKk&#10;WSxg0p2HX14kB0Ms33jBEiatYgGTrjzyCss3HvF0NGkRC5h049HXvuRp5zglyzL+8DJLmLSFBUy6&#10;8Jc3vuGEqzgXCsn446tfsoRJM1jApHnP/mep7Pb6RMcgFfAHgnj8X9+whEkTWMCkaa/NWrm2jitc&#10;0RFcHh+ef28ZS5hUjwVMmvXxV5uG7T7Q2F90DlKfmgYX/v2/1S+JzkHUHhYwadYPm/YuFZ2B1Kti&#10;d+1NojMQtYcFTJr0yCuLeIqROsTbk0jNWMCkOU//ewlvN6KwyLKMv7zxNUuYVIkFTJry3y/W3dDY&#10;4hUdgzTE7fXjX5/++D/ROYiOxQImTVm3reoV0RlIe37aU3+W6AxEx2IBk2Y89s+veCqROo3zBkht&#10;WMCkCW/NWfVuqy8gOgZpWCAYwksfLm8QnYPoMBYwacK2yrrpojOQ9u2raU59b96P94vOQQQAkixr&#10;66yMJEmiI1CM/eWNr2W31y86BumELMtoqNmD3qV5uO2KifxAiVNq6D4WMKnazEUbpq7esn+26Byk&#10;L16PCw21+wEAJpMRJ5QVsYzjjBq6jwVMqvbQSwtlrf2MkjbU1+xDq/fodcRNRiP69CzA7VedxQ8a&#10;nVPD5woLmFTr1ZkrKiqrmspE5yB9Cvh9qDlQCaDtz0CWsb6poftYwKRaD764QFs/nKQ5TQ01cDub&#10;Onyd0WhAeWk+fnPNZH4A6YQauo8FTKr0zDvfyg3NHtExSOdCwSCq9++CLIe/tKnBYEDvHixjrVND&#10;97GASZU4+qVYaWmqg7O5c7cHGwwSepXk487rpvCDSWPU0H0sYFKdJ99eIjc7ud4zxUYoFET1vshG&#10;wW0xGCSUFefhdzecww8pDVBD97GASXU4+qVYa2mqh7O5XrH9SZKEnsW5uPvGqfzAUik1dB8LmFTl&#10;6X8vkfm0I4q1g6PgnVH5UJYkCT265eCem6bxw0tF1NB9LGBSFY5+SZSmhmq4nc1RPYYkSSgtysG9&#10;N7OMRVND97GASTVe+nB5w76a5lTROSg+HbwveHfMjidJEkoKs3HfLefyQ00ANXQfC5hUg6NfEq2+&#10;dj9aPa6YH1eSJHQvyMKgfqW2iaef2BrzAHFIDd3HAiZV+HDB+ivXbj3wpugcFN+OXCNapOKCLAzp&#10;34NlHEVq6D4WMKnCI68skgPBrt0GQqSE6n07EQyq59nT3fIzMbhfafZZZwyqEZ1FT9TQfSxgUgWe&#10;fia1UPqWJCUV5WViSH+WsRLU0H0sYBLuhfe/k6vrnaJjEAEAggE/qvfvEh2jQ4W5GRjUr6TflDFD&#10;NojOokVq6D4WMAnH0S+pTW3VHvh92rkfPS87DUP69Rh8zrghP4rOohVq6D4WMAnHAia1cbU0ormx&#10;VnSMTsnLSsPg/qXDp44bukx0FjVTQ/exgEmoZ99dKtc1ujt+IVEMBYMBVO/bKTpGl+VmpmJw/9Ix&#10;08af/KXoLGqjhu5jAZMw875Zl7xsQ1XHD2MlEqCueg98rdo5Dd2RnMxUDO5XOuncM0+eLzqLGqih&#10;+1jAFHMvv/vFgTWbd+VY7clISkkXHYeoTc7mBrQ01YmOERVZ6ckY0r/HtPMmnPKx6CyiqKH7WMAU&#10;E+98vPjZFeu23+5y//8RRUZ2ISxWm8BURMfn97WitqpSdIyoy0pPxqB+pVddMPHUt0RniSU1dB8L&#10;mKJm1ufLJ36/Zuu8uoaWX/ydZDAgt6BUQCqi8FXt24mQihbliLaM1CQM7l9644WThr0qOku0qaH7&#10;WMCkuD++8KG8e1/7M0htjkSkZeTGKBFR5zTWV8Pjiu4TktQqPTURg/uVzrjorOEviM4SDWroPhYw&#10;KeKZN+bIm7fvRSgU3s9TSloWHIkpUU5F1DUeVwsa66tExxAuLSUBg/v1uOvis4c/KTqLUtTQfSxg&#10;6rTDk6n8/shP0WXmdoPZbIlCKiLlBAJ+1GhgVaxYSk1OwOB+pQ9Mn3zaY6KzdIUauo8FTBF55+PF&#10;z65ct/12p7vzt2fw+i9pSdXeHQiFgqJjqFJKkgMn9S157rKpI+8QnSVSaug+FjB16OMFK4Z9v3rr&#10;0pp6Za6FWW0OpGflK7IvomhrqN0Pr4BnBGtNcpIDgzRUxmroPhYwHVc4k6k6IzE5nff/kmbo+X7g&#10;aElKsOOkvt3/dcW5o64RneV41NB9LGA6SqSTqTojLSMXNkdi1PZPpKRWrxv1NftEx9AstZaxGrqP&#10;BUx49f2FFas37ijzdWIyVWdk5RXDZDLH5FhEXaWXdaHVIMFhw4l9us+9+vwzzhadRQ3dxwKOU0pM&#10;puoMSZKQW9gjpsck6qoDe3+CHAqJjqErCXYrTuxbIqyM1dB9LOA4ovRkqs4wW6zIzCkSdnyiztDb&#10;gxnUxmGzYmCf4m+vvXDMiFgdUw3dxwKOA3/6x0x5x55q0TEAADZ7ItIyuQIWaUtjfRU8rl8uqUrK&#10;i1UZq6H7WMA6FYvJVJ2RkJSG5NQM0TGIItLSVA9nc73oGHHHZrVgQO/irTdcPLaX0vtWQ/exgHXk&#10;1fcXVqzZtLOs1ecXHeW4ktOykMAlKElj3K5mNNWr4yxSvLJZzRjQu7tiZayG7mMBa9x7c769f/ma&#10;bY+2uDyio4QlPSsfVptDdAyiiPhaPair3is6Bh1itZjRv7xb1U2XjO/09Sw1dB8LWIPUMJmqszJz&#10;imC2WEXHIIoI14RWr86WsRq6jwWsIWqaTNVZ2fndYTSaRMcgikgoFETV3h2iY1AHLGYT+vUq8t5y&#10;2QR7R69VQ/exgFXuuTfnyhu27kFIJ/cg5hb2iLv/hqQP+yu3iY5AETCbTejfThmroftYwCqkhclU&#10;ncFFOEjL+FQk7TKbjOhbVoTbrpj4c4GooftYwCqhtclUnWEwmpCT3110DKJOqd6/C8GAvn4pjkcm&#10;kxGjhw2cceHEoS+IzsICFujTRStP+H71tvVVtY2io8SE0WRGdl6x6BhEnVJzYDcCfp/oGNQFJUW5&#10;sCWmotEZwMM3jxVeJpwNI8DhyVSfLFgpOkpMSRD+807UaXr65T+eSJKE0qJcWBwpaHQF4HXG5qEz&#10;4WABx8iRk6m0PpO50/j5RZrGH2At+bl4E1LQ6AzA7VJP8R7GAo6i1/+7aMmPG3ac1urzY92W3aLj&#10;CMcRBGkZf361QZIklHbLg8WejEZXAG4VjXiPxQJW2Htzvr1/xdptjzY7PVi2qkJ0HJXhBxgRRYck&#10;SehRnAeTLRlNLnWOeI/FAlbAkZOpFi5dJzqOimlrwh/RkbQ2YTVeHCzefJhsSWhyBQANFO9hLOAu&#10;+MtLs+WfKqvibjJVZ/EDjDSNP7+qIkkSenbPh8GShGa3tor3MBZwhJ57c668cdseBIMhbN99QHQc&#10;TWEBk5aFZH2sRqd1h4vXaD004g1or3gPYwGH4fX/LlqyauOO07ytnEzVFSxg0jJZJ8vBapUkSSgr&#10;KYBkTjw44tVw8R7GAj6OD+YuvW35mm3PN7W4OZlKIfwAIy3jCFiMw8ULcyJa3AHAr/3iPYwFfIRP&#10;F608YfnqbesP1DbiiyVrRcfRHZkfYKRRsizzGnCMGQwSykoKIRsT0OLRV/EexgIGJ1PFUigYhMFo&#10;FB2DKCL85TF2jizeZk8AgP6K97C4LeAX3p4vr6/YzclUMRYKsYBJezh/IfoMBgPKSgriongPi6sC&#10;PnIy1ZpNO0XHiUvBYAAms0V0DKLIsICjxmAwoFdpIYIGR9wU72G6L2BOplKXYDB+3lykHy5nk+gI&#10;umM0GlBWcrB4m+KseA/TZQHP/erHrO9Wba3eX9PAyVQqE9TBrQMUX5oaauBmASvGaDw44vXDjiZv&#10;EPFYvIfpqoAPT6aa9fly0VHoOPhAc9KSxvpqeFzNomPowuHiDUh2NHqCAIKiIwmn+QJ+4e358oaK&#10;SgSCQU6m0oAAC5g0QJZlNNZVwetxio6ieUajEeWlhfDBhkYvi/dImi3gv/xjplzT2MLJVBoT8PtE&#10;RyBqlyyH0FB7AK1et+gomna4eFtlGxpYvG0yiA7QWVu378F3329AfmYqzCbN/h4Rd2Q5xNPQpFqh&#10;YBB11XtZvl1gMhnRt1d3dC/tiQavGe5WFu/xaLaAszJS4HR5MHvut9ixYy+KcjP4wGyN8HMUTCoU&#10;CPhRW70Hfl+r6CiaZD5UvMUlPdHgMcHtZfF2RLsFnJ7885/37a/FR598g1aXG7mZqeJCUVj8rV7R&#10;EYiO0ur1oLaqkmdnOsFsNuGEXt3RrTuLN1LaLeDMlPeO/drq9T/h03lLkWizICXJISIWhcHnYwGT&#10;eridTaiv3ceHhUTIbDbhhPISFHXrgXqPiaeaO0GzF0+z0pNvAjD92K/LsoxF36yCzWrBhLFDUNfk&#10;gk+Hi3hrmd/nhSzLvGRAQsmyjObGWt7jGyGL2YSy0iJ4AhbUuzm5qis0OwKeNGZIuzfneVt9+Hju&#10;UmzbWomi3HR+2KuILMscBZNQoWAQ9TV7Wb4RsFhM6FdegsLiUtS7jfD4WLxdpdkCDteB6np89Mli&#10;uJpdyMtKFR2HDvFxlikJ4mv1oKZqN3ycixCWw8VbUNQDdW4jPK08Va8UzZ6CjtT6TTuwftMOjDpt&#10;AGx2GxqaXaIjxTW3swlGkxmOhOSOX0ykEGdzA1qa6gHw4QodsVrMKCstgstvRh1PNUeFpgs4wWGD&#10;yx3Zb7Fff7sWVqsFZ44ejCaXB95WznoUIRQKoam+Gj6vBylpWZAMuj8ZQwKFgkE01lfx/t4wWK1m&#10;lJUUwekzo87F4o0mTX/qHXkrUiRaW334dP4ybN60C0W56TAYeH1YFI+7BTVVlbz3kqLG63Gh5sBu&#10;lm8HbFYL+vfugbyCEtS5DGj1s3ijTdsFnJnSpe2raxvw0SeL0VjfhPzsNIVSUaSChxZAcDY3iI5C&#10;OiLLB8+yNNTuRyjEMjmew8WbW9AdtS4JrX5e440VTZ+CzsroWgEftrmiEpsrKjFyWH8kJDpQ38QF&#10;2GNOltHSVAevx4XU9GyYzBbRiUjDfK0eNNZXc2GNdthtFvQsKUJLqxG1rhAAFm+sabuA05Up4MMW&#10;L1sHi9mEM8cMRovHB4+XSybGmt/nRW1VJRKT05GYzLMSFBlZDqG5sY63F7XDbrOgR/citPiMqHWy&#10;eEXS9inojJR/Kb1Pnz+AOZ99j/XrtqEwJx0GTg6KOfnQaLi2iuvyUvi8Hhdq9u9m+R6Hw25F/z49&#10;kJ3fHXUuCT6eahZO0+2SmZF8R7T2XdfQgpmfLkZ9TQMKctKjdRhqx8HR8B40N9ZymUA6rmAwgIba&#10;/Wio3Y9gkKveHetg8fZEZm4xap0sXjWRZFlb98Mdu6LVwHEzYvJ/YPjJfZGSmoy6xpZYHI6OYTCa&#10;kJyaCbsjUXQUUglZluFqaYSzuQGyzFI5VoLditLuRWjyGuAP8PtzrIdvHiv89hdNXwOOpaXLN8Jo&#10;MmLCGYPh9gfg9vDUaCyFggE01h2A22lHcmomzBar6EgkkNfjRHNjHSdZtSHBYUOP4kI0egy8xqty&#10;LOAIBANBzF2wHGmpiRg94kTsr2tCMMgf7ljytR58bJzdkYSk1AwYjfwRjid+XyuaG2vha/WIjqI6&#10;iQ4bSosL0eiVUOOUweJVP01fAwaAxAR7zI/Z0OjEzDlLUL2/lteHBfG4W1CzfxdamuoQ4vVh3QsE&#10;/GioO4DaqkqW7zESE+wY0LcM6TndUOME/AFtXVaMZ5ofPmSmJ8PpEvOG3L5zP7bv3I9TBvdGZlYa&#10;aurbfUATKUyWZTibG+ByNiEhMRUJSamcta4zgYAfzuYGeFwt4PrNR0tKsKOkuBCNHgk1LSHw+6M9&#10;mi/g7IwU7KysEprh+x82w2Aw4MzRg+ELhuCMcH1q6ho5FIKzuR4uZyMSklKRkMgi1joW7/ElJzrQ&#10;vVsBGtwsXq3TfAErtRpWV4VCIcxfuAJJiQ6MO2MQquqbEQhw+btYkkMhOJvq4WpuhCMxGQlJqbxG&#10;rDF+XyucLQ3wurka3bFYvPqj+U+nzAx1Pc6uxenGrDlLUFyUjcEnlWPPgXrRkeKOLIfgammEy9kE&#10;uz0RCclpMHNpS1XzelxwtTTy+m4bUpIcKC5i8eqR5gs4OyPlZQA3ic5xrF2V1dhVWY0hJ/ZCbl4m&#10;quu4Ok/MyTI87hZ43C2wWO1wJKbAZk/4xb3kJEYoFITH1QKXs4m3E7UhJSkBxUUFqHfJqGmRweLV&#10;H80XcGZ68h1QYQEftnJ1BaQ1WzH+jEEIQkKLoAlj8c7X6oGv1QOD0QhHQjIciSk8PS2Ir9ULt7MJ&#10;Xo8TWlsIKBaOLl7O8Nczza+EBcRuNayuSkywY9yoQahpdMIf4JJ5ollsdjgcybA5EiBJnLQVTcFg&#10;AB5XC9yuZo52jyM1OQHdigpQ55QRCmniI03TuBJWnHG6PJg991sUFmTh5MG9sbeqgSMAgXxeD3xe&#10;D6QGA2z2BNgTkmCx2nmKWiGhUBBetxMet5PXdtuRlpKIosJ81Dll1DRzxBtPWMAC7Nlbgz17a3BS&#10;/54oLMpGVS2vD4sky6GfrxVLBgNstgTYHAmw2ni9OFLBYABejwtejxM+rxe8bnl86amJKCwoQF1L&#10;iMUbp3RRwEmJdrQ4tfcb9qp127B6/XaMGXkSDGYjmlrcoiPFPTl0RBlLBlhtdlhtDlhsDphMZtHx&#10;VMnn86LV40ar18XHR4YhPTUJhQX5h4qXtyrGM10UcGZ6siYLGDi4mtPCb36Ew27F+DMGo67ZBZ+f&#10;14fVQJZDh0ZzLgCA0WSG1eaA1WaHxWqHwWAUnFCMgN8HX6sHrV4PWlvdfFRkmDLSklCQn4e6FpnF&#10;SwB0UsDZGSnYsVvsalhd5fa04uN5S5GXk47hp5yAPbw+rDrBgB9uZ9PPD3w3mcywWO0wW22wWO26&#10;HCHLsgy/zwtfq/fn/w2FWB6ROFi8+ahz8lQzHU0XBZyZro7VsJSwv6oeH32yGP37lqC0JB/7axpF&#10;R6LjCAT8CAT8gOvgGuCSZIDZYoXZbIHJYoXZbIXJbNHMdeRgMICA34eA3we/rxV+fysCfj94Hbdz&#10;stKTkZeXd6h4+UsL/ZIuCjgrUz8FfNi6jTuwftNOjB4xECarBY3NLtGRqAOyHPr5fuMjGYwmmExm&#10;mMwWGE1mmEwmGIwmGA/9E7t8MkLBAIKH/gkE/Aj6/Yd+kfDxVLJCfi5eXuOlDuiigLMzUp4DcLvo&#10;HEqTZRmLFq+G1WrBhDGD0dDiQauP91BqTSgYgC8YOO6tOAajEUajCQaDEZLBAINkgGQwwmAwQJIM&#10;kCQAkgQJ0sH/PTyilmXIkAH5YPnLsnywZEMhyKEgQqEQQqHgwX+CQZ46jrKs9BTk5eWyeClsuliI&#10;A9DOYhxdkZ2ZhpHD+2FvdQNv1CdSieyMFOTm5qK2JcR5GxqihoU4uPyPhlTXNuCjTxajpaEF+dlp&#10;ouMQxbXszFQMOKEcpoRs1DQHWb4UMRawBm3Ysguz5yyB3WREWkqi6DhEcSUnMxUD+pbD5Mhi8VKX&#10;6OIacLz6eulaWCxmnDl6MFo8rfB4faIjEelWblYasrOyUesMoaaF13ip63QzAk5OdIiOIITP58ec&#10;z77Dxg07UJiTDoNBN/9JiVQhLzsdA07oDYM9EzUtHPGScnTzaZ2ZkSw6glA1dY2Y+eliNNQ2oCCH&#10;14eJuiovOx39TyiHZMtATXOAxUuK000BZ2Xo717gztiybQ9mfboEFklCRmqS6DhEmpOfk4H+fXtD&#10;smWgltd4KYp0cw04Kz2+R8DHWvL9ephNJpw5ZjBcXj/cXi6ST9SegpwMpGdkoc4ZRG0L12On6OMI&#10;WMf8gQD+9/n3WLO2AoU5aTAadfOfm0gxBbkHR7yyNR21LTzVTLGjm0/krIOrYVEbGhqdmPnpElQf&#10;qENBTrroOESqUJibif59eyNkTmPxkhC6WQkLiI/VsJRw6pA+SM9IQW1Di+goRDFXmJeJtLRMnmaO&#10;c2pYCUs314ApfN+t3ASjyYgzzxgMrz8Al4fXh0n/ivKzkJKagbqWAMuXVEE3p6ApMsFAEPMWLMeP&#10;q7agIJvXh0m/uuVnoV/f3ggYU1DH4iUV4adunGtqdmHWnCXYv7cGhbm8Pkz6UVyQjRP69IafxUsq&#10;pasCjtfVsJSwc/cBzPxkMUL+ALI5o5w07HDx+gzJqHeyeEm9dHUNOCsjBc1Ot+gYmrZy1RYYDAaM&#10;P2MQAjLQ4mr7GbZEatO9MAcJSWmodwZYvKQJuhoBZ2Vy5KaEUCiEzxatxPIVG5GflQazySg6EtFx&#10;dS/MQd8+vdEqJbF4SVP0VcBcDUtRLU43Zv9vCXbv2o/C3PR2bwEjirWSotyfi7eBxUsapLtT0KS8&#10;yr01qNxbg0EDeqKgMBtVtU2iI1EcKynKhS0xFY3OALwsXtIwXY2AMzOSuRpWFP24dhvmzFuGZLsV&#10;yYl20XEozpR2y0OfPr3hRSIaWbykA7paCQvgalixkuCwYdwZg1DX5ILPzw9Dig5JklBalAtLQgpL&#10;lxSlhpWwdDUCpthxub34eO5S/PTTXhTlZvD6MClKkiT0KM5H7/JyuOUEli/pEguYumTf/lp89Mk3&#10;8DrdyM1KFR2HNE6SJPTsno/y8nK4Qw40uli8pF+6moQFHHwDa+20uh6s2fAT1m7cgdEjBsJktaCx&#10;2SU6EmnIwRFvHky2ZDS5AgCLl+KA7go4KdGO5hYuxiGCLMtYtHg1bFYLzhwzBA0tbrT6/KJjkYod&#10;HvEaLElodrN4Kb7o7hQ0l1EUz9vqwyfzlmJrxW4U8f5haoMkSSgrKUCvXuVwBuwHy5cozuiugHkv&#10;sHocqK7HR58shrPJibzsNNFxSAUkSUKv0kIWLxF0eAo6kwWsOhs278SGzTsx6rQBsNltaOD14bhz&#10;eMQLcyJa3AGAt64R6a+AszO4HKVaff3tWlgsZkwYMwRNLg+8rbw+rHcGg4Sy7gWQWbyaUl9Xj/QM&#10;Pp402nR3CjozPeUJ0Rno+Hw+Pz6dvwybNu5EYU46DAZeH9Yjg0FCeY8i9OxZjma/7WD5kurV19Xj&#10;22++xdLFS0VHiQu6WwkL4GpYWtK7VxF69yrGvuoG0VFIAQaDAWUlBZCNCWjxsHS1oqG+AZs3bkZ1&#10;VTUAwGg0YvK0yYJTRZcaVsLS3Slo0pbNFZXYXFGJkaf2Q0JyAuobnaIjUScYDAb0Ki1E0OBAsycA&#10;gOWrBU2NTdi8cTMO7D8gOkpcYgGTKiz+bj3MJhPOHDMYTq8PHq9PdCQKw5HF28Ti1Yzm5hZs3rgJ&#10;+/fuFx0lrumygLkaljb5AwH87/PvkZGWhFEjTsS+mkaEQiHRsagNRuPB4vXDjiZvECxebXC2OLFl&#10;0xbsqdwLgJ+RoumygJOTHGjirS6aVdfQgpmfLkZZjwL061uKvVX1oiPRIYeLNyDZ0egJAgiKjkRh&#10;cLlc2LJxC/ZU7uHgREV0WcDZGSksYB3Yun0vtm7fi2FD+yItPRm1DS2iI8Uto9GI8tJC+GBDo5fF&#10;qxVutxsVmyqwe9duFq8K6bKAM9OTsXXHPtExSCHLVmyE0WTEhDMGw+MPwOVpFR0pbhwu3lbZhgYW&#10;r2Z4PV5UbK7Arp27eBlHxXRZwFyOUn+CgSDmLliOlOQEjDn9JByoa0IwyA+WaDGZjOhVWoTWkJXF&#10;qyGt3lZUbKnAzp92sng1QJcFnJ3JAtarpmYXZs1ZgpLiXJw0oAx7eH1YUWaTEWWlRWiVrWjgNV5N&#10;8Xq9WDB/AYJB/jfTCt2thAUAmenJfxSdgaJrx64DmPnpYkiBALLSufxoV5nNJpzQqzu6de+JBo8J&#10;bi8/xLUmGAyxfDVGlwV8ybRRD4rOQLHx/Y9bMO/z75GW5ECiwyY6juaYzSacUF6Com49UO8xwd3K&#10;D3CiWNHlKWiKL6FQCJ8tXIGkRAfGjhqEmoZm+AMskvaYzSb0Ki2CJ2BBvZunmolE0OUImOJTi9ON&#10;2f9bgj2VB1CYyye5tMViMaFfeQmKiktR7zbC42PxEomi2xEwV8OKX7sqq7GrshqDB/ZCXn4mquua&#10;REcSzmIxoVdJEVwBC+rcQQCcIUskmm4LOCXJgUaNL8ZhsZphs1phtZphsZhgNBphMBggSRIOPhRK&#10;QlVVHVwuj+ioqvTDmgpIa7di3KhBkA0Smp3x932yWswoKy2Cy28+VLwc8RKphW4LOCszRTMFbDBI&#10;cDjsSEi0IzHBDrvdCpvNAoOh4ysE6enJ2LFjH+rqGqMfVINkWcYXX/2AxAQ7xo0ahJpGJ/wB/a9b&#10;bLWaUVZSBKfPjDoXi5dIjfRbwOkp2PqTOlfDkiQJiYkOJCcnICUlAQkJ9rCec9wWg0FCjx4FcDis&#10;qKysUjipfjhdHsye+y3y8zIxbGhf7Kmq1+UlCpvVgrKSQrSweIlUT78FrLLVsIxGA1JSkpCWloTU&#10;1CQYjcrOf8vLy4TDYcO2bZVcIaod+/bX4qNPvsGJ/UrRrVseDtQ2io6kiIPFW4QWnxG1rhBYvETq&#10;xwKOspSURGRmpiItLRkGQ+dGuZEcq0+fEmyp2AW/T/+nWbti9fqfsGbDDowZeRIMZiOaWtyiI3WK&#10;3WZBz5IitLQeLl7+8kWkFTou4OQHADwq4tgmkxHZ2enIzk6HxRLbb7HDYcMJfUuxZcsuePjQgnbJ&#10;soyF3/wIm9WCCWOHoK7JBZ9fG7+42G0W9Oh+aMTrZPESaZFu7wOePvX0x2J9TJvNipLSApx4YjkK&#10;C7NjXr6HWSxm9OlTgqQkh5Dja4231YeP5y7F9m2VKMpN7/T1+Fhw2Kzo17sHsvO7o84lwedn8RJp&#10;lW4LOJbsdht69ixC/wE9kZWZGvVTzeEwmYwoLy9GcnKC6Ciasb+qHh99shiuZhfyslJFxzmKw25F&#10;/z49kZlXzOIl0gndnoKOBYvFjMLCbGRkpkJ85f6SwWBAr17F2Lp1N5qanKLjaMb6TTuwYfNOnHHa&#10;AJhtVqG3syXYrSjtXoQmr4Gnmol0RtcFHK3VsAwGA/Lzs5Cbm6GK0W57DAYJZWXdsG1bJRobW0TH&#10;0QxZlvHlkjWwWi04c/RgNLk88Lb6Y3b8BIcNPYoL0ehh8RLpla5PQadG4fRrWloSBgzoifz8TNWX&#10;72EHS7gIKSmJoqNoTmurD5/OX4bNm3ahKDc96v/NEx02DOjTExk5RahxAn7eUkakW7ouYCVvRTKb&#10;TSgr64aysm6wWMyK7TdWJOngSJgTszqnurYBH32yGE31zcjPTlN8/4kJdgzo2xPph4s3oL9FQojo&#10;aDovYGUe1J6Wloz+/XsiLS1Jkf2JYjBI6NWrGA4+N7fTNlXsxuw5S2A1GpCuwBmFpAQ7BvQtQ3p2&#10;EWpaWLxE8UTX14C7OgI2GCQUF+cjS2UzYrvCaDSgvLwYmzbtgNfrEx1HsxYvWweL2YQzxwxBi6cV&#10;ngi/l8mJDnTvVoAGt4SalhAAFi9RvNH1CDgzvfMFbLNZ0Ldvqa7K9zCz2YTy8mKYTEbRUTTN5w9g&#10;zmffYf26bSjMSQ/r4RnJiQ4M6FuGlMxC1LTICPAaL1Hc0nUBZ2ek3NWZ7VJTk3DCCT10farWarWg&#10;rKybqhed0Iq6hhbM/HQx6msaUJCT3uZrkpNYvER0NF0X8MVTRz4Z6TY5uRkoK+um+MMS1CgpyYGS&#10;knzRMXSjYvsezPp0MUyQkZF6cL5ASlICBvTtheT0AhYvER1F19eAI9W9ex6ys9sewehVZmYqPJ5W&#10;7N9fKzqKbixdvhFGkxEXnzsGXiQcusZLRHQ0/Q/zwiBJEnr0KIy78j2ssDCHS1YqLBgIor7BiWCI&#10;k6uIqG26L+COrnEevDWnGzJU8vhCESQJ6NGjEGYzT4gQEcWK7gs4rZ17NQ8vTsEVog7OjO7Zs4iT&#10;soiIYkT3BXy8e4FZvr+UlORAYWG26BhERHFB9wWceZzVsHr0KERqKsv3WLl5mbweTEQUA7ov4Ow2&#10;RsDFxblIT1dmmUq9kQCUlBTExW1YREQi6f5TNvOYos3NzUBOToagNNpgtZpRXJwnOgYRka7pvoCz&#10;M1JmHP5zSkoiiopyRcbRjMzMVM0/fIKISM10X8AXnTPyBeDg0os9ehSCk3zD1717Pk9FExFFSVx8&#10;uh6c8VzEhw9EyGw2obAwR3QMIiJdiosC7tYtV9cPVoim7Ox0JCTYRccgItKduCjgnOM8oYY6JkkH&#10;T0UTEZGydF/Ad/7pTS7G20UJCba4XSebiChadF3Ar7y3YFez0yM6hi4UFGTBwAlZRESK0fUn6oq1&#10;27qJzqAXZrMJ+XmZomMQEemGbgv43ife4alnheXmZsBs4ROTiIiUoMsC/viLFcPqGlpEx9Adg8GA&#10;wgI+rIGISAm6LODPFq9eKjqDXmVmpsJiNYuOQUSkebor4Nc//HKJPxAUHUO3JElCfl6W6BikYcFg&#10;ENu3bseB/QdERyESSncX9L5fXXGa6Ax6l5mZin37auDz+UVHIQ0JhULYtWMXKrZUwOvx4qTBJ4mO&#10;RCSUrgr4xXc+8/y4YYfoGLpnMEjIy8vErl37RUchDQiFZOzetRsVm7fA4+ZtgUSH6aqAV23cyfUm&#10;YyQrKw1791YjwNP9dByyLKNydyUqNlXA5XKJjkOkOrop4Dc+/HLB0h+3iI4RNwwGCdnZ6di3r0Z0&#10;FFIZWQb27tmDLRu3wOl0io5DpFq6KeDv12wdKzpDvMnJScf+/bWQZd5yTQft3bMXWzZuQUsLbwMk&#10;6oguZkF/smDloGAwJDpG3DGbTUhLSxYdg1TgwP4D+GrBV1j5/UqWL1GYdDEC/mbFxh9EZ4hXOTnp&#10;qK9vEh2DBKk6UIXNGzejsaFRdBQizdFFATe1uEVHiFtJSQ7YbFZ4va2io1AM1VTXYPPGzaivqxcd&#10;hUizNF/Af397vrx6007RMeJaVlYqKiurRMegGKiva8DG9RtQV1snOgqR5mn+GvD6ikrREeJeRkaq&#10;6AgUIxVbKli+RArRfAEHgrwPVTSLxYTk5ATRMYiINEXTBfzsv/7H+19UgqNgIqLIaLqAN/+0T3QE&#10;OiQtLQmSJImOQUSkGZouYC6DqB4mk5GnoYmIIqDZAn579jdviM5AR0tLSxIdgYhIMzRbwJu3771a&#10;dAY6WmoqC5iIKFyaLeDqOq6+pDYWixkOBx9IRUQUDs0WMKlTSkqi6AhERJqgyQL+cN53V4rOQG1j&#10;ARMRhUeTBbxzT/WbojNQ2xITHbwdiYgoDJos4Mr9XApPrQwGCYmJdtExiIhUT5MF7OaTd1QtKYn3&#10;AxMRdUSTBUzqlpjoEB2BiEj1WMCkOJ6CJiLqmOYKePYXy0eLzkDtM5mMsFotomMQEama5gq4sdn1&#10;O9EZqGMJCVyQg4ioPRosYPdZojNQx7giFhFR+zRXwC0uj+gIFAa7nQVMRNQezRWwt9UvOgKFwW63&#10;io5ARKRqmitgj9cnOgKFwWq1cEUsIqJ2aK6AW30cAWuBJIEzoYmI2qG5Ag7JsugIFCabjQVMRHQ8&#10;mitgmQWsGRaLWXQEIiLV0mABi05A4TKbTaIjEBGpluYK2GjUXOS4ZbGwgImIjkdzbWblqEozeAqa&#10;SJvsDq7nHguaazOrxQyn2ys6BoXBZDKKjkBEEbDb7ejVpxzdiruJjhIXNFfANhtHVVphNLKAibTA&#10;ZrOhrHcvdC8phsGguROjmqW5Ak5OsGOv6BAUFiNHwESqZrVaUVZehu6l3fkLswDaK+AkxzoA/UXn&#10;oI6ZOGGOSJUsFgt6lpehtLSEvygLpLkCTkl0PA/gFdE5qGOSJEGSJN67TaQSZrMZPcp6oEdZD5hM&#10;mvv41x3NDVEuPGvYq6IzUPgkA9eDJhLNZDKhvE85xk8aj/I+5SxfleB/BYoqgyQhJDoEUZwymkwo&#10;7VGCnr16wmLh0rBqwwKmqOITkYhiz2A0oqS0O8rKy2C1qvvRoCa5FZs2bEJZvxNFR4k5TRaww2aF&#10;29sqOgaFgQVMFDsGgwHdDxWvzWYTHaddZvhRsXkz1m74CUajgQWsFcUFmdi0nTcjaQEnYBHFhtVq&#10;wbiJ42C3q3sVK7MUwM5t2/DDmoq4/3zQZAF3L8yetmn73tmic1DH4v0NRhQrJpNJ1ZOrzFIQe3ft&#10;xHcrN/Bz4RDNzYIGgPMmnPKx6AwUHr7RiOKbSQqhcf8uzJ41D8tWrOdnwhHU++tSB3h/qTbwvxFR&#10;fDJKMpqq92Hxd6vh8wVEx1ElzRZwYW4GKvfXio5B7ZBlGaEQC5gonhglGa6Ganzz7Sp4OFm2XZot&#10;4D49Cm6s3F/LFbFULBjkHcBE8cIgAa1NNVi0bBVanB7RcTRBk9eAAa6IpQXBYFB0BCKKMoMEhNwN&#10;+HrhIsz9YinLNwKaHQEDgMNuhdvDUxxqFQhwBEykV5IEyN5mLP1+NapqGkTH0SRNF/CA3sUrv1tV&#10;MUR0DmpbIMCJF0T6I8Hgb8GKFWuwh/NwukSzp6AB4LoLxwwVnYGOjzMfifTFFPRg3crvMeuThSxf&#10;BWh6BAwASQl2tLh4zUGN/H6/6AhEpACT3IoN6zZg89ZK0VF0RdMjYAA4eWDPB0RnoLb5/BwBE2mZ&#10;GX7s2LwOH82cz/KNAs0X8PTJpz0mOgO1zdfKETCRFpmlIPb9tBkfzZyHtRt+Eh1HtzR/ChoAehbn&#10;YtuuA6Jj0DG8Xp/oCEQUAZMUxP7dO7FsBddrjgXNj4AB4J6bpvGZdyojy0BrKwuYSAtMhhCaDuzG&#10;x7PmYelyrtccK7oYAQNAemoi6hudomPQIT6fn29iIpUzSjJaavdj8bI18PIX5pjTxQgYAB6/+3KO&#10;glXEwwVSiFTLKAGtTdX4fO7n+OKrFSxfQXQzAgaAlCQHmlrcomMQALfbKzoCER3DIAF+Zz2+WbYK&#10;DU08YyiabkbAAPDkfVdyFKwSHg8LmEgtJAmAtxnffvU15sxfzPJVCV2NgAEgIy0JdQ0tomPEPY6A&#10;icSTJAkGnxMrVq5B5b4a0XHoGLoaAQPAX+66jKNgwYLBEG9BIhLs4LKRyzHzkwUsX5XSXQEDQElR&#10;tugIcc3l8nAGNJEARqMBA8pyr3rklnFSaV7iy3wkaNuy0xNFRwCgw1PQAPD7W86TbnrgZTkUYgmI&#10;4HRyIhxRLFnMRjxw/eijzv5dfv7omwHcDAD3PPYveeHi1fAH4ruQzSYj/u+Gg9+nWy8S3w+6HAED&#10;wOhT+3GNaEGcfCA3UUyYjAYMH9jNdmz5Huvx+6+WVs7/m/TrG6Yu7FaQFat4qlLWLeNfh8tXLXQ5&#10;AgYOrhF99+P/fpSz/WJLloEW3gpGFFVGowGDe+eXTT6997ZItrvm4nHjDv/5zkf+KX/17ToEdH6a&#10;OinBiruuHKmq4j1MtwUMAH+953Lpxvtflnk9MnZcLg943YkoOgwGCSf2yhszbXTfL7u6r6cevE4C&#10;gFf+PX/XzHnLuu2vqu96QBUxSBKGnlBYdPbI8j2isxyPrgsYAMYM6/fAwqXrHhWdI140N/OMA5HS&#10;JElC/545V10wrt9bSu/7xssnFh/+868felX+5rv1CAZDSh8mpvIyk7y3XHiKXXSOjui+gKdPPu2x&#10;h5/776N7DtSJjhIXmppcoiMQ6YYkSehTkvXA9AkDYvLY1b89fIMEAC++Odcza94yW1VtYywOqxir&#10;2YT7rz9Dlaeb26L7AgaAh26/UJrx8Osy1zuNrmAwxBnQRArp1S3z5cvPPvFmEce+5aqzfh493vr7&#10;F+WlKzcjFFL3qLhPSdYfL5k48EHROSIRFwUMAM8/dC2vB0dZY2ML7/8l6qKeRRnvXTn5pEtE5zjs&#10;73+6RQKAF96YI8+atwy19c2iIx0lNcmG314+QjOj3iPFTQEDwKRRJ02a+9WP80Tn0KvGRi4BStRZ&#10;xXmpK6+bNmSo6BzHc9s1k38uuRvvfkFevqpC6C/cBoOEP9w0VpPFe1hcFfC5Z548/6X/fNH4w/rt&#10;qaKz6I0sy2jk85iJIlaQnVx10/kn54rOEYlX/nqbBADPvvaJPHv+d6iP8S/fhTkpu288b2hxx69U&#10;t7gqYAC4+dLxaX9+aZb80+4q0VF0panJxduPiCKQm5Ek/+qiUzS9GNId158jAcC8L39I/nDOt00/&#10;rN0W1VGxzWrC76/VziSrjsRdAQPAfTefK/3h2Q/kvTq7702kurpG0RGINCErLQEzpg/TTYkAwKTR&#10;g5sBSADw5Esz5U8+X46mZmXviOjfM+fGC8f3f1XRnQoWlwUMAH+44yLpvifekWv56MIuC4VCaOD3&#10;kahd6cl2/Pqy03RVvG353c3nSQAwZ8GKnh/OWbJ11fqfurS/tGQ7fqPT71vcFjAA/Pmuy6TfP/kf&#10;uUZls/q0pqGhRfW3KBCJouVZul0xedzQbTg0Kv7z8/+V5yxYAacr/HXijUYDHrpxjK6/b3FdwADw&#10;p99dypFwF9XUNIiOQKQ6al6DONbum3GhBACz5i2bOHPu0nlrN+1s9/XFeWkrr5s2WLUzwpUS9wUM&#10;HBwJX/6bZ2W73So6iuZ4vT40K3yth0jLEuwW3HP16SzeNpw7adh8HBoVP/q39+X/LVwBt6f15793&#10;2Cy495r4+d6xgA+pq21AckoSkpMTREfRFI5+iQ6yW82479pRcVMeXfXAry+WAOCDT5fcNnv+suf1&#10;OMmqIyzgQzLTkrFu0050L8lHVmaq6DiaEArJqKlpFB2DSCirxYT7r9PPrTGxdtGUES8AeOE/f79L&#10;dJSYYwEfkpWeDFmWseOnvXC7vehWlANJ4nuqPXV1TQgEAqJjEAlhNhmhtge8k7awgA/Jykj5+c9V&#10;B+rgcXvRo0chzGZ+i47nAJ8wRXHIZDRg6AmFKZNO68XbJ6hL2C6HZGUkrwPQ//C/Nze7sH79dpSW&#10;FiAlJVFgMnVqanbB4/GKjkEUM0ajAYN755dNPr33NtFZSB9YwIdkZaTcBGDpkV/z+wPYsmUXcnMz&#10;UFiYA4OBZ5sOO7C/VnQE0jitXOIxGCSc2CtvzLTRfb8UnYX0hQV8yNQJpy4bOG5Gm3934EAdGhud&#10;KC3NR2KiI8bJ1Mfp9KCpiQ9eoM5JSk5G777lyC/IFx2lXZIkoX/PnKsuGNfvLdFZSJ9YwGHyelux&#10;ceMOZOeko7AgGyaTUXQkYfburRYdgTQoMSkR5X3KUVBYCDUPfiVJQp+SrAemTxjwmOgspG8s4AhV&#10;V9Wjvq4JRUU5yMxKg4o/R6LC5eLolyKTkJCA8j7lKOxWqPrTzr26Zb58+dkn3iw6B8UHFvARzGYT&#10;/P6Ob6sJBILYsWMfDlTVo6gwG6mpSTFIpw579nD0S+FxOBzo1bsXioq7qX7+RGlB+tyrzxl0tugc&#10;FF9YwEfISk/GvggeUehxe1FRsRtJSQ7kF2QjReeraDU3uzj6pQ7Z7Db0Ku+F4pJiGAzqftxtcV7q&#10;yuumDdH9msOkTizgI2RmpERUwIe1tLixZfNOJCTYkZ+fhdS0JF2emq6srBIdgVTMarOiV3kvdC/p&#10;DoNR3cVbkJ1cddP5J+eKzkHxjQV8hOwjFuPoDJfLg61bd8NqtSA7Ow1ZWWm6mazV0NACVwSPEqP4&#10;YbFY0LO8DKU9SmA0qvvnPTcjSf7VRaeo+7cDihss4CNkdbGAD2tt9aGysgp791YjLS0ZGRmpSElJ&#10;UP0ElGP5/QHU1zehrq4JTifLl45mtljQs6wHSnv2UP0vmllpCZgxfZi23oCkeyzgI2SmH70aVleF&#10;QjLq6g4WmNlsQlpaMtLSkpCUlKDaSSmtrX40NjajocGJlhYXZFkWHYlUxmQ2o0fPUvQo66n6pVrT&#10;k+349WWnqfPNRnFP3e+eGMvOTLkawA/R2LffH0B1dT2qq+thMBqQkpyA5OQEJCcnQuRziIPBEJxO&#10;N5qbXWhsbIHniGdzEh2ruHs3DBoyCBaLWXSUdqUk2nDnFSNYvKRqktZGONE+jTtw3IyYf0NMJiMS&#10;EuxISLQjwWGHw2GFxWJRfLGCUEiGx+OF2+2Fy+WF0+mG2831nKNl4rhhsKZki44RV5ISrLjrypEs&#10;XuqQGrqPI2AVCASCaGpyHnWLjyRJsNkssFotsFjMMJtNMJtNMJmMMBgMMBoNvziNHQyGjvgnAJ8v&#10;AL8/AJ/PD2+rD75Wf6z/rxHFRILdgnuuPp3FS5rCAlYpWZbh8bTylDBRO+xWM+67dhSLlzSJBXwM&#10;i8UMn48jRSI1s1pMuP+6M1i8pGks4GNkpSdjLx80T6RKZpMR/3fDaBYv6QIL+BiZLGAi1TEZDRjS&#10;tyD7rBHlNaKzECmFBXyMrExlFuMgoq4zGg0Y1Du/35TTe28QnYVIaSzgY3R1OUoi6jqDQcKJvfLG&#10;TBvd90vRWYiihQV8jMz0lJUAhojOQRSPJElC/545V10wrt9borMQRRsL+BjZGclXA1gvOgdRPJEk&#10;CX1Ksh6YPmHAY6KzEMUKC/gYU848ZcPAcTNExyCKG726Zb58+dkn3iw6B1GssYCJSIjSgvS5V58z&#10;6GzROYhEYQETUUwV56WtvG7a4KGicxCJxgJuA1fDIlJeYU7K7hvPG1osOgeRWrCA25CdkYw9+7kY&#10;B5ES8rOSG2++4OQ00TmI1IYF3IacrDQWMFEX5WYkyb+66BSD6BxEasXnAR/Hbx56VV707dqYHIv0&#10;KV6fB5yVloAZ04dxvWZSNTV0Hwu4HXMXrsz68wv/rW5uccfsmKQf8VbAGakO3HHJcBYvaYIauo+n&#10;oNtx1tghNQCk2x94Wf76O67NQdSWtGQ7fnPZaSxeoghxBBymTz///oTH//HR+hanR8jxSXv0PgJO&#10;SbThzitGsHhJk9TQfRwBh2nKmadsACDd+vsX5SXLN4qOQyRMUoIVd105ksVL1EUcAXfCrHnLJj75&#10;0qx5ThdHw3R8ehsBJ9gtuOfq08W/AYkUoIbuYwF3wc33/F1e9sNm0TFIpfRSwA6bBfdew+IlfVFD&#10;97GAu+jDOd9e+dTLs950e1pFRyGV0XoB261m3HftKHW94YgUoobuYwEr5Ma7npe/X1UhOgapiFYL&#10;2GYx4ffXnaHONxqRQtTQfSxgBb3/8eLf/e21j5/gaJgA7RWw1WzC/dezeCk+qKH7WMBRcO1vn5V/&#10;WLtNdAwSTCsFbDEb8cD1o9X/xiJSkBq6j+u0RsHrT98h3X3r+c/ZrBbRUYiOy2wyYvjAbjaWL5EY&#10;HAFH2dW/fkZetf4n0TFIALWOgE1GA4b0Lcg+a0R5jegsRKKooftYwDHw1oeL3n3h9TnTW/mM4bii&#10;tgI2Gg0Y3Du/bPLpvXl9hOKeGrqPBRxDV9z+tLx24w7RMShG1FLARoMBJ5bnDZ96Rp9lorMQqYUa&#10;uo8FHGNvvL9gwT/enDvWx9Gw7okuYINBwsCyvEnnjuk7X1gIIpVSQ/exgAW57LYn5fWbd4mOQVEk&#10;qoAlSUL/njlXXTCu31sxPziRRqih+zgLWpB3XvidNOPayevMZj4Pg5RlNhnA8iVSPxawQNdfOmHA&#10;ynnPSH3KikRHISKiGGMBq8B7L94t3Xr12bs5GiYiih8sYJW48fKJxSvnPSP1610sOgoREcUAC1hl&#10;3nnhd9Lt152z0mIxi45CRERRxAJWoesuGT90xdynpf69u4uOQkREUcICVrF/v3Cn9Nsbp82ycjRM&#10;RKQ7LGCVu+qisectn/u0NLBviegoRESkIBawRrz13G+lu24572U+YYmISB9YwBpy+fmjb/7+f09J&#10;g/r3EB2FiIi6iAWsQW8882vp3tsu+KPDbhUdhYiIOokFrFGXTBv14LJPn5SGnlgmOgoREXUCC1jj&#10;Xnvydun3My66i6NhIiJtYQHrwMVTRz657NMnpVMGlYuOQkREYWIB68grf71N+r9fT78qwWETHYWI&#10;iDrAAtaZCyaf9tbST56Qhg/pIzoKERG1gwWsUy/+5VfSH+68dFJigl10FCIiagMLWMfOnTRs/rcf&#10;/1UaecoJoqMQEdExWMBx4IXHbpYeueuy4cmJDtFRiIjoEBZwnJg64dRli2c/Lp0xrL/oKEREBBZw&#10;3Hn2jzdKj917ZVlKcoLoKEREcY0FHIcmjxu67ZuZf5HGjhgoOgoRUdxiAcexp/9wvfSX+69OSUtJ&#10;FB2FiCjusIDj3KTRg5u/+ujP0rjTTxQdhYgorrCACQDw1IPXSWsWPC+lpyaJjkJEFBdYwHSULz/8&#10;kzRx9GDRMYiIdI8FTL/w+P1XS2sWPC9lpCWLjkJEpFssYDquRf99TDp77FDRMYiIdIkFTO36031X&#10;SmsWPC9lpnM0TESkJBYwhWXhB49J55x5iugYRES6wQKmsP3x7sulNQuel7IzU0RHISLSPBYwReyL&#10;9x6Vzps0DJIkiY5CRKRZLGDqlIfuvFRa/cVzUm52mugoRESaxAKmLvnsP49I5599GkfDREQRYgFT&#10;lz34m+nS6i+ek/Jz0kVHISLSDBYwKWbeOw9LF50zkqNhIqIwsIBJUffffpG0+ovnpMK8DNFRiIhU&#10;jQVMUfG/t/8gXXruKI6GiYiOgwVMUXPPrRdIq794TupWkCU6ChGR6rCAKeo+ffNB6YoLRnM0TER0&#10;BBYwxcTvbj5PWv3Fc1L3wmzRUYiIVIEFTDH18b/+T7rqwrEwGPijR0TxjZ+CFHO/vWmatOrzZ6XS&#10;4lzRUYiIhGEBkzCz/nm/dO308TAa+WNIRPGHn3wk1B3XnyP9+NmzUllJvugoREQxxQImVfjw1fuk&#10;Gy6bAJPRKDoKEVFMsIBJNW67ZrL0w2d/k8pKORomIv1jAZPqfPjKfdLNV0zymk0cDRORfrGASZVu&#10;ueos+8r5f5N69ywUHYWIKCpYwKRq7790j3Tr1WfvNptNoqMQESmKBUyqd+PlE4tXzntG6lNWJDoK&#10;EZFiWMCkGe+9eLc049rJ6zgaJiI9YAGTplx/6YQBK+c9I/XrXSw6ChFRl7CASZPeeeF30q9vmLrQ&#10;YjGLjkJE1CksYNKsay4eN27F3KelgX1LREchIooYC5g0763nfivdefO571k5GiYiDWEBky5cecGY&#10;S5bPfVoa1L+H6ChERGFhAZOuvPHMr6W7bjnvZbvNIjoKEVG7WMCkO5efP/rm7+Y8JQ0ZWCY6ChHR&#10;cbGASbf++dTt0r23XfBHh90qOgoR0S+wgEnXLpk26sFlnz4pnXJSL9FRYqZ7XtrLojMQUcckWZZF&#10;Z4iIJEmiI5BGffDpktueeWX2825Pa0yON3HcMFhTsmNyLABw2My495pRfIMQhUEN3ccRMMWNi6aM&#10;eGHZp09Kpw7uLTqK4gaU5V7F8iXSFo6AKS7NnLt06lMvz57tdHmidoxYjIBTEm2484oRfFMQRUgN&#10;3ccCprj2q/v+IX+7YlNU9h3NApYkCaf0K8w+a0R5TVQOQKRzaug+FjDFvY8/+27Yky/OWtrsdCu6&#10;32gVcHZ6Im67+FS+EYi6QA3dxwImOmTGAy/L33y3XrH9KV3AJqMBD944hm8AIgWoofs4CYvokOcf&#10;vUl67N4ry5KTHKKj/EK3vNR1LF8ifeGTzYmOMHnc0G0ApDsefEX+auk60XFgtZhw/3VnsHiJdIgj&#10;YKI2PPvIjdKf77sqOyU5QViG3t2znmD5EukXR8BEx3HW2CE1AKQ7H/6nvGDx6pgdN9Fhxd1XjWTx&#10;EukcJ2ERhemM8++TG5qcYb8+0klYkiThpPK8MdNG9/2yM/mIKHxq6D6egiYK01cf/VmaOHpwVPad&#10;nuLAwzePlVi+RPGDI2CiThhz4e/luoaWdl8TzgjYaDDgoZs4u5ko1tTQfRwBE3XCov/+SZo0ZkiX&#10;9pGfldzI8iWKXxwBE3XR2Ivul2vrm3/x9eONgC1mIx64fjR/kIkEUkP3cQRM1EULP3hMmjL+5LBe&#10;27Mo4z2WLxEBHAETKWr89Afk6tomAEePgPmsXiJ1UUP3cQRMpKAv3ntUmjbx1KO+xmf1ElGbZFnW&#10;1D9EWvHsG/P5A0ukUqK7TJZl7Z2CJiIi0gOegiYiIhKABUxERCQAC5iIiEgAFjAREZEALGAiIiIB&#10;WMBEREQCsICJiIgEYAETEREJwAImIiISgAVMREQkAAuYiIhIABYwERGRACxgIiIiAVjAREREAvw/&#10;jaADKHznwEQAAAAASUVORK5CYII=&#10;"
+       id="image1" />
+  </g>
+</svg>
+</span> Aerial Gym Simulator</a><a class="headerlink" href="#aerial-gym-simulator" title="Permanent link">&para;</a></h1>
+<p>Welcome to the documentation of the Aerial Gym Simulator &nbsp;&nbsp; <a href="https://www.github.com/ntnu-arl/aerial_gym_simulator"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg></span></a></p>
+<p>The Aerial Gym Simulator is a high-fidelity physics-based simulator for training Micro Aerial Vehicle (MAV) platforms such as multirotors to learn to fly and navigate cluttered environments using learning-based methods. The environments are built upon the underlying <a href="https://developer.nvidia.com/isaac-gym">NVIDIA Isaac Gym</a> simulator. We offer aerial robot models for standard planar quadrotor platforms, as well as fully-actuated platforms and multirotors with arbitrary configurations. These configurations are supported with low-level and high-level geometric controllers that reside on the GPU and provide parallelization for the simultaneous control of thousands of multirotors.</p>
+<p>This is the <em>second release</em> of the simulator and includes a variety of new features and improvements. Task definition and environment configuration allow for fine-grained customization of all the environment entities without having to deal with large monolithic environment files. A custom rendering framework allows obtaining depth, and segmentation images at high speeds and can be used to simulate custom sensors such as LiDARs with varying properties. The simulator is open-source and is released under the <a href="https://opensource.org/licenses/BSD-3-Clause">BSD-3-Clause License</a>.</p>
+<p>Aerial Gym Simulator allows you to train state-based control policies in under a minute,</p>
+<p><img alt="Aerial Gym Simulator" src="gifs/Aerial%20Gym%20Position%20Control.gif" /></p>
+<p>And train vision-based navigation policies in under an hour:</p>
+<p><img alt="RL for Navigation" src="gifs/rl_for_navigation_example.gif" /></p>
+<p>Equipped with GPU-accelerated and customizable ray-casting based LiDAR and Camera sensors with depth and segmentation capabilities:</p>
+<p><img alt="Depth Frames 1" src="gifs/camera_depth_frames.gif" /> <img alt="Lidar Depth Frames 1" src="gifs/lidar_depth_frames.gif" /></p>
+<p><img alt="Seg Frames 1" src="gifs/camera_seg_frames.gif" /> <img alt="Lidar Seg Frames 1" src="gifs/lidar_seg_frames.gif" /></p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<details class="note">
+<summary><strong>Modular and Extendable Design</strong></summary>
+  allowing users to easily create custom environments, robots, sensors, tasks, and controllers, and changing parameters programmatically on-the-fly by modifying the <a href="4_simulation_components/">Simulation Components</a>.</details>
+</li>
+<li>
+<details class="note">
+<summary><strong>Rewritten from the Ground-Up</strong></summary>
+  to offer very high control over each of the simulation components and capability to extensively <a href="5_customization/">customize</a> the simulator to your needs.</details>
+</li>
+<li>
+<details class="note">
+<summary><strong>High-Fidelity Physics Engine</strong></summary>
+  leveraging <a href="https://developer.nvidia.com/isaac-gym/download">NVIDIA Isaac Gym</a>, which provides a high-fidelity physics engine for simulating multirotor platforms, with the possibility of adding support for custom physics engine backends and rendering pipelines.</details>
+</li>
+<li>
+<details class="note">
+<summary><strong>Parallelized Geometric Controllers</strong></summary>
+  that reside on the GPU and provide parallelization for the <a href="3_robots_and_controllers/#controllers">simultaneous control of thousands of multirotor</a> vehicles.</details>
+</li>
+<li>
+<details class="note">
+<summary><strong>Custom Rendering Framework</strong></summary>
+  (based on <a href="https://nvidia.github.io/warp/">NVIDIA Warp</a>) used to design <a href="8_sensors_and_rendering/#warp-sensors">custom sensors</a> and perform parallelized kernel-based operations.</details>
+</li>
+<li>
+<details class="note">
+<summary><strong>Modular and Extendable</strong></summary>
+  allowing users to easily create <a href="5_customization/#custom-environments">custom environments</a>, <a href="5_customization/#custom-robots">robots</a>, <a href="5_customization/#custom-sensors">sensors</a>, <a href="5_customization/#custom-tasks">tasks</a>, and <a href="5_customization/#custom-controllers">controllers</a>.</details>
+</li>
+<li>
+<details class="note">
+<summary><strong>RL-based control and navigation policies</strong></summary>
+  of your choice can be added for robot learning tasks. <a href="6_rl_training/">Includes scripts to get started with training your own robots.</a>.</details>
+</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title"><strong>Support for Isaac Lab</strong></p>
+<p>Support for <a href="https://isaac-sim.github.io/IsaacLab/">Isaac Lab</a> and <a href="https://developer.nvidia.com/isaac/sim">Isaac Sim</a> is currently under development. We anticipate releasing this feature in the near future.</p>
+</div>
+<p>Please refer to the paper detailing the previous version of our simulator to get insights into the motivation and the design principles involved in creating the Aerial Gym Simulator: <a href="https://arxiv.org/abs/2305.16510">https://arxiv.org/abs/2305.16510</a> (link will be updated to reflect the newer version soon!).</p>
+<h2 id="why-aerial-gym-simulator">Why Aerial Gym Simulator?<a class="headerlink" href="#why-aerial-gym-simulator" title="Permanent link">&para;</a></h2>
+<p>The Aerial Gym Simulator is designed to simulate thousands of MAVs simultaneously and comes equipped with both low and high-level controllers that are used on real-world systems. In addition, the new customized ray-casting allows for superfast rendering of the environment for tasks using depth and segmentation from the environment.</p>
+<p>The optimized code in this newer version allows training for motor-command policies for robot control in under a minute and vision-based navigation policies in under an hour. Extensive examples are provided to allow users to get started with training their own policies for their custom robots quickly.</p>
+<h2 id="citing">Citing<a class="headerlink" href="#citing" title="Permanent link">&para;</a></h2>
+<p>When referencing the Aerial Gym Simulator in your research, please cite the following paper</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nc">@misc</span><span class="p">{</span><span class="nl">kulkarni2023aerialgymisaac</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">      </span><span class="na">title</span><span class="p">=</span><span class="s">{Aerial Gym -- Isaac Gym Simulator for Aerial Robots}</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">      </span><span class="na">author</span><span class="p">=</span><span class="s">{Mihir Kulkarni and Theodor J. L. Forgaard and Kostas Alexis}</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="na">year</span><span class="p">=</span><span class="s">{2023}</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="na">eprint</span><span class="p">=</span><span class="s">{2305.16510}</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="na">archivePrefix</span><span class="p">=</span><span class="s">{arXiv}</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="na">primaryClass</span><span class="p">=</span><span class="s">{cs.RO}</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="na">url</span><span class="p">=</span><span class="s">{https://arxiv.org/abs/2305.16510}</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span>
+</code></pre></div>
+<p>If you use the reinforcement learning policy provided alongside this simulator for navigation tasks, please cite the following paper:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nc">@misc</span><span class="p">{</span><span class="nl">kulkarni2024reinforcementlearningcollisionfreeflight</span><span class="p">,</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">      </span><span class="na">title</span><span class="p">=</span><span class="s">{Reinforcement Learning for Collision-free Flight Exploiting Deep Collision Encoding}</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">      </span><span class="na">author</span><span class="p">=</span><span class="s">{Mihir Kulkarni and Kostas Alexis}</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="na">year</span><span class="p">=</span><span class="s">{2024}</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="na">eprint</span><span class="p">=</span><span class="s">{2402.03947}</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="na">archivePrefix</span><span class="p">=</span><span class="s">{arXiv}</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="na">primaryClass</span><span class="p">=</span><span class="s">{cs.RO}</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="na">url</span><span class="p">=</span><span class="s">{https://arxiv.org/abs/2402.03947}</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="quick-links">Quick Links<a class="headerlink" href="#quick-links" title="Permanent link">&para;</a></h2>
+<p>For your convenience, here are some quick links to the most important sections of the documentation:</p>
+<ul>
+<li><a href="2_getting_started/#installation">Installation</a></li>
+<li><a href="3_robots_and_controllers/">Robots and Controllers</a></li>
+<li><a href="8_sensors_and_rendering/">Sensors and Rendering Capabilities</a></li>
+<li><a href="6_rl_training/">RL Training</a></li>
+<li><a href="4_simulation_components/">Simulation Components</a></li>
+<li><a href="5_customization/">Customization</a></li>
+<li><a href="7_FAQ_and_troubleshooting/">FAQs and Troubleshooting</a></li>
+</ul>
+<h2 id="contact">Contact<a class="headerlink" href="#contact" title="Permanent link">&para;</a></h2>
+<p>Mihir Kulkarni  &nbsp;&nbsp;&nbsp; <a href="mailto:mihirk284@gmail.com">Email</a> &nbsp; <a href="https://github.com/mihirk284">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/mihir-kulkarni-6070b6135/">LinkedIn</a> &nbsp; <a href="https://twitter.com/mihirk284">X (formerly Twitter)</a></p>
+<p>Welf Rehberg &nbsp;&nbsp;&nbsp;&nbsp; <a href="mailto:welf.rehberg@ntnu.no">Email</a> &nbsp; <a href="https://github.com/Zwoelf12">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/welfrehberg/">LinkedIn</a></p>
+<p>Theodor J. L. Forgaard &nbsp;&nbsp;&nbsp; <a href="mailto:tjforgaa@stud.ntnu.no">Email</a> &nbsp; <a href="https://github.com/tforgaard">GitHb</a> &nbsp; <a href="https://www.linkedin.com/in/theodor-johannes-line-forgaard-665b5311a/">LinkedIn</a></p>
+<p>Kostas Alexis &nbsp;&nbsp;&nbsp;&nbsp; <a href="mailto:konstantinos.alexis@ntnu.no">Email</a> &nbsp;  <a href="https://github.com/kostas-alexis">GitHub</a> &nbsp; 
+ <a href="https://www.linkedin.com/in/kostas-alexis-67713918/">LinkedIn</a> &nbsp; <a href="https://twitter.com/arlteam">X (formerly Twitter)</a></p>
+<p>This work is done at the <a href="https://www.autonomousrobotslab.com">Autonomous Robots Lab</a>, <a href="https://www.ntnu.no">Norwegian University of Science and Technology (NTNU)</a>. For more information, visit our <a href="https://www.autonomousrobotslab.com/">Website</a>.</p>
+<h2 id="acknowledgements">Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permanent link">&para;</a></h2>
+<p>This material was supported by RESNAV (AFOSR Award No. FA8655-21-1-7033) and SPEAR (Horizon Europe Grant Agreement No. 101119774).</p>
+<p>This repository utilizes some of the code and helper scripts from <a href="https://github.com/leggedrobotics/legged_gym">https://github.com/leggedrobotics/legged_gym</a> and <a href="https://github.com/isaac-sim/IsaacGymEnvs">IsaacGymEnvs</a>.</p>
+<h2 id="faqs-and-troubleshooting">FAQs and Troubleshooting<a class="headerlink" href="#faqs-and-troubleshooting" title="Permanent link">&para;</a></h2>
+<p>Please refer to our <a href="https://ntnu-arl.github.io/aerial_gym_simulator/7_FAQ_and_troubleshooting/">website</a> or to the <a href="https://github.com/ntnu-arl/aerial_gym_simulator/issues">Issues</a> section in the GitHub repository for more information.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+        
+          
+          <a href="2_getting_started/" class="md-footer__link md-footer__link--next" aria-label="Next: Getting Started">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Getting Started
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024, Aerial Gym Simulator. All rights reserved.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant", "navigation.instant.progress", "navigation.instant.preview", "navigation.tabs.sticky", "navigation.tabs", "navigation.tracking", "navigation.expand", "navigation.sections", "search.suggest", "search.highlight", "search.share", "content.action.view", "content.code.annotate", "content.code.copy", "content.code.select", "content.footnote.tooltips", "content.tabs.link", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow", "toc.integrate"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+        <script src="javascripts/extra.js"></script>
+      
+        <script src="javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
