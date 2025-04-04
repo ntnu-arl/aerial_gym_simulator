@@ -17,6 +17,7 @@ import torch
 from aerial_gym.utils.logging import CustomLogger
 
 import math, random
+from typing import List, Optional
 
 logger = CustomLogger("env_manager")
 
@@ -67,7 +68,7 @@ class EnvManager(BaseManager):
         self.are_targets_visualized = are_targets_visualized
         
         # List of xyz positions of target locations for the robot
-        self.visual_targets = None
+        self.visual_target_positions: Optional[List[List[float]]] = None
 
         self.asset_manager = None
         self.tensor_manager = None
@@ -383,10 +384,10 @@ class EnvManager(BaseManager):
     def render_viewer(self):
         # render viewer GUI
         if self.are_targets_visualized == False:
-            visual_targets = None
+            visual_target_positions = None
         else: 
-            visual_targets = self.visual_targets
-        self.IGE_env.render_viewer(visual_targets)
+            visual_target_positions = self.visual_target_positions
+        self.IGE_env.render_viewer(visual_target_positions)
 
     def post_reward_calculation_step(self):
         envs_to_reset = self.reset_terminated_and_truncated_envs()

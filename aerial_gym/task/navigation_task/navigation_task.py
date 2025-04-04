@@ -175,7 +175,7 @@ class NavigationTask(BaseTask):
         )
         
         # Populate sim_env visual targets positions
-        self.sim_env.visual_targets = [target_pos.tolist() for target_pos in self.target_position]
+        self.sim_env.visual_target_positions = [target_pos.tolist() for target_pos in self.target_position]
         
         # logger.warning(f"reset envs: {env_ids}")
         self.infos = {}
