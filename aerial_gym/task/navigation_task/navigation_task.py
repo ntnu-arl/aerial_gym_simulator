@@ -11,6 +11,7 @@ from aerial_gym.utils.vae.vae_image_encoder import VAEImageEncoder
 
 import gymnasium as gym
 from gym.spaces import Dict, Box
+from typing import Optional
 
 logger = CustomLogger("navigation_task")
 
@@ -21,7 +22,7 @@ def dict_to_class(dict):
 
 class NavigationTask(BaseTask):
     def __init__(
-        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None, are_targets_visualized:bool=True
+        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None, are_targets_visualized: Optional[bool] = None
     ):
         # overwrite the params if user has provided them
         if seed is not None:
