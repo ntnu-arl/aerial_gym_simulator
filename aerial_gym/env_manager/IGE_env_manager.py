@@ -519,20 +519,14 @@ class IsaacGymEnv(BaseManager):
         axes_geom = gymutil.AxesGeometry(0.1)
         
         # Create a wireframe sphere
-        sphere_rot = gymapi.Quat.from_euler_zyx(0.5 * math.pi, 0, 0)
-        sphere_pose = gymapi.Transform(r=sphere_rot)
-        sphere_geom = gymutil.WireframeSphereGeometry(0.02, 12, 12, sphere_pose, color=(1, 1, 0))
+        
+        sphere_geom = gymutil.WireframeSphereGeometry(0.05, 12, 12, color=(1, 1, 0))
         pose = gymapi.Transform()
         for env_id, target_pos in enumerate(postitions):
             x, y, z = target_pos
             pose.p = gymapi.Vec3(x, y, z)
-            pose.r = gymapi.Quat.from_euler_zyx(-0.5 * math.pi, 0, 0)
-                    
-            gymutil.draw_lines(axes_geom, self.gym, self.viewer.viewer,  self.env_handles[env_id], pose)
+            
             gymutil.draw_lines(sphere_geom, self.gym, self.viewer.viewer, self.env_handles[env_id], pose)
-        
-                
-        
 
     def render_viewer(self, visual_marker_positions: Optional[List[List[float]]]=None):
         if self.viewer is not None:
