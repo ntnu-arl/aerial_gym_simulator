@@ -11,6 +11,7 @@ from aerial_gym.utils.vae.vae_image_encoder import VAEImageEncoder
 
 import gymnasium as gym
 from gym.spaces import Dict, Box
+from typing import Optional
 
 logger = CustomLogger("navigation_task")
 
@@ -21,7 +22,7 @@ def dict_to_class(dict):
 
 class NavigationTask(BaseTask):
     def __init__(
-        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None
+        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None, are_targets_visualized: Optional[bool] = None
     ):
         # overwrite the params if user has provided them
         if seed is not None:
@@ -34,6 +35,8 @@ class NavigationTask(BaseTask):
             task_config.device = device
         if use_warp is not None:
             task_config.use_warp = use_warp
+        if are_targets_visualized is not None: 
+            task_config.are_targets_visualized = are_targets_visualized
         super().__init__(task_config)
         self.device = self.task_config.device
         # set the each of the elements of reward parameter to a torch tensor
@@ -61,8 +64,9 @@ class NavigationTask(BaseTask):
             num_envs=self.task_config.num_envs,
             use_warp=self.task_config.use_warp,
             headless=self.task_config.headless,
+            are_targets_visualized=self.task_config.are_targets_visualized
         )
-
+        
         self.target_position = torch.zeros(
             (self.sim_env.num_envs, 3), device=self.device, requires_grad=False
         )
@@ -170,6 +174,10 @@ class NavigationTask(BaseTask):
             max=self.obs_dict["env_bounds_max"][env_ids],
             ratio=target_ratio[env_ids],
         )
+        
+        # Populate sim_env visual targets positions
+        self.sim_env.visual_target_positions = [target_pos.tolist() for target_pos in self.target_position]
+        
         # logger.warning(f"reset envs: {env_ids}")
         self.infos = {}
         return
