@@ -11,6 +11,8 @@ from aerial_gym.utils.vae.vae_image_encoder import VAEImageEncoder
 
 import gymnasium as gym
 from gym.spaces import Dict, Box
+import os
+import matplotlib.pyplot as plt
 
 logger = CustomLogger("navigation_task")
 
@@ -21,7 +23,7 @@ def dict_to_class(dict):
 
 class NavigationTask(BaseTask):
     def __init__(
-        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None
+        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None, observation_save_path:str=None
     ):
         # overwrite the params if user has provided them
         if seed is not None:
@@ -73,7 +75,13 @@ class NavigationTask(BaseTask):
         self.target_max_ratio = torch.tensor(
             self.task_config.target_max_ratio, device=self.device, requires_grad=False
         ).expand(self.sim_env.num_envs, -1)
-
+        
+        # Add saving path
+        self.observation_save_path = observation_save_path
+        self.img_ctr = 0
+        if observation_save_path is not None:
+            self._init_observation_dirs()
+        
         self.success_aggregate = 0
         self.crashes_aggregate = 0
         self.timeouts_aggregate = 0
@@ -156,6 +164,20 @@ class NavigationTask(BaseTask):
 
         self.num_task_steps = 0
 
+    def _init_observation_dirs(self):
+        """Create env_x directories if not already present."""
+        os.makedirs(self.observation_save_path, exist_ok=True)
+        for i in range(self.task_config.num_envs):
+            os.makedirs(os.path.join(self.observation_save_path, f"env_{i}"), exist_ok=True)
+    
+    
+    def clear_env_dir(self, env_id):
+        """Delete all images in env_x folder."""
+        env_path = os.path.join(self.observation_save_path, f"env_{env_id}")
+        if os.path.exists(env_path):
+            for file in os.listdir(env_path):
+                os.remove(os.path.join(env_path, file))
+    
     def close(self):
         self.sim_env.delete_env()
 
@@ -276,17 +298,18 @@ class NavigationTask(BaseTask):
         image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)
         if self.task_config.vae_config.use_vae:
             self.image_latents[:] = self.vae_model.encode(image_obs)
-        # # comments to make sure the VAE does as expected
-        # decoded_image = self.vae_model.decode(self.image_latents[0].unsqueeze(0))
-        # image0 = image_obs[0].cpu().numpy()
-        # decoded_image0 = decoded_image[0].squeeze(0).cpu().numpy()
-        # # save as .png with timestep
-        # if not hasattr(self, "img_ctr"):
-        #     self.img_ctr = 0
-        # self.img_ctr += 1
-        # import matplotlib.pyplot as plt
-        # plt.imsave(f"image0{self.img_ctr}.png", image0, vmin=0, vmax=1)
-        # plt.imsave(f"decoded_image0{self.img_ctr}.png", decoded_image0, vmin=0, vmax=1)
+        
+        
+        self.img_ctr += 1
+
+        if self.observation_save_path is not None:
+            decoded_images = self.vae_model.decode(self.image_latents)
+            for env_id in range(self.sim_env.num_envs):
+                img_orig = image_obs[env_id].cpu().numpy()
+                img_dec = decoded_images[env_id].squeeze(0).cpu().numpy()
+                path = os.path.join(self.observation_save_path, f"env_{env_id}")
+                plt.imsave(os.path.join(path, f"image{self.img_ctr:04d}.png"), img_orig, vmin=0, vmax=1)
+                plt.imsave(os.path.join(path, f"decoded_image{self.img_ctr:04d}.png"), img_dec, vmin=0, vmax=1)
 
     def step(self, actions):
         # this uses the action, gets observations
