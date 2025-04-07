@@ -13,7 +13,7 @@ import gymnasium as gym
 from gym.spaces import Dict, Box
 import os
 import matplotlib.pyplot as plt
-
+import shutil
 logger = CustomLogger("navigation_task")
 
 
@@ -77,10 +77,11 @@ class NavigationTask(BaseTask):
         ).expand(self.sim_env.num_envs, -1)
         
         # Add saving path
-        # TODO: remove fixed folder 
+        # TODO: remove hardcoded folder 
         observation_save_path = "/tmp/"
+        # If observation_save_path is specified - the observations and VAE 
+        # reconstructions images will be saved in this directory 
         self.observation_save_path = observation_save_path
-        self.img_ctr = 0
         if observation_save_path is not None:
             self._init_observation_dirs()
         
@@ -88,6 +89,10 @@ class NavigationTask(BaseTask):
         self.crashes_aggregate = 0
         self.timeouts_aggregate = 0
 
+        # Setup tracker of current run_id and frame_id for each environment
+        self.env_run_counters = {i: 0 for i in range(self.task_config.num_envs)}
+        self.env_frame_counters = {i: 0 for i in range(self.task_config.num_envs)}
+        
         self.pos_error_vehicle_frame_prev = torch.zeros_like(self.target_position)
         self.pos_error_vehicle_frame = torch.zeros_like(self.target_position)
 
@@ -173,13 +178,15 @@ class NavigationTask(BaseTask):
             os.makedirs(os.path.join(self.observation_save_path, f"env_{i}"), exist_ok=True)
     
     
-    def clear_env_dir(self, env_id):
-        """Delete all images in env_x folder."""
+    def clear_env_dir(self, env_id:int):
+        """Remove all run_x folders in env_x and reset counters."""
         env_path = os.path.join(self.observation_save_path, f"env_{env_id}")
         if os.path.exists(env_path):
-            for file in os.listdir(env_path):
-                os.remove(os.path.join(env_path, file))
-    
+            shutil.rmtree(env_path)
+        os.makedirs(env_path)
+        self.env_run_counters[env_id] = 0
+        self.env_frame_counters[env_id] = 0
+        
     def close(self):
         self.sim_env.delete_env()
 
@@ -194,6 +201,14 @@ class NavigationTask(BaseTask):
             max=self.obs_dict["env_bounds_max"][env_ids],
             ratio=target_ratio[env_ids],
         )
+        
+        for env_id in env_ids:
+            env_id_int = int(env_id)
+            # Increase the run_id for the restarted environment
+            self.env_run_counters[env_id_int] += 1
+            # Reset frame counter for new run
+            self.env_frame_counters[env_id_int] = 0
+              
         # TODO: Remove fixed target position for drones                
         # self.target_position[0][0] = 3.750000
         # self.target_position[0][1] = 8.750000
@@ -308,21 +323,38 @@ class NavigationTask(BaseTask):
         image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)
         if self.task_config.vae_config.use_vae:
             self.image_latents[:] = self.vae_model.encode(image_obs)
-        
-        
-        self.img_ctr += 1
 
-        if self.observation_save_path is not None:
-            decoded_images = self.vae_model.decode(self.image_latents)
-            for env_id in range(self.sim_env.num_envs):
-                img_orig = image_obs[env_id].cpu().numpy()
-                img_dec = decoded_images[env_id].squeeze(0).cpu().numpy()
-                path = os.path.join(self.observation_save_path, f"env_{env_id}")
-                plt.imsave(os.path.join(path, f"image{self.img_ctr:04d}.png"), img_orig, vmin=0, vmax=1)
-                plt.imsave(os.path.join(path, f"decoded_image{self.img_ctr:04d}.png"), img_dec, vmin=0, vmax=1)
-                if show_live:
-                    self._show_live_observations(env_id, img_orig, img_dec)
-                    
+        if self.observation_save_path is None and show_live == False:
+            return 
+        
+        # Decode VAE 
+        decoded_images = self.vae_model.decode(self.image_latents)
+        
+        # Show or save observations
+        for env_id in range(self.sim_env.num_envs):
+            img_orig = image_obs[env_id].cpu().numpy()
+            img_dec = decoded_images[env_id].squeeze(0).cpu().numpy()
+            
+            if self.observation_save_path is not None: 
+                self._save_observation_data(env_id, img_orig, img_dec)
+            if show_live:
+                self._show_live_observations(env_id, img_orig, img_dec)
+                
+    def _save_observation_data(self, env_id:str, img_orig, img_dec):
+        
+        # Setup folders and paths 
+        run_id = self.env_run_counters[env_id]
+        frame_id = self.env_frame_counters[env_id]
+        path = os.path.join(self.observation_save_path, f"env_{env_id}", f"run_{run_id}")
+        os.makedirs(path, exist_ok=True)
+        
+        # Save observations
+        plt.imsave(os.path.join(path, f"image{frame_id:04d}.png"), img_orig, vmin=0, vmax=1)
+        plt.imsave(os.path.join(path, f"decoded_image{frame_id:04d}.png"), img_dec, vmin=0, vmax=1)
+        
+        # Update frame_id
+        self.env_frame_counters[env_id] +=1
+          
     def _show_live_observations(self, env_id:str, img_orig, img_dec):
         if not hasattr(self, "live_figs"):
             self.live_figs = {}
