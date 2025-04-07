@@ -77,6 +77,8 @@ class NavigationTask(BaseTask):
         ).expand(self.sim_env.num_envs, -1)
         
         # Add saving path
+        # TODO: remove fixed folder 
+        observation_save_path = "/tmp/"
         self.observation_save_path = observation_save_path
         self.img_ctr = 0
         if observation_save_path is not None:
@@ -192,6 +194,14 @@ class NavigationTask(BaseTask):
             max=self.obs_dict["env_bounds_max"][env_ids],
             ratio=target_ratio[env_ids],
         )
+        # TODO: Remove fixed target position for drones                
+        # self.target_position[0][0] = 3.750000
+        # self.target_position[0][1] = 8.750000
+        # self.target_position[0][2] = -5.5
+        
+        # self.target_position[1][0] = 3.750000
+        # self.target_position[1][1] = 8.750000
+        # self.target_position[1][2] = -5.5
         # logger.warning(f"reset envs: {env_ids}")
         self.infos = {}
         return
@@ -294,7 +304,7 @@ class NavigationTask(BaseTask):
             self.crashes_aggregate = 0
             self.timeouts_aggregate = 0
 
-    def process_image_observation(self):
+    def process_image_observation(self, show_live=True):
         image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)
         if self.task_config.vae_config.use_vae:
             self.image_latents[:] = self.vae_model.encode(image_obs)
@@ -310,6 +320,38 @@ class NavigationTask(BaseTask):
                 path = os.path.join(self.observation_save_path, f"env_{env_id}")
                 plt.imsave(os.path.join(path, f"image{self.img_ctr:04d}.png"), img_orig, vmin=0, vmax=1)
                 plt.imsave(os.path.join(path, f"decoded_image{self.img_ctr:04d}.png"), img_dec, vmin=0, vmax=1)
+                if show_live:
+                    self._show_live_observations(env_id, img_orig, img_dec)
+                    
+    def _show_live_observations(self, env_id:str, img_orig, img_dec):
+        if not hasattr(self, "live_figs"):
+            self.live_figs = {}
+
+        if env_id not in self.live_figs:
+            fig, axs = plt.subplots(1, 2, figsize=(8, 4))
+            im_orig = axs[0].imshow(img_orig, vmin=0, vmax=1)
+            axs[0].set_title(f"Env {env_id} - Original")
+            axs[0].axis('off')
+
+            im_dec = axs[1].imshow(img_dec, vmin=0, vmax=1)
+            axs[1].set_title(f"Env {env_id} - Decoded")
+            axs[1].axis('off')
+
+            fig.canvas.manager.set_window_title(f"Env {env_id}")
+            plt.tight_layout()
+            plt.show(block=False)
+
+            self.live_figs[env_id] = {
+                "fig": fig,
+                "im_orig": im_orig,
+                "im_dec": im_dec,
+            }
+        else:
+            fig_data = self.live_figs[env_id]
+            fig_data["im_orig"].set_data(img_orig)
+            fig_data["im_dec"].set_data(img_dec)
+            fig_data["fig"].canvas.draw()
+            fig_data["fig"].canvas.flush_events()
 
     def step(self, actions):
         # this uses the action, gets observations
