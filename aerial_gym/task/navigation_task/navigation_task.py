@@ -23,7 +23,8 @@ def dict_to_class(dict):
 
 class NavigationTask(BaseTask):
     def __init__(
-        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None, observation_save_path:str=None
+        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None, observation_save_path:str=None,
+        is_showing_live_observations: bool = False,
     ):
         # overwrite the params if user has provided them
         if seed is not None:
@@ -80,7 +81,9 @@ class NavigationTask(BaseTask):
         # TODO: remove hardcoded folder 
         observation_save_path = "/tmp/"
         # If observation_save_path is specified - the observations and VAE 
-        # reconstructions images will be saved in this directory 
+        # reconstructions images will be saved in this directory
+        self.is_showing_live_observations = is_showing_live_observations
+         
         self.observation_save_path = observation_save_path
         if observation_save_path is not None:
             self._init_observation_dirs()
@@ -319,12 +322,18 @@ class NavigationTask(BaseTask):
             self.crashes_aggregate = 0
             self.timeouts_aggregate = 0
 
-    def process_image_observation(self, show_live=True):
+    def process_image_observation(self) -> None:
+        """
+        Process the current observation:
+        - Encode and decode the observation using VAE (if enabled).
+        - Optionally save or show the original and decoded images.
+        """
+        
         image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)
         if self.task_config.vae_config.use_vae:
             self.image_latents[:] = self.vae_model.encode(image_obs)
 
-        if self.observation_save_path is None and show_live == False:
+        if self.observation_save_path is None and self.is_showing_live_observations == False:
             return 
         
         # Decode VAE 
@@ -337,14 +346,23 @@ class NavigationTask(BaseTask):
             
             if self.observation_save_path is not None: 
                 self._save_observation_data(env_id, img_orig, img_dec)
-            if show_live:
+            if self.is_showing_live_observations:
                 self._show_live_observations(env_id, img_orig, img_dec)
                 
-    def _save_observation_data(self, env_id:str, img_orig, img_dec):
+    def _save_observation_data(self, env_id: int, img_orig: np.ndarray, img_dec: np.ndarray) -> None:
+        """
+        Save original and decoded image observations for the given environment and current run.
+
+        Args:
+            env_id (int): Environment ID.
+            img_orig (np.ndarray): Original image.
+            img_dec (np.ndarray): Decoded image.
+        """
         
-        # Setup folders and paths 
         run_id = self.env_run_counters[env_id]
         frame_id = self.env_frame_counters[env_id]
+        
+        # Setup folders and paths 
         path = os.path.join(self.observation_save_path, f"env_{env_id}", f"run_{run_id}")
         os.makedirs(path, exist_ok=True)
         
@@ -352,10 +370,18 @@ class NavigationTask(BaseTask):
         plt.imsave(os.path.join(path, f"image{frame_id:04d}.png"), img_orig, vmin=0, vmax=1)
         plt.imsave(os.path.join(path, f"decoded_image{frame_id:04d}.png"), img_dec, vmin=0, vmax=1)
         
-        # Update frame_id
+        # Increment frame counter
         self.env_frame_counters[env_id] +=1
           
-    def _show_live_observations(self, env_id:str, img_orig, img_dec):
+    def _show_live_observations(self, env_id: int, img_orig: np.ndarray, img_dec: np.ndarray) -> None:
+        """
+        Display original and decoded images in a persistent live matplotlib window per environment.
+
+        Args:
+            env_id (int): Environment ID.
+            img_orig (np.ndarray): Original image.
+            img_dec (np.ndarray): Decoded image.
+        """
         if not hasattr(self, "live_figs"):
             self.live_figs = {}
 
