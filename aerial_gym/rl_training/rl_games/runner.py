@@ -196,7 +196,7 @@ def get_args():
         {
             "name": "--num_envs",
             "type": int,
-            "default": "8192",
+            "default": "1024",
             "help": "Number of environments to create. Overrides config file if provided.",
         },
         {

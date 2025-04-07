@@ -150,7 +150,6 @@ class PositionSetpointTaskSim2RealEndToEnd(BaseTask):
         self.infos = {}
         self.sim_env.reset_idx(env_ids)
         self.action_history[env_ids] = 0.0
-        self.prev_pos_error[env_ids] = 0.0
         return
 
     def render(self):
@@ -289,19 +288,19 @@ def compute_reward(
 
     forw = quat_axis(quats, 0)
     alignment = 1 - forw[..., 0]
-    alignment_reward = exp_func(alignment, 4., 5.0) + exp_func(alignment, 2., 2.0)
+    alignment_reward = exp_func(alignment, 6., 5.0)
 
-    angvel_reward = torch.sum(exp_func(angvels_err, .75 , 10.0), dim=1)
+    angvel_reward = torch.sum(exp_func(angvels_err, .3 , 10.0), dim=1)
     vel_reward = torch.sum(exp_func(linvels_err, 1., 5.0), dim=1)
 
-    action_input_offset = action_input - 9.81 * 1.2350000515580177/4
+    action_input_offset = action_input - 9.81 * 0.372/4
     action_cost = torch.sum(exp_penalty_func(action_input_offset, 0.01, 10.0), dim=1)
 
     closer_by_dist = prev_target_dist - target_dist
-    towards_goal_reward = torch.where(closer_by_dist >= 0, 50*closer_by_dist, 100*closer_by_dist)
+    towards_goal_reward = torch.where(closer_by_dist >= 0, 10*closer_by_dist, 15*closer_by_dist)
 
     action_difference = action_input - prev_action
-    action_difference_penalty = torch.sum(exp_penalty_func(action_difference, 0.5, 6.0), dim=1)
+    action_difference_penalty = torch.sum(exp_penalty_func(action_difference, 1.3, 6.0), dim=1)
 
     reward = towards_goal_reward + (pos_reward * (alignment_reward + vel_reward + angvel_reward + action_difference_penalty) + (angvel_reward + vel_reward + upright_reward + pos_reward + action_cost)) / 100.0
 

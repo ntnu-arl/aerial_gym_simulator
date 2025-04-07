@@ -48,7 +48,7 @@ def torch_rand_float_vec(lower, upper, shape, device):
     return torch.rand(*shape, device=device) * (upper - lower) + lower
 
 
-@torch.jit.script
+@torch.jit.script_if_tracing
 def ssa(a: torch.Tensor) -> torch.Tensor:
     """Smallest signed angle"""
     return torch.remainder(a + torch.pi, 2 * torch.pi) - torch.pi
