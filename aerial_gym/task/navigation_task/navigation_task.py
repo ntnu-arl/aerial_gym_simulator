@@ -77,9 +77,6 @@ class NavigationTask(BaseTask):
             self.task_config.target_max_ratio, device=self.device, requires_grad=False
         ).expand(self.sim_env.num_envs, -1)
         
-        # Add saving path
-        # TODO: remove hardcoded folder 
-        observation_save_path = "/tmp/"
         # If observation_save_path is specified - the observations and VAE 
         # reconstructions images will be saved in this directory
         self.is_showing_live_observations = is_showing_live_observations
@@ -211,16 +208,6 @@ class NavigationTask(BaseTask):
             self.env_run_counters[env_id_int] += 1
             # Reset frame counter for new run
             self.env_frame_counters[env_id_int] = 0
-              
-        # TODO: Remove fixed target position for drones                
-        # self.target_position[0][0] = 3.750000
-        # self.target_position[0][1] = 8.750000
-        # self.target_position[0][2] = -5.5
-        
-        # self.target_position[1][0] = 3.750000
-        # self.target_position[1][1] = 8.750000
-        # self.target_position[1][2] = -5.5
-        # logger.warning(f"reset envs: {env_ids}")
         self.infos = {}
         return
 
