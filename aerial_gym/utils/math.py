@@ -48,12 +48,6 @@ def torch_rand_float_vec(lower, upper, shape, device):
     return torch.rand(*shape, device=device) * (upper - lower) + lower
 
 
-@torch.jit.script_if_tracing
-def ssa(a: torch.Tensor) -> torch.Tensor:
-    """Smallest signed angle"""
-    return torch.remainder(a + torch.pi, 2 * torch.pi) - torch.pi
-
-
 @torch.jit.script
 def torch_rand_float_tensor(lower, upper):
     # type: (torch.Tensor, torch.Tensor) -> torch.Tensor
@@ -93,12 +87,6 @@ def exponential_penalty_function(
 ) -> torch.Tensor:
     """Exponential reward function"""
     return magnitude * (torch.exp(-(value * value) / base_width) - 1.0)
-
-
-@torch.jit.script
-def ssa(a: torch.Tensor) -> torch.Tensor:
-    """Smallest signed angle"""
-    return torch.remainder(a + torch.pi, 2 * torch.pi) - torch.pi
 
 
 @torch.jit.script
