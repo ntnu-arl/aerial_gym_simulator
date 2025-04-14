@@ -10,6 +10,7 @@ nav:
   - Simulation Components: '4_simulation_components.md'
   - Customizing the Simulator: '5_customization.md'
   - RL Training: '6_rl_training.md'
+  - Sim2Real: '9_sim2real.md'
   - FAQ & Troubleshooting: '7_FAQ_and_troubleshooting.md'
 
 
