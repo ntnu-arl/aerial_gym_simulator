@@ -1,11 +1,11 @@
-params:  
+params:
   seed: 8
   algo:
     name: a2c_continuous
 
   model:
     name: continuous_a2c_logstd
-  
+
   load_checkpoint: False
 
   network:
@@ -32,7 +32,7 @@ params:
     env_name: position_setpoint_task_sim2real
     env_config:
       num_envs: 8192
-      
+
     name: gen_ppo
     reward_shaper:
       # min_val: -1
