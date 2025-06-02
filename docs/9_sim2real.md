@@ -3,26 +3,26 @@
 ## PX4 Module
 To simplify deploying the networks to a platform, an experimental module in px4 has been created along with a guide. On this page you can read about training, network conversion, uploading and building PX4 to test it out for yourself, or build upon it for further research or use-cases.
 
-This example uses the ARL LMF drone platform, by doing a hover flight and measuring a couple of things on your own platform you can customize the sim to train networks specifically for your platform
+This example uses the Holybro X500 v2 drone platform, by doing a hover flight and measuring a couple of things on your own platform you can customize the sim to train networks specifically for your platform
 
 To train your own networks for use in PX4, start by following the [installation instructions](./2_getting_started.md/#installation). Then you can go into the rl_games folder and run the runner.py script.
 
 ```bash
 cd aerial_gym/rl_training/rl_games
-python runner.py --task=position_setpoint_task_sim2real_end_to_end
+python runner.py --task=position_setpoint_task_sim2real_px4
 ```
 
 If you want to customize the simulator to your own platform or research please check the [Customizing the Simulator](./5_customization.md) section. The relevant files can be found in:
 
 - Robot:
-    - Configuration: aerial_gym/config/robot_config/lmf1_config.py
-    - Model: resources/robots/lmf1/model.urdf
+    - Configuration: aerial_gym/config/robot_config/x500_config.py
+    - Model: resources/robots/x500/model.urdf
 - Network size, layers and activation function: aerial_gym/rl_training/rl_games/ppo_aerial_quad.yaml
 - Task:
-    - Configuration: aerial_gym/config/task_config/position_setpoint_task_sim2real_end_to_end_config.py
-    - Task: aerial_gym/task/position_setpoint_task_sim2real_end_to_end/position_setpoint_task_sim2real_end_to_end.py
+    - Configuration: aerial_gym/config/task_config/position_setpoint_task_sim2real_px4_config.py
+    - Task: aerial_gym/task/position_setpoint_task_sim2real_px4/position_setpoint_task_sim2real_px4.py
 
-In the task you can change the actions, inputs, reward functions, which robot to use etc. Make sure the lmf1 robot is chosen in the task config if you want to use that as a starting point.
+In the task you can change the actions, inputs, reward functions, which robot to use etc. Make sure the x500 robot is chosen in the task config if you want to use that as a starting point.
 
 ## Optimizing for your platform
 
@@ -33,6 +33,8 @@ To train a optimal position setpoint controller for your own platform you should
 - The positions of the different motors, how far they are from the middle of the platform. This is changed in the urdf file under each of the base_link_to_..._prop as origin xyz.
 - Motor time constants, usually found in the datasheet of the motors. Added in the robot config file as motor_time_constant...
 - Motor thrust coefficients, found by doing a hover flight and logging the rpm values needed to hover. The calculation is 9.81*platform weight/4 = thrust per motor to keep the drone hovering. Thrust / (rpm^2) = motor thrust coefficient. Then change the values in the robot config file motor_thrust_constant... You can also use rps or rads/s instead of rpm by changing the motor config.
+- Maximum and minimum thrust in Newtons the actions can command. This is set in the task configuration as action_limit_max and action_limit_min.
+- Update the reward function at the bottom of the task file to tune the performance of the policy. When running runner.py the total weight is printed to the console and should be inserted in the action_input_offset.
 
 ## Conversion
 While the Aerial Gym Simulator uses the PyTorch framework, the PX4 module uses TensorFlow Lite Micro (TFLM). Therefore the networks trained in Aerial Gym needs to be converted before they can be added into PX4. Along with the instructions here, a conversion script can be found in the resources/conversion folder.
@@ -68,7 +70,7 @@ While the Aerial Gym Simulator uses the PyTorch framework, the PX4 module uses T
 
 ## Installing PX4
 
-The module is currently not available in the main PX4 repo, because we are waiting for a toolchain upgrade. In the meantime the code can be found in this [fork and branch](https://github.com/SindreMHegre/PX4-Autopilot-public/tree/for_paper). If anything fail with the first three steps, check the [PX4 docs](https://docs.px4.io/v1.15/en/).
+The module is currently not available in the main PX4 repo, because we are waiting for some toolchain fixes to be approved. In the meantime the code can be found in this [fork and branch](https://github.com/SindreMHegre/PX4-Autopilot-public/tree/for_paper). If anything fails during the first three steps, check the [PX4 docs](https://docs.px4.io/v1.15/en/) as this is the standard PX4 installation.
 
 1. First clone the branch with its submodules
 
@@ -79,6 +81,8 @@ The module is currently not available in the main PX4 repo, because we are waiti
 1. Fetch the tags from the main PX4 repo, PX4 will not build without them
 
     ```bash
+    cd PX4-Autopilot-public/
+    git remote add upstream https://github.com/PX4/PX4-Autopilot.git
     git fetch upstream --tags
     ```
 
@@ -116,10 +120,12 @@ The module is currently not available in the main PX4 repo, because we are waiti
     cd ../../..
     ```
 
-1. (Optional) If you want to include the neural network controller module onto a new board, add:
+1. (Optional) If you want to include the neural network controller module and test module onto a new board, add:
 
     ```bash
+    CONFIG_LIB_TFLM=y
     CONFIG_MODULES_MC_NN_CONTROL=y
+    CONFIG_MODULES_MC_NN_TESTING=y
     ```
     to your .px4board file. There are three pre-made board config files where other modules are removed to make sure the entire executable fits in the flash memory of the boards. These are: px4_sitl_neural, px4_fmu-v6c_neural and mro_pixracerpro_neural
 
@@ -130,3 +136,5 @@ The module is currently not available in the main PX4 repo, because we are waiti
     ```
 
 Warning! When switching to the neural controller on an actual drone there has been a bug some times that the network produces NAN as motor outputs if it does not receive trajectory setpoints. It is advised to change the mc_nn_testing module to setpoints that you desire and start that module first.
+
+If you want to tune how much thrust is commanded, the THRUST_COEFF parameter can be configured. The lower the value the more thrust is commanded by the neural controller.
