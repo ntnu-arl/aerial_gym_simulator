@@ -1,4 +1,4 @@
-warp-lang==1.0.0b5
+warp-lang==1.0.0
 urdfpy=0.0.22
 networkx==3.1
 scipy
