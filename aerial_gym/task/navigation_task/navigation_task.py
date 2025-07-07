@@ -116,12 +116,12 @@ class NavigationTask(BaseTask):
                     shape=(self.task_config.observation_space_dim,),
                     dtype=np.float32,
                 ),
-                "image_obs": Box(
-                    low=-1.0,
-                    high=1.0,
-                    shape=(1, 135, 240),
-                    dtype=np.float32,
-                ),
+                # "image_obs": Box(
+                #     low=-1.0,
+                #     high=1.0,
+                #     shape=(1, 135, 240),
+                #     dtype=np.float32,
+                # ),
             }
         )
         self.action_space = Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)
@@ -138,20 +138,20 @@ class NavigationTask(BaseTask):
                 device=self.device,
                 requires_grad=False,
             ),
-            "priviliged_obs": torch.zeros(
-                (
-                    self.sim_env.num_envs,
-                    self.task_config.privileged_observation_space_dim,
-                ),
-                device=self.device,
-                requires_grad=False,
-            ),
-            "collisions": torch.zeros(
-                (self.sim_env.num_envs, 1), device=self.device, requires_grad=False
-            ),
-            "rewards": torch.zeros(
-                (self.sim_env.num_envs, 1), device=self.device, requires_grad=False
-            ),
+            # "priviliged_obs": torch.zeros(
+            #     (
+            #         self.sim_env.num_envs,
+            #         self.task_config.privileged_observation_space_dim,
+            #     ),
+            #     device=self.device,
+            #     requires_grad=False,
+            # ),
+            # "collisions": torch.zeros(
+            #     (self.sim_env.num_envs, 1), device=self.device, requires_grad=False
+            # ),
+            # "rewards": torch.zeros(
+            #     (self.sim_env.num_envs, 1), device=self.device, requires_grad=False
+            # ),
         }
 
         self.num_task_steps = 0
@@ -388,11 +388,11 @@ class NavigationTask(BaseTask):
         self.task_obs["observations"][:, 13:17] = self.obs_dict["robot_actions"]
         if self.task_config.vae_config.use_vae:
             self.task_obs["observations"][:, 17:] = self.image_latents
-        self.task_obs["rewards"] = self.rewards
-        self.task_obs["terminations"] = self.terminations
-        self.task_obs["truncations"] = self.truncations
+        # self.task_obs["rewards"] = self.rewards
+        # self.task_obs["terminations"] = self.terminations
+        # self.task_obs["truncations"] = self.truncations
 
-        self.task_obs["image_obs"] = self.obs_dict["depth_range_pixels"]
+        # self.task_obs["image_obs"] = self.obs_dict["depth_range_pixels"]
 
     def compute_rewards_and_crashes(self, obs_dict):
         robot_position = obs_dict["robot_position"]

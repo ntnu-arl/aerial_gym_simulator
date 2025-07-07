@@ -34,7 +34,7 @@ class AerialGymVecEnv(gym.Env):
         self.action_space = convert_space(self.env.action_space)
 
         # isaacgym_examples environments actually return dicts
-        if obs_key == "obs":
+        if obs_key == "obs" or obs_key == "observations":
             self.observation_space = gym.spaces.Dict(convert_space(self.env.observation_space))
         else:
             raise ValueError(f"Unknown observation key: {obs_key}")

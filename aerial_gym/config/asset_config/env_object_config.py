@@ -271,7 +271,7 @@ class tree_asset_params(asset_state_params):
 
 
 class object_asset_params(asset_state_params):
-    num_assets = 5
+    num_assets = 35
 
     asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/objects"
 

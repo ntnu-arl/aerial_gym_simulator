@@ -1,22 +1,22 @@
 from aerial_gym.config.sensor_config.lidar_config.base_lidar_config import BaseLidarConfig
 
 
-class ST_VL53L5CXConfig(BaseLidarConfig):
+class pmd_flexx2_config(BaseLidarConfig):
     num_sensors = 1  # number of sensors of this type
     sensor_type = "lidar"  # sensor type
 
     # If you use more than one sensors above, there is a need to specify the sensor placement for each sensor
     # this can be added here, but the user can implement this if needed.
 
-    height = 8
-    width = 8
-    horizontal_fov_deg_min = -45
-    horizontal_fov_deg_max = 45
-    vertical_fov_deg_min = -45
-    vertical_fov_deg_max = +45
+    height = 172
+    width = 224
+    horizontal_fov_deg_min = -28
+    horizontal_fov_deg_max = 28
+    vertical_fov_deg_min = -22
+    vertical_fov_deg_max = +22
 
     # min and max range do not match with the real sensor, but here we get to limit it for our convenience
-    max_range = 4.0
+    max_range = 5.0
     min_range = 0.2
 
     # Type of lidar (range, pointcloud, segmentation)
@@ -33,7 +33,7 @@ class ST_VL53L5CXConfig(BaseLidarConfig):
     euler_frame_rot_deg = [0.0, 0.0, 0.0]
 
     # Type of data to be returned from the sensor
-    normalize_range = False  # will be set to false when pointcloud is in world frame
+    normalize_range = True  # will be set to false when pointcloud is in world frame
 
     # do not change this.
     normalize_range = (
@@ -51,9 +51,9 @@ class ST_VL53L5CXConfig(BaseLidarConfig):
     )  # Will be [-1]U[0,1] if normalize_range is True, otherwise will be value set by user in place of -1.0
 
     # randomize placement of the sensor
-    randomize_placement = False
-    min_translation = [0.07, -0.06, 0.01]
-    max_translation = [0.12, 0.03, 0.04]
+    randomize_placement = True
+    min_translation = [0.07, -0.06, 0.02]
+    max_translation = [0.12, 0.03, 0.06]
     min_euler_rotation_deg = [-5.0, -5.0, -5.0]
     max_euler_rotation_deg = [5.0, 5.0, 5.0]
 
@@ -67,4 +67,4 @@ class ST_VL53L5CXConfig(BaseLidarConfig):
         std_b = -4.07347360e-06
         std_c = 5.30757302e-03
         mean_offset = -0.025
-        pixel_dropout_prob = 0.0
+        pixel_dropout_prob = 0.01

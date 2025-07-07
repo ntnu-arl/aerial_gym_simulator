@@ -10,6 +10,9 @@ from aerial_gym.config.sensor_config.lidar_config.base_lidar_config import (
 )
 from aerial_gym.config.sensor_config.lidar_config.osdome_64_config import OSDome_64_Config
 from aerial_gym.config.sensor_config.imu_config.base_imu_config import BaseImuConfig
+from aerial_gym.config.sensor_config.lidar_config.pmd_flexx2_config import pmd_flexx2_config
+
+
 
 
 class LMF2Cfg:
@@ -52,7 +55,7 @@ class LMF2Cfg:
         camera_config = BaseDepthCameraConfig
 
         enable_lidar = False
-        lidar_config = BaseLidarConfig  # OSDome_64_Config
+        lidar_config = pmd_flexx2_config  # OSDome_64_Config
 
         enable_imu = False
         imu_config = BaseImuConfig
