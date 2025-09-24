@@ -66,7 +66,7 @@ class EnvObjectConfig:
         semantic_id = -1
         color = [170, 66, 66]
 
-    class thin_asset_params(base_asset_params):
+    class thin_asset_params(BaseAssetParams):
         num_assets = 0
 
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/thin"
@@ -108,7 +108,7 @@ class EnvObjectConfig:
         semantic_id = THIN_SEMANTIC_ID
         color = [170, 66, 66]
 
-    class tree_asset_params(base_asset_params):
+    class tree_asset_params(BaseAssetParams):
         num_assets = 1
 
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/trees"
@@ -154,7 +154,7 @@ class EnvObjectConfig:
 
         semantic_masked_links = {}
 
-    class object_asset_params(base_asset_params):
+    class object_asset_params(BaseAssetParams):
         num_assets = 2
 
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/objects"
@@ -194,7 +194,7 @@ class EnvObjectConfig:
 
         # color = [80,255,100]
 
-    class left_wall(base_asset_params):
+    class left_wall(BaseAssetParams):
         num_assets = 1
 
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/walls"
@@ -240,7 +240,7 @@ class EnvObjectConfig:
         semantic_id = -1  # semantic_id = WALL_SEMANTIC_ID
         color = [100, 200, 210]
 
-    class right_wall(base_asset_params):
+    class right_wall(BaseAssetParams):
         num_assets = 1
 
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/walls"
@@ -283,7 +283,7 @@ class EnvObjectConfig:
         semantic_id = -1  # semantic_id = WALL_SEMANTIC_ID
         color = [100, 200, 210]
 
-    class top_wall(base_asset_params):
+    class top_wall(BaseAssetParams):
         num_assets = 1
 
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/walls"
@@ -329,7 +329,7 @@ class EnvObjectConfig:
         semantic_id = -1  # semantic_id = WALL_SEMANTIC_ID
         color = [100, 200, 210]
 
-    class bottom_wall(base_asset_params):
+    class bottom_wall(BaseAssetParams):
         num_assets = 1
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/walls"
         file = "bottom_wall.urdf"
@@ -374,7 +374,7 @@ class EnvObjectConfig:
         semantic_id = -1  # semantic_id = WALL_SEMANTIC_ID
         color = [100, 150, 150]
 
-    class front_wall(base_asset_params):
+    class front_wall(BaseAssetParams):
         num_assets = 1
 
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/walls"
@@ -420,7 +420,7 @@ class EnvObjectConfig:
         semantic_id = -1  # semantic_id = WALL_SEMANTIC_ID
         color = [100, 200, 210]
 
-    class back_wall(base_asset_params):
+    class back_wall(BaseAssetParams):
         num_assets = 1
 
         asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/walls"
