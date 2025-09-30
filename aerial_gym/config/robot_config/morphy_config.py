@@ -85,8 +85,8 @@ class MorphyCfg:
         stiffness = [0.2, 1.0, 0.2, 1.0, 0.2, 1.0, 0.2, 1.0]  # Kpv
         damping = [0.025, 0.02, 0.025, 0.02, 0.025, 0.02, 0.025, 0.02]  # Kd
         # custom params for custom arm response for morphy
-        custom_nonlinear_stiffness = -230.0
-        custom_linear_damping = -5834.0
+        custom_nonlinear_stiffness = -5834.0
+        custom_linear_damping = -230.0
 
     class disturbance:
         enable_disturbance = False

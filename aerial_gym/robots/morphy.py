@@ -48,6 +48,6 @@ class Morphy(BaseReconfigurable):
 
 
 @torch.jit.script
-def arm_response_func(pos_error, vel_error, lin_damper, nonlin_spring):
+def arm_response_func(pos_error, vel_error, nonlin_spring, lin_damper):
     # type: (Tensor, Tensor, float, float) -> Tensor
     return lin_damper * vel_error + nonlin_spring * torch.sign(pos_error) * pos_error**2
