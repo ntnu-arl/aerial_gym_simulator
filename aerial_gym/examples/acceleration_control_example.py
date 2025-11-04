@@ -4,6 +4,10 @@ logger = CustomLogger(__name__)
 from aerial_gym.sim.sim_builder import SimBuilder
 import torch
 
+
+import numpy as np
+import matplotlib.pyplot as plt
+
 if __name__ == "__main__":
     logger.debug("this is how a debug message looks like")
     logger.info("this is how an info message looks like")
@@ -15,9 +19,9 @@ if __name__ == "__main__":
     )
     env_manager = SimBuilder().build_env(
         sim_name="base_sim",
-        env_name="env_with_obstacles",  # empty_env
-        robot_name="base_quadrotor",  # "base_octarotor"
-        controller_name="lee_acceleration_control",
+        env_name="empty_env",  # empty_env
+        robot_name="lmf2",  # "base_octarotor"
+        controller_name="lee_velocity_control",
         args=None,
         num_envs=16,
         device="cuda:0",
@@ -25,12 +29,44 @@ if __name__ == "__main__":
         use_warp=True,  # safer to use warp as it disables the camera when no object is in the environment
     )
     actions = torch.zeros((env_manager.num_envs, 4)).to("cuda:0")
-    actions[:, 0] = 0.25  # constant forward acceleration
+    actions[:, 0] = 10.0  # constant forward acceleration
+    actions[:, 1] = 5.0  # no lateral acceleration
+    actions[:, 2] = 2.0  # no vertical acceleration
+    actions[:, 3] = -0.1  # no yaw acceleration
     env_manager.reset()
-    for i in range(1000):
-        if i % 100 == 0:
+    obs_dict = env_manager.get_obs()
+
+    position_array_list = np.zeros((2000, 3), dtype=np.float32)
+    velocity_array_list = np.zeros((2000, 3), dtype=np.float32)
+
+
+    for i in range(10000):
+        if i % 1000 == 0 and i > 0:
             print("i", i)
-            env_manager.reset()
+            # env_manager.reset()
+            plt.figure(figsize=(10, 5))
+            plt.subplot(1, 2, 1)
+            plt.plot(position_array_list[:, 0], label="X Position")
+            plt.plot(position_array_list[:, 1], label="Y Position")
+            plt.plot(position_array_list[:, 2], label="Z Position")
+            plt.legend()
+            plt.title("Position")
+            plt.subplot(1, 2, 2)
+            plt.plot(velocity_array_list[:, 0], label="X Velocity")
+            plt.plot(velocity_array_list[:, 1], label="Y Velocity")
+            plt.plot(velocity_array_list[:, 2], label="Z Velocity")
+            plt.legend()
+            plt.title("Velocity")
+            plt.tight_layout()
+            plt.show()
+            # position_array_list = np.zeros((1000, 3), dtype=np.float32)
+            # velocity_array_list = np.zeros((1000, 3), dtype=np.float32)
+            actions = -actions
+
         env_manager.step(actions=actions)
         env_manager.render()
         env_manager.reset_terminated_and_truncated_envs()
+
+        position_array_list[i % 2000, 0:3] = obs_dict["robot_position"][0].cpu().numpy()
+        velocity_array_list[i % 2000, 0:3] = obs_dict["robot_body_linvel"][0].cpu().numpy()
+

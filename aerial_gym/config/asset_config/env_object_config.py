@@ -63,14 +63,14 @@ class asset_state_params:
 
 
 class panel_asset_params(asset_state_params):
-    num_assets = 3
+    num_assets = 15
 
     asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/panels"
 
     collision_mask = 1  # objects with the same collision mask will not collide
 
-    min_position_ratio = [0.3, 0.05, 0.05]  # max position as a ratio of the bounds
-    max_position_ratio = [0.85, 0.95, 0.95]  # min position as a ratio of the bounds
+    min_position_ratio = [0.1, 0.0, 0.0]  # max position as a ratio of the bounds
+    max_position_ratio = [1.0, 1.0, 1.0]  # min position as a ratio of the bounds
 
     specified_position = [
         -1000.0,
@@ -82,9 +82,9 @@ class panel_asset_params(asset_state_params):
     max_euler_angles = [0.0, 0.0, np.pi / 3.0]  # max euler angles
 
     min_state_ratio = [
-        0.3,
-        0.05,
-        0.05,
+        0.35,
+        0.0,
+        0.0,
         0.0,
         0.0,
         -np.pi / 3.0,
@@ -97,9 +97,9 @@ class panel_asset_params(asset_state_params):
         0.0,
     ]
     max_state_ratio = [
-        0.85,
-        0.95,
-        0.95,
+        1.0,
+        1.0,
+        1.0,
         0.0,
         0.0,
         np.pi / 3.0,
@@ -112,7 +112,7 @@ class panel_asset_params(asset_state_params):
         0.0,
     ]
 
-    keep_in_env = True
+    keep_in_env = False
 
     collapse_fixed_joints = True
     per_link_semantic = False
@@ -170,7 +170,7 @@ class tile_asset_params(asset_state_params):
         0.0,
     ]
 
-    keep_in_env = True
+    keep_in_env = False
 
     collapse_fixed_joints = True
     per_link_semantic = False
@@ -262,7 +262,7 @@ class tree_asset_params(asset_state_params):
 
     collapse_fixed_joints = True
     per_link_semantic = True
-    keep_in_env = True
+    keep_in_env = False
 
     semantic_id = -1  # TREE_SEMANTIC_ID
     color = [70, 200, 100]
@@ -271,14 +271,14 @@ class tree_asset_params(asset_state_params):
 
 
 class object_asset_params(asset_state_params):
-    num_assets = 35
+    num_assets = 70
 
     asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/objects"
 
     min_state_ratio = [
         0.30,
-        0.05,
-        0.05,
+        0.0,
+        0.0,
         -np.pi,
         -np.pi,
         -np.pi,
@@ -291,9 +291,9 @@ class object_asset_params(asset_state_params):
         0.0,
     ]
     max_state_ratio = [
-        0.85,
-        0.9,
-        0.9,
+        1.0,
+        1.0,
+        1.0,
         np.pi,
         np.pi,
         np.pi,
@@ -352,7 +352,7 @@ class left_wall(asset_state_params):
         0.0,
     ]
 
-    keep_in_env = True
+    keep_in_env = False
 
     collapse_fixed_joints = True
     specific_filepath = "cube.urdf"
@@ -398,7 +398,7 @@ class right_wall(asset_state_params):
         0.0,
     ]
 
-    keep_in_env = True
+    keep_in_env = False
 
     collapse_fixed_joints = True
     per_link_semantic = False
@@ -446,7 +446,7 @@ class top_wall(asset_state_params):
         0.0,
     ]
 
-    keep_in_env = True
+    keep_in_env = False
 
     collapse_fixed_joints = True
     specific_filepath = "cube.urdf"
@@ -493,7 +493,7 @@ class bottom_wall(asset_state_params):
         0.0,
     ]
 
-    keep_in_env = True
+    keep_in_env = False
 
     collapse_fixed_joints = True
     specific_filepath = "cube.urdf"
@@ -541,7 +541,7 @@ class front_wall(asset_state_params):
         0.0,
     ]
 
-    keep_in_env = True
+    keep_in_env = False
 
     collapse_fixed_joints = True
     specific_filepath = "cube.urdf"
@@ -589,7 +589,7 @@ class back_wall(asset_state_params):
         0.0,
     ]
 
-    keep_in_env = True
+    keep_in_env = False
 
     collapse_fixed_joints = True
     specific_filepath = "cube.urdf"
