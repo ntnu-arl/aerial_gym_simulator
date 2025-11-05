@@ -98,6 +98,16 @@ env_configurations.register(
 )
 
 env_configurations.register(
+    "position_setpoint_task_sim2real_px4",
+    {
+        "env_creator": lambda **kwargs: task_registry.make_task(
+            "position_setpoint_task_sim2real_px4", **kwargs
+        ),
+        "vecenv_type": "AERIAL-RLGPU",
+    },
+)
+
+env_configurations.register(
     "position_setpoint_task_acceleration_sim2real",
     {
         "env_creator": lambda **kwargs: task_registry.make_task(
