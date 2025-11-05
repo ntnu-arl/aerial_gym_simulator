@@ -1,26 +1,18 @@
-from isaacgym import gymapi
-from isaacgym import gymtorch
-
-from isaacgym import gymutil
+import numpy as np
+import torch
+from isaacgym import gymapi, gymtorch, gymutil
 
 from aerial_gym.env_manager.base_env_manager import BaseManager
-from aerial_gym.env_manager.asset_manager import AssetManager
 from aerial_gym.env_manager.IGE_viewer_control import IGEViewerControl
-import torch
-
-import os
-
-
-from aerial_gym.utils.math import torch_rand_float_tensor
-
+from aerial_gym.env_manager.terrain_generator import TerrainGenerator
 from aerial_gym.utils.helpers import (
-    get_args,
-    update_cfg_from_args,
     class_to_dict,
+    get_args,
     parse_sim_params,
+    update_cfg_from_args,
 )
-import numpy as np
 from aerial_gym.utils.logging import CustomLogger
+from aerial_gym.utils.math import torch_rand_float_tensor
 
 logger = CustomLogger("IsaacGymEnvManager")
 
@@ -33,6 +25,7 @@ class IsaacGymEnv(BaseManager):
         self.env_tensor_bounds_max = None
         self.asset_handles = []
         self.env_handles = []
+        self.heightfield_handles = {}  # Store heightfield handles per environment
         self.num_rigid_bodies_robot = None
         self.has_IGE_cameras = has_IGE_cameras
         self.sim_has_dof = False
@@ -56,12 +49,8 @@ class IsaacGymEnv(BaseManager):
             self.cfg.env.upper_bound_max, device=self.device, requires_grad=False
         ).expand(self.cfg.env.num_envs, -1)
 
-        self.env_lower_bound = torch_rand_float_tensor(
-            self.env_lower_bound_min, self.env_lower_bound_max
-        )
-        self.env_upper_bound = torch_rand_float_tensor(
-            self.env_upper_bound_min, self.env_upper_bound_max
-        )
+        self.env_lower_bound = torch_rand_float_tensor(self.env_lower_bound_min, self.env_lower_bound_max)
+        self.env_upper_bound = torch_rand_float_tensor(self.env_upper_bound_min, self.env_upper_bound_max)
 
         self.viewer = None
         self.graphics_are_stepped = True
@@ -95,18 +84,10 @@ class IsaacGymEnv(BaseManager):
             )
             self.simulator_params.use_gpu_pipeline = False
         if self.simulator_params.use_gpu_pipeline == False:
-            logger.critical(
-                "The use_gpu_pipeline is set to False, this will result in slower simulation times"
-            )
+            logger.critical("The use_gpu_pipeline is set to False, this will result in slower simulation times")
         else:
-            logger.info(
-                "Using GPU pipeline for simulation."
-            )
-        logger.info(
-            "Sim Device type: {}, Sim Device ID: {}".format(
-                self.sim_device_type, self.sim_device_id
-            )
-        )
+            logger.info("Using GPU pipeline for simulation.")
+        logger.info(f"Sim Device type: {self.sim_device_type}, Sim Device ID: {self.sim_device_id}")
         if self.sim_config.viewer.headless and not self.has_IGE_cameras:
             self.graphics_device_id = -1
             logger.critical(
@@ -116,7 +97,7 @@ class IsaacGymEnv(BaseManager):
             )
         else:
             self.graphics_device_id = self.sim_device_id
-        logger.info("Graphics Device ID: {}".format(self.graphics_device_id))
+        logger.info(f"Graphics Device ID: {self.graphics_device_id}")
         logger.info("Creating Isaac Gym Simulation Object")
         warn_msg1 = (
             "If you have set the CUDA_VISIBLE_DEVICES environment variable, please ensure that you set it\n"
@@ -141,6 +122,73 @@ class IsaacGymEnv(BaseManager):
         plane_params.normal = gymapi.Vec3(0.0, 0.0, 1.0)
         self.gym.add_ground(self.sim, plane_params)
         return
+
+    def create_terrain_heightfield(self, env_id: int, env_handle):
+        """
+        Create a heightfield terrain for a specific environment using Simplex noise.
+
+        Note: Isaac Gym heightfields are static once created and cannot be updated or removed.
+        Returns the terrain generator for height sampling.
+
+        Args:
+            env_id: Environment ID
+            env_handle: Isaac Gym environment handle
+
+        Returns:
+            TerrainGenerator instance for this environment
+
+        """
+        if not hasattr(self.cfg.env, "enable_terrain") or not self.cfg.env.enable_terrain:
+            return
+
+        resolution = getattr(self.cfg.env, "terrain_resolution", 256)
+        scale_x = self.cfg.env.upper_bound_min[0] - self.cfg.env.lower_bound_min[0]
+        scale_y = self.cfg.env.upper_bound_min[1] - self.cfg.env.lower_bound_min[1]
+        amplitude = getattr(self.cfg.env, "terrain_amplitude", 2.0)
+        octaves = getattr(self.cfg.env, "terrain_octaves", 6)
+        frequency = getattr(self.cfg.env, "terrain_frequency", 0.1)
+        lacunarity = getattr(self.cfg.env, "terrain_lacunarity", 2.0)
+        persistence = getattr(self.cfg.env, "terrain_persistence", 0.5)
+        seed = getattr(self.cfg.env, "terrain_seed", None)
+
+        if seed is None:
+            import random
+
+            seed = env_id * 1000 + random.randint(0, 1000)
+
+        terrain_gen = TerrainGenerator(
+            resolution=resolution,
+            scale_x=scale_x,
+            scale_y=scale_y,
+            amplitude=amplitude,
+            octaves=octaves,
+            frequency=frequency,
+            lacunarity=lacunarity,
+            persistence=persistence,
+            seed=seed,
+        )
+        heightmap = terrain_gen.generate_heightmap(use_cache=True)
+
+        # Convert to Isaac Gym int16 format (heightfields are static once created)
+        heightmap_normalized = heightmap / amplitude
+        heightmap_int16 = (heightmap_normalized * 32767).astype(np.int16)
+        heightfield_data = heightmap_int16.flatten()
+
+        heightfield_params = gymapi.HeightFieldParams()
+        heightfield_params.nbColumns = resolution
+        heightfield_params.nbRows = resolution
+        heightfield_params.vertical_scale = amplitude / 32767.0
+        heightfield_params.column_scale = scale_x / resolution
+        heightfield_params.row_scale = scale_y / resolution
+        heightfield_params.transform.p.x = -scale_x / 2.0
+        heightfield_params.transform.p.y = -scale_y / 2.0
+        heightfield_params.transform.p.z = amplitude / 2.0  # Offset so terrain starts at z=0
+
+        heightfield_handle = self.gym.add_heightfield(self.sim, heightfield_data, heightfield_params)
+        self.heightfield_handles[env_id] = heightfield_handle
+        logger.debug(f"Created terrain heightfield for environment {env_id}")
+
+        return terrain_gen  # Return generator for height sampling
 
     def create_env(self, env_id):
         """
@@ -180,7 +228,6 @@ class IsaacGymEnv(BaseManager):
         global_asset_counter,
         segmentation_counter,
     ):
-
         local_segmentation_ctr_for_isaacgym_asset = segmentation_counter
         if asset_info_dict["semantic_id"] < 0:
             asset_segmentation_id = local_segmentation_ctr_for_isaacgym_asset
@@ -200,9 +247,7 @@ class IsaacGymEnv(BaseManager):
         )
 
         if asset_info_dict["asset_type"] == "robot":
-            self.num_rigid_bodies_robot = self.gym.get_actor_rigid_body_count(
-                env_handle, asset_handle
-            )
+            self.num_rigid_bodies_robot = self.gym.get_actor_rigid_body_count(env_handle, asset_handle)
 
         if asset_info_dict["per_link_semantic"]:
             rigid_body_names_all = self.gym.get_actor_rigid_body_names(env_handle, asset_handle)
@@ -215,12 +260,8 @@ class IsaacGymEnv(BaseManager):
                 links_to_label = rigid_body_names_all
 
             for name in rigid_body_names_all:
-
                 # Skip the values that are already in the dictionary which are predefined for objects of interest
-                while (
-                    local_segmentation_ctr_for_isaacgym_asset
-                    in asset_info_dict["semantic_masked_links"].values()
-                ):
+                while local_segmentation_ctr_for_isaacgym_asset in asset_info_dict["semantic_masked_links"].values():
                     local_segmentation_ctr_for_isaacgym_asset += 1
 
                 if name in links_to_label:
@@ -235,9 +276,7 @@ class IsaacGymEnv(BaseManager):
                     segmentation_value = local_segmentation_ctr_for_isaacgym_asset
                     logger.debug(f"Setting segmentation id for {name} to {segmentation_value}")
                 index = rigid_body_names_all.index(name)
-                self.gym.set_rigid_body_segmentation_id(
-                    env_handle, asset_handle, index, segmentation_value
-                )
+                self.gym.set_rigid_body_segmentation_id(env_handle, asset_handle, index, segmentation_value)
 
         color = asset_info_dict["color"]
         if asset_info_dict["color"] is None:
@@ -268,9 +307,7 @@ class IsaacGymEnv(BaseManager):
         self.num_envs = len(self.env_handles)
         self.num_assets_per_env = [len(assets) for assets in self.asset_handles]
 
-        if not all(
-            [num_assets == self.num_assets_per_env[0] for num_assets in self.num_assets_per_env]
-        ):
+        if not all([num_assets == self.num_assets_per_env[0] for num_assets in self.num_assets_per_env]):
             raise ValueError("All environments should have the same number of assets")
 
         self.num_assets_per_env = self.num_assets_per_env[0]
@@ -281,10 +318,7 @@ class IsaacGymEnv(BaseManager):
         ]
 
         if not all(
-            [
-                num_rigid_bodies == self.num_rigid_bodies_per_env[0]
-                for num_rigid_bodies in self.num_rigid_bodies_per_env
-            ]
+            [num_rigid_bodies == self.num_rigid_bodies_per_env[0] for num_rigid_bodies in self.num_rigid_bodies_per_env]
         ):
             raise ValueError("All environments should have the same number of rigid bodies.")
 
@@ -294,13 +328,11 @@ class IsaacGymEnv(BaseManager):
         self.unfolded_vec_root_tensor = gymtorch.wrap_tensor(self.unfolded_vec_root_tensor)
 
         self.global_contact_force_tensor = self.gym.acquire_net_contact_force_tensor(self.sim)
-        self.global_contact_force_tensor = gymtorch.wrap_tensor(
-            self.global_contact_force_tensor
-        ).view(self.num_envs, self.num_rigid_bodies_per_env, -1)
-
-        self.vec_root_tensor = self.unfolded_vec_root_tensor.view(
-            self.num_envs, self.num_assets_per_env, -1
+        self.global_contact_force_tensor = gymtorch.wrap_tensor(self.global_contact_force_tensor).view(
+            self.num_envs, self.num_rigid_bodies_per_env, -1
         )
+
+        self.vec_root_tensor = self.unfolded_vec_root_tensor.view(self.num_envs, self.num_assets_per_env, -1)
 
         self.global_tensor_dict = global_tensor_dict
 
@@ -332,30 +364,20 @@ class IsaacGymEnv(BaseManager):
             self.gym.acquire_dof_state_tensor(self.sim)
         )
         # if not None, view the tensor as (num_envs, num_dofs, 2)
-        if not self.global_tensor_dict["unfolded_dof_state_tensor"] is None:
+        if self.global_tensor_dict["unfolded_dof_state_tensor"] is not None:
             self.sim_has_dof = True
-            self.global_tensor_dict["dof_state_tensor"] = self.global_tensor_dict[
-                "unfolded_dof_state_tensor"
-            ].view(self.num_envs, -1, 2)
+            self.global_tensor_dict["dof_state_tensor"] = self.global_tensor_dict["unfolded_dof_state_tensor"].view(
+                self.num_envs, -1, 2
+            )
 
         self.global_tensor_dict["global_contact_force_tensor"] = self.global_contact_force_tensor
-        self.global_tensor_dict["robot_contact_force_tensor"] = self.global_contact_force_tensor[
-            :, 0, :
-        ]
+        self.global_tensor_dict["robot_contact_force_tensor"] = self.global_contact_force_tensor[:, 0, :]
 
         # Populate robot tensors
-        self.global_tensor_dict["robot_position"] = self.global_tensor_dict["robot_state_tensor"][
-            :, :3
-        ]
-        self.global_tensor_dict["robot_orientation"] = self.global_tensor_dict[
-            "robot_state_tensor"
-        ][:, 3:7]
-        self.global_tensor_dict["robot_linvel"] = self.global_tensor_dict["robot_state_tensor"][
-            :, 7:10
-        ]
-        self.global_tensor_dict["robot_angvel"] = self.global_tensor_dict["robot_state_tensor"][
-            :, 10:
-        ]
+        self.global_tensor_dict["robot_position"] = self.global_tensor_dict["robot_state_tensor"][:, :3]
+        self.global_tensor_dict["robot_orientation"] = self.global_tensor_dict["robot_state_tensor"][:, 3:7]
+        self.global_tensor_dict["robot_linvel"] = self.global_tensor_dict["robot_state_tensor"][:, 7:10]
+        self.global_tensor_dict["robot_angvel"] = self.global_tensor_dict["robot_state_tensor"][:, 10:]
         self.global_tensor_dict["robot_body_angvel"] = torch.zeros_like(
             self.global_tensor_dict["robot_state_tensor"][:, 10:13]
         )
@@ -367,29 +389,23 @@ class IsaacGymEnv(BaseManager):
         )
 
         idx = self.num_rigid_bodies_robot
-        self.global_tensor_dict["robot_force_tensor"] = self.global_tensor_dict[
-            "global_force_tensor"
-        ].view(self.num_envs, self.num_rigid_bodies_per_env, 3)[:, :idx, :]
+        self.global_tensor_dict["robot_force_tensor"] = self.global_tensor_dict["global_force_tensor"].view(
+            self.num_envs, self.num_rigid_bodies_per_env, 3
+        )[:, :idx, :]
 
-        self.global_tensor_dict["robot_torque_tensor"] = self.global_tensor_dict[
-            "global_torque_tensor"
-        ].view(self.num_envs, self.num_rigid_bodies_per_env, 3)[:, :idx, :]
+        self.global_tensor_dict["robot_torque_tensor"] = self.global_tensor_dict["global_torque_tensor"].view(
+            self.num_envs, self.num_rigid_bodies_per_env, 3
+        )[:, :idx, :]
 
         # ==============================
         # Populate obstacle tensors
         if self.num_assets_per_env > 0:
-            self.global_tensor_dict["obstacle_position"] = self.global_tensor_dict[
-                "env_asset_state_tensor"
-            ][:, :, 0:3]
-            self.global_tensor_dict["obstacle_orientation"] = self.global_tensor_dict[
-                "env_asset_state_tensor"
-            ][:, :, 3:7]
-            self.global_tensor_dict["obstacle_linvel"] = self.global_tensor_dict[
-                "env_asset_state_tensor"
-            ][:, :, 7:10]
-            self.global_tensor_dict["obstacle_angvel"] = self.global_tensor_dict[
-                "env_asset_state_tensor"
-            ][:, :, 10:]
+            self.global_tensor_dict["obstacle_position"] = self.global_tensor_dict["env_asset_state_tensor"][:, :, 0:3]
+            self.global_tensor_dict["obstacle_orientation"] = self.global_tensor_dict["env_asset_state_tensor"][
+                :, :, 3:7
+            ]
+            self.global_tensor_dict["obstacle_linvel"] = self.global_tensor_dict["env_asset_state_tensor"][:, :, 7:10]
+            self.global_tensor_dict["obstacle_angvel"] = self.global_tensor_dict["env_asset_state_tensor"][:, :, 10:]
             self.global_tensor_dict["obstacle_body_angvel"] = torch.zeros_like(
                 self.global_tensor_dict["env_asset_state_tensor"][:, :, 10:13]
             )
@@ -401,13 +417,13 @@ class IsaacGymEnv(BaseManager):
             )
 
             # assume that each obstacle is collapsed to a single base link
-            self.global_tensor_dict["obstacle_force_tensor"] = self.global_tensor_dict[
-                "global_force_tensor"
-            ].view(self.num_envs, self.num_rigid_bodies_per_env, 3)[:, idx:, :]
+            self.global_tensor_dict["obstacle_force_tensor"] = self.global_tensor_dict["global_force_tensor"].view(
+                self.num_envs, self.num_rigid_bodies_per_env, 3
+            )[:, idx:, :]
 
-            self.global_tensor_dict["obstacle_torque_tensor"] = self.global_tensor_dict[
-                "global_torque_tensor"
-            ].view(self.num_envs, self.num_rigid_bodies_per_env, 3)[:, idx:, :]
+            self.global_tensor_dict["obstacle_torque_tensor"] = self.global_tensor_dict["global_torque_tensor"].view(
+                self.num_envs, self.num_rigid_bodies_per_env, 3
+            )[:, idx:, :]
 
         self.global_tensor_dict["env_bounds_max"] = self.env_upper_bound
         self.global_tensor_dict["env_bounds_min"] = self.env_lower_bound
@@ -424,9 +440,7 @@ class IsaacGymEnv(BaseManager):
         logger.warning(f"Headless: {self.sim_config.viewer.headless}")
         if not self.sim_config.viewer.headless:
             logger.info("Creating viewer")
-            self.viewer = IGEViewerControl(
-                self.gym, self.sim, env_manager, self.sim_config.viewer, self.device
-            )
+            self.viewer = IGEViewerControl(self.gym, self.sim, env_manager, self.sim_config.viewer, self.device)
             self.viewer.set_actor_and_env_handles(self.robot_handles, self.env_handles)
             self.viewer.set_camera_lookat()
             logger.info("Created viewer")
@@ -462,9 +476,7 @@ class IsaacGymEnv(BaseManager):
                 )
             elif self.dof_control_mode == "effort":
                 self.dof_application_function = self.gym.set_dof_actuation_force_tensor
-                self.dof_application_tensor = gymtorch.unwrap_tensor(
-                    self.global_tensor_dict["dof_effort_tensor"]
-                )
+                self.dof_application_tensor = gymtorch.unwrap_tensor(self.global_tensor_dict["dof_effort_tensor"])
             else:
                 raise ValueError("Invalid dof control mode")
             self.dof_application_function(self.sim, self.dof_application_tensor)
@@ -511,12 +523,12 @@ class IsaacGymEnv(BaseManager):
         self.reset_idx(torch.arange(self.num_envs, device=self.device))
 
     def reset_idx(self, env_ids):
-        self.env_lower_bound[env_ids, :] = torch_rand_float_tensor(
-            self.env_lower_bound_min, self.env_lower_bound_max
-        )[env_ids]
-        self.env_upper_bound[env_ids, :] = torch_rand_float_tensor(
-            self.env_upper_bound_min, self.env_upper_bound_max
-        )[env_ids]
+        self.env_lower_bound[env_ids, :] = torch_rand_float_tensor(self.env_lower_bound_min, self.env_lower_bound_max)[
+            env_ids
+        ]
+        self.env_upper_bound[env_ids, :] = torch_rand_float_tensor(self.env_upper_bound_min, self.env_upper_bound_max)[
+            env_ids
+        ]
 
     def write_to_sim(self):
         """

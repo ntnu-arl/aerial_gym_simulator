@@ -1,6 +1,6 @@
-from aerial_gym import AERIAL_GYM_DIRECTORY
-
 import numpy as np
+
+from aerial_gym import AERIAL_GYM_DIRECTORY
 
 THIN_SEMANTIC_ID = 1
 TREE_SEMANTIC_ID = 2
@@ -230,34 +230,34 @@ class tree_asset_params(asset_state_params):
     collision_mask = 1  # objects with the same collision mask will not collide
 
     min_state_ratio = [
-        0.1,
-        0.1,
-        0.0,
-        0,
-        -np.pi / 6.0,
-        -np.pi,
-        1.0,
-        0.0,
-        0.0,
+        0.1,  # X position: 10% to 90% of bounds
+        0.1,  # Y position: 10% to 90% of bounds
+        0.0,  # Z position: Ground level (adjusted by terrain)
+        0,  # Roll
+        -np.pi / 20.0,  # Pitch: ±9° from vertical
+        -np.pi,  # Yaw: Full rotation
+        0.5,  # Scale: 0.5 to 1.5
         0.0,
         0.0,
+        0.0,  # Linear velocities
         0.0,
         0.0,
+        0.0,  # Angular velocities
     ]
     max_state_ratio = [
-        0.9,
-        0.9,
-        0.0,
-        0,
-        np.pi / 6.0,
-        np.pi,
-        1.0,
-        0.0,
-        0.0,
+        0.9,  # X position
+        0.9,  # Y position
+        0.0,  # Z position
+        0,  # Roll
+        np.pi / 20.0,  # Pitch
+        np.pi,  # Yaw
+        1.5,  # Scale
         0.0,
         0.0,
+        0.0,  # Linear velocities
         0.0,
         0.0,
+        0.0,  # Angular velocities
     ]
 
     collapse_fixed_joints = True
