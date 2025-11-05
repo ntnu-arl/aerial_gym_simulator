@@ -1,4 +1,5 @@
 from aerial_gym.config.asset_config.env_object_config import (
+    target_asset_params,
     tree_asset_params,
 )
 
@@ -24,7 +25,7 @@ class ProceduralForestEnvCfg:
         sample_timestep_for_latency = True  # sample the timestep for the latency noise
         perturb_observations = True
         keep_same_env_for_num_episodes = 1
-        write_to_sim_at_every_timestep = False  # write to sim at every timestep
+        write_to_sim_at_every_timestep = True  # write to sim at every timestep
 
         use_warp = True
 
@@ -49,11 +50,19 @@ class ProceduralForestEnvCfg:
         upper_bound_min = [50.0, 50.0, 30.0]
         upper_bound_max = [50.0, 50.0, 30.0]
 
+        # Target movement configuration
+        target_velocity_change_interval = 100  # Steps between velocity changes
+        target_stop_probability = 0.15  # Chance to stop moving per interval
+        target_velocity_max = 1.0  # Maximum velocity magnitude in m/s
+        target_velocity_min = 0.3  # Minimum velocity when moving in m/s
+
     class env_config:
         include_asset_type = {
             "trees": True,
+            "target": True,
         }
 
         asset_type_to_dict_map = {
             "trees": tree_asset_params,
+            "target": target_asset_params,
         }

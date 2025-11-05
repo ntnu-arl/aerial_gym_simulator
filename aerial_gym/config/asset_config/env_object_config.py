@@ -12,6 +12,7 @@ LEFT_WALL_SEMANTIC_ID = 11
 RIGHT_WALL_SEMANTIC_ID = 12
 BOTTOM_WALL_SEMANTIC_ID = 13
 TOP_WALL_SEMANTIC_ID = 14
+TARGET_SEMANTIC_ID = 15
 
 
 class asset_state_params:
@@ -596,3 +597,52 @@ class back_wall(asset_state_params):
     per_link_semantic = False
     semantic_id = BACK_WALL_SEMANTIC_ID
     color = [100, 200, 210]
+
+
+class target_asset_params(asset_state_params):
+    num_assets = 1
+
+    asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/models/environment_assets/objects"
+    file = "target.urdf"
+
+    collision_mask = 1
+
+    min_state_ratio = [
+        0.1,  # X position: 10% to 90% of bounds
+        0.1,  # Y position: 10% to 90% of bounds
+        0.0,  # Z position: Ground level (set by terrain)
+        0.0,  # Roll
+        0.0,  # Pitch
+        0.0,  # Yaw
+        1.0,  # Scale: fixed at 1.0
+        0.0,  # Linear velocity X
+        0.0,  # Linear velocity Y
+        0.0,  # Linear velocity Z
+        0.0,  # Angular velocity X
+        0.0,  # Angular velocity Y
+        0.0,  # Angular velocity Z
+    ]
+    max_state_ratio = [
+        0.9,  # X position
+        0.9,  # Y position
+        0.0,  # Z position
+        0.0,  # Roll
+        0.0,  # Pitch
+        0.0,  # Yaw
+        1.0,  # Scale
+        0.0,  # Linear velocity X
+        0.0,  # Linear velocity Y
+        0.0,  # Linear velocity Z
+        0.0,  # Angular velocity X
+        0.0,  # Angular velocity Y
+        0.0,  # Angular velocity Z
+    ]
+
+    keep_in_env = True
+    collapse_fixed_joints = True
+    fix_base_link = True  # Fix base to prevent physics from affecting it (position updated directly via state tensor)
+    disable_gravity = True  # Disable gravity to prevent falling
+    per_link_semantic = False
+    semantic_id = TARGET_SEMANTIC_ID
+    color = [255, 0, 0]  # Bright red for visibility
+    semantic_masked_links = {}

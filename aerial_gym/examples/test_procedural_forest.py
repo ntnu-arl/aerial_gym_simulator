@@ -68,7 +68,7 @@ if __name__ == "__main__":
         logger.info(f"  - Images will be saved to: {output_dir}/")
 
         for i in range(1000000):
-            if i % 20 == 0:
+            if i % 2000 == 0:
                 logger.info(f"Step {i}: Resetting environment...")
                 env_manager.reset()
 

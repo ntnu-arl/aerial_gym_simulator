@@ -276,7 +276,15 @@ class EnvManager(BaseManager):
 
         # Pass terrain generators to AssetManager for height sampling
         terrain_gens = getattr(self, "terrain_generators", {})
-        self.asset_manager = AssetManager(self.global_tensor_dict, self.keep_in_env, terrain_generators=terrain_gens)
+        global_asset_dicts = getattr(self, "global_asset_dicts", None)
+        self.asset_manager = AssetManager(
+            self.global_tensor_dict,
+            self.keep_in_env,
+            terrain_generators=terrain_gens,
+            cfg=self.cfg,
+            global_asset_dicts=global_asset_dicts,
+            sim_config=self.sim_config,
+        )
         self.asset_manager.prepare_for_sim()
         self.robot_manager.prepare_for_sim(self.global_tensor_dict)
         self.obstacle_manager = ObstacleManager(self.IGE_env.num_assets_per_env, self.cfg, self.device)
@@ -348,6 +356,8 @@ class EnvManager(BaseManager):
     def pre_physics_step(self, actions, env_actions):
         # first let the robot compute the actions
         self.robot_manager.pre_physics_step(actions)
+        # update target movement (if present)
+        self.asset_manager.step(env_actions)
         # then the asset manager applies the actions here
         self.asset_manager.pre_physics_step(env_actions)
         # apply actions to obstacle manager
