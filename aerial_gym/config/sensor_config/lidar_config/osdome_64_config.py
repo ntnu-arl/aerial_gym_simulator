@@ -12,9 +12,10 @@ class OSDome_64_Config(BaseLidarConfig):
     max_range = 10.0
     min_range = 0.2
 
-    return_pointcloud = False
+    return_pointcloud = True
     segmentation_camera = False
     normalize_range = False
+    pointcloud_in_world_frame = True
 
     # randomize placement of the sensor
     randomize_placement = True

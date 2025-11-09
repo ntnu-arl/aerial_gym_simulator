@@ -80,6 +80,12 @@ class LiDARNavigationTask(BaseTask):
             self.target_position)
         self.pos_error_vehicle_frame = torch.zeros_like(self.target_position)
 
+        self.world_dir_vectors = torch.ones(
+            (self.sim_env.num_envs, 48, 120, 3), device=self.device
+        )
+
+        self.time_to_collision = torch.zeros((self.sim_env.num_envs), device=self.device)
+
         # Get the dictionary once from the environment and use it to get the observations later.
         # This is to avoid constant retuning of data back anf forth across functions as the tensors update and can be read in-place.
         self.obs_dict = self.sim_env.get_obs()
@@ -101,17 +107,11 @@ class LiDARNavigationTask(BaseTask):
         self.observation_space = Dict(
             {
                 "observations": Box(
-                    low=-1.0,
-                    high=1.0,
+                    low=-np.inf,
+                    high=np.inf,
                     shape=(self.task_config.observation_space_dim,),
                     dtype=np.float32,
                 ),
-                # "image_obs": Box(
-                #     low=-1.0,
-                #     high=1.0,
-                #     shape=(1, 135, 240),
-                #     dtype=np.float32,
-                # ),
             }
         )
         self.downsampled_lidar_data = torch.zeros(
@@ -275,48 +275,67 @@ class LiDARNavigationTask(BaseTask):
             self.timeouts_aggregate = 0
 
     def process_image_observation(self):
-        image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)/10.0
+        pointcloud_obs = self.obs_dict["depth_range_pixels"].squeeze(1)
+        self.world_dir_vectors[:] = pointcloud_obs - self.obs_dict["robot_position"].unsqueeze(1).unsqueeze(1)
+        range_obs = torch.norm(self.world_dir_vectors, dim=-1)
+        range_obs[range_obs > 10] = 10.0
+        range_obs[range_obs < 0.2] = 10.0
+
+        image_obs = range_obs.clone()
+
+        range_obs_flat = range_obs.view(self.num_envs, -1)
+
+        self.world_unit_dir = self.world_dir_vectors.view(self.num_envs, -1, 3) / (range_obs_flat.unsqueeze(-1) + 1e-6)
+
+        self.world_dir_vectors_flat = self.world_dir_vectors.view(self.num_envs, -1, 3)
+        self.vel_component_along_dir = torch.sum(
+            self.obs_dict["robot_linvel"].unsqueeze(1) * self.world_unit_dir, dim=-1
+        )
+
+        time_to_collision = torch.where(
+            self.vel_component_along_dir > 0,
+            (range_obs_flat - 0.2) / (self.vel_component_along_dir + 1e-6),
+            10.0 * torch.ones_like(range_obs_flat)
+        )
+
+        self.time_to_collision[:] = torch.clamp(torch.min(time_to_collision, dim=-1).values, 0.0, 10.0)
+
+        inv_range_image = 1 / image_obs
 
         # invalid pixels are set to max distance
-        image_obs[image_obs > 1.0] = 1.0
-        image_obs[image_obs < 0.02] = 1.0
         # # downsample the image using max pooling
-        image_obs_ds = 1 - torch.nn.functional.max_pool2d(
-            1 - image_obs.unsqueeze(1), (3, 6)).squeeze(1)
+        image_obs_ds = torch.nn.functional.max_pool2d(
+            inv_range_image.unsqueeze(1), (3, 6)).squeeze(1)
 
         self.downsampled_lidar_data[:] = image_obs_ds.reshape(
             (self.num_envs, -1)).to(self.device)
-        # save both images for robot 0
-        # import matplotlib.pyplot as plt
-        # plt.imsave("full_image.png", image_obs[0].cpu().numpy(), cmap='plasma')
-        # plt.imsave("downsampled_image.png", image_obs_ds[0].cpu().numpy(), cmap='plasma')
         return
 
-    def process_image_observation_inference(self):
-        image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)/10.0
+    # def process_image_observation_inference(self):
+    #     image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)/10.0
 
-        # the image obs are from 0 to 2pi azimuth and 0 to pi elevation
-        azimuth_bin_indices = torch.linspace(
-            0, image_obs.shape[2]-1, steps=240, device=self.device
-        ).long()
-        elevation_bin_indices = torch.linspace(
-            0, image_obs.shape[1]-1, steps=135, device=self.device
-        ).long()
+    #     # the image obs are from 0 to 2pi azimuth and 0 to pi elevation
+    #     azimuth_bin_indices = torch.linspace(
+    #         0, image_obs.shape[2]-1, steps=240, device=self.device
+    #     ).long()
+    #     elevation_bin_indices = torch.linspace(
+    #         0, image_obs.shape[1]-1, steps=135, device=self.device
+    #     ).long()
 
-        # invalid pixels are set to max distance
-        image_obs[image_obs > 1.0] = 1.0
-        image_obs[image_obs < 0.02] = 1.0
-        # # downsample the image using max pooling
-        image_obs_ds = 1 - torch.nn.functional.max_pool2d(
-            1 - image_obs.unsqueeze(1), (3, 6)).squeeze(1)
+    #     # invalid pixels are set to max distance
+    #     image_obs[image_obs > 1.0] = 1.0
+    #     image_obs[image_obs < 0.02] = 1.0
+    #     # # downsample the image using max pooling
+    #     image_obs_ds = 1 - torch.nn.functional.max_pool2d(
+    #         1 - image_obs.unsqueeze(1), (3, 6)).squeeze(1)
 
-        self.downsampled_lidar_data[:] = image_obs_ds.reshape(
-            (self.num_envs, -1)).to(self.device)
-        # save both images for robot 0
-        # import matplotlib.pyplot as plt
-        # plt.imsave("full_image.png", image_obs[0].cpu().numpy(), cmap='plasma')
-        # plt.imsave("downsampled_image.png", image_obs_ds[0].cpu().numpy(), cmap='plasma')
-        return
+    #     self.downsampled_lidar_data[:] = image_obs_ds.reshape(
+    #         (self.num_envs, -1)).to(self.device)
+    #     # save both images for robot 0
+    #     # import matplotlib.pyplot as plt
+    #     # plt.imsave("full_image.png", image_obs[0].cpu().numpy(), cmap='plasma')
+    #     # plt.imsave("downsampled_image.png", image_obs_ds[0].cpu().numpy(), cmap='plasma')
+    #     return
         
 
     def step(self, actions):
@@ -379,18 +398,9 @@ class LiDARNavigationTask(BaseTask):
         self.num_task_steps += 1
         # do stuff with the image observations here
         self.process_image_observation()
-        self.post_image_reward_addition()
         if self.task_config.return_state_before_reset == False:
             return_tuple = self.get_return_tuple()
         return return_tuple
-
-    def post_image_reward_addition(self):
-        image_obs = 10.0 * self.obs_dict["depth_range_pixels"].squeeze(1)
-        image_obs[image_obs < 0] = 10.0
-        self.min_pixel_dist = torch.amin(image_obs, dim=(1, 2))
-        self.rewards[self.terminations < 0] += -exponential_reward_function(
-            4.0, 1.0, self.min_pixel_dist[self.terminations < 0]
-        )
 
     def get_return_tuple(self):
         self.process_obs_for_task()
@@ -449,7 +459,7 @@ class LiDARNavigationTask(BaseTask):
             obs_dict["crashes"],
             obs_dict["robot_actions"],
             obs_dict["robot_prev_actions"],
-            self.downsampled_lidar_data,    
+            self.time_to_collision,    
             self.curriculum_progress_fraction,
             self.task_config.reward_parameters,
         )
@@ -479,7 +489,7 @@ def compute_reward(
     crashes,
     action,
     prev_action,
-    downsampled_lidar_data,
+    time_to_collision,
     curriculum_progress_fraction,
     parameter_dict,
 ):
@@ -502,11 +512,20 @@ def compute_reward(
     robot_vel_dir = robot_vehicle_linvel / (
         robot_vel_norm.unsqueeze(1) + 1e-6)
     unit_vec_to_goal = pos_error / (dist.unsqueeze(1) + 1e-6)
+
+    reasonable_vel_along_goal = exponential_reward_function(
+        2.0,
+        2.0,
+        (robot_vel_norm - 2.0)
+    )
+    
+    
     vel_dir_component = torch.sum(robot_vel_dir * unit_vec_to_goal, dim=1)
+
     vel_dir_component_reward = torch.where(vel_dir_component > 0,
-                                           parameter_dict["vel_direction_component_reward_magnitude"] * vel_dir_component,
+                                           parameter_dict["vel_direction_component_reward_magnitude"] * vel_dir_component * reasonable_vel_along_goal,
                                            -0.2 * torch.ones_like(vel_dir_component)
-                                           ) * torch.min(dist , torch.ones_like(dist))
+                                           ) * torch.min((dist/3.0) , torch.ones_like(dist))
     
     # for acceleration setpoint task
     # any velocity greater than 3m/s be penalized
@@ -579,6 +598,12 @@ def compute_reward(
         z_absolute_penalty + yawrate_absolute_penalty + y_absolute_penalty
     total_action_penalty = action_diff_penalty + absolute_action_penalty
 
+    time_to_collision_penalty = exponential_penalty_function(
+        3.0,
+        1.0,
+        time_to_collision
+    )
+
     # combined reward
     reward = (
         MULTIPLICATION_FACTOR_REWARD
@@ -592,6 +617,8 @@ def compute_reward(
             + stable_at_goal_reward
             + vel_penalty_for_acc
             + total_action_penalty
+            + time_to_collision_penalty
+            # + lidar_data_penalty
         )
     )
 
