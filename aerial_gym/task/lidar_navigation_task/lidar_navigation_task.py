@@ -85,6 +85,7 @@ class LiDARNavigationTask(BaseTask):
         )
 
         self.time_to_collision = torch.zeros((self.sim_env.num_envs), device=self.device)
+        self.target_yaw = torch.zeros((self.sim_env.num_envs), device=self.device)
 
         # Get the dictionary once from the environment and use it to get the observations later.
         # This is to avoid constant retuning of data back anf forth across functions as the tensors update and can be read in-place.
@@ -166,7 +167,12 @@ class LiDARNavigationTask(BaseTask):
             ratio=target_ratio[env_ids],
         )
         self.obs_dict["robot_prev_actions"][env_ids] = 0.0
-        
+
+        self.target_yaw[env_ids] = torch_rand_float_tensor(
+            -torch.pi * torch.ones(len(env_ids), device=self.device),
+            torch.pi * torch.ones(len(env_ids), device=self.device),
+        )
+
         # logger.warning(f"reset envs: {env_ids}")
         self.infos = {}
         return
@@ -273,19 +279,46 @@ class LiDARNavigationTask(BaseTask):
             self.success_aggregate = 0
             self.crashes_aggregate = 0
             self.timeouts_aggregate = 0
+    
+    def add_noise_to_downsampled_lidar_data(self, ds_lidar_data):
+        # random noise to 3% pixels
+        noise_mask = torch.bernoulli(
+            0.03 * torch.ones_like(ds_lidar_data)).to(self.device)
+        ds_lidar_data[noise_mask == 1] += torch_rand_float_tensor(
+            0.2 * torch.ones_like(noise_mask[noise_mask == 1]),
+            10.0 * torch.ones_like(noise_mask[noise_mask == 1])
+        ).to(self.device)
+
+        # bernoulli sampling to have 1-2% points max range
+        max_range_points_mask = torch.bernoulli(
+            0.02 * torch.ones_like(ds_lidar_data)).to(self.device)
+        ds_lidar_data[max_range_points_mask == 1] = 10.0
+
+        # 1-2% points in the bottom half of the image to be a low value between 0.2 to 1 meter
+        # 5% pixels below 10: index of ds_lidar_data should have random range between 0.2 to 1.0 metres
+
+        low_range_points_mask = torch.bernoulli(
+            0.02 * torch.ones_like(ds_lidar_data[:, 10:])).to(self.device)
+        random_low_ranges = torch_rand_float_tensor(
+            0.2 * torch.ones_like(low_range_points_mask),
+            1.0 * torch.ones_like(low_range_points_mask)
+        ).to(self.device)
+        ds_lidar_data[:, 10:][low_range_points_mask == 1] = random_low_ranges[low_range_points_mask == 1]
+        return ds_lidar_data
+
 
     def process_image_observation(self):
         pointcloud_obs = self.obs_dict["depth_range_pixels"].squeeze(1)
         self.world_dir_vectors[:] = pointcloud_obs - self.obs_dict["robot_position"].unsqueeze(1).unsqueeze(1)
         range_obs = torch.norm(self.world_dir_vectors, dim=-1)
+        range_obs_flat = range_obs.view(self.num_envs, -1)
+        self.world_unit_dir = self.world_dir_vectors.view(self.num_envs, -1, 3) / (range_obs_flat.unsqueeze(-1) + 1e-6)
+        
         range_obs[range_obs > 10] = 10.0
         range_obs[range_obs < 0.2] = 10.0
 
         image_obs = range_obs.clone()
 
-        range_obs_flat = range_obs.view(self.num_envs, -1)
-
-        self.world_unit_dir = self.world_dir_vectors.view(self.num_envs, -1, 3) / (range_obs_flat.unsqueeze(-1) + 1e-6)
 
         self.world_dir_vectors_flat = self.world_dir_vectors.view(self.num_envs, -1, 3)
         self.vel_component_along_dir = torch.sum(
@@ -294,21 +327,35 @@ class LiDARNavigationTask(BaseTask):
 
         time_to_collision = torch.where(
             self.vel_component_along_dir > 0,
-            (range_obs_flat - 0.2) / (self.vel_component_along_dir + 1e-6),
+            (range_obs_flat) / (self.vel_component_along_dir + 1e-6),
             10.0 * torch.ones_like(range_obs_flat)
         )
 
-        self.time_to_collision[:] = torch.clamp(torch.min(time_to_collision, dim=-1).values, 0.0, 10.0)
+        # print(self.vel_component_along_dir.shape,range_obs_flat.shape)
 
-        inv_range_image = 1 / image_obs
+        self.time_to_collision[:] = torch.clamp(torch.min(time_to_collision, dim=-1).values, 0.0, 10.0)
+        min_indices = torch.min(time_to_collision, dim=-1).indices
+        # print(min_indices)
+        # print("time to collision: ", self.time_to_collision[0])
+        # print(range_obs_flat[0, min_indices[0]], self.vel_component_along_dir[0, min_indices[0]])
+
+        # Min pooling to downsample the image
+        image_obs_ds = -torch.nn.functional.max_pool2d(
+            -image_obs.unsqueeze(1), (3, 6)).squeeze(1)
+        
+        # Noise after min pooling
+        image_obs_noisy = self.add_noise_to_downsampled_lidar_data(image_obs_ds)
+        inv_range_image = 1 / image_obs_noisy
+        self.downsampled_lidar_data[:] = inv_range_image.reshape(
+            (self.num_envs, -1)).to(self.device)
 
         # invalid pixels are set to max distance
         # # downsample the image using max pooling
-        image_obs_ds = torch.nn.functional.max_pool2d(
-            inv_range_image.unsqueeze(1), (3, 6)).squeeze(1)
+        # inv_image_obs_ds = torch.nn.functional.max_pool2d(
+        #     inv_range_image.unsqueeze(1), (3, 6)).squeeze(1)
 
-        self.downsampled_lidar_data[:] = image_obs_ds.reshape(
-            (self.num_envs, -1)).to(self.device)
+        # self.downsampled_lidar_data[:] = inv_image_obs_ds.reshape(
+        #     (self.num_envs, -1)).to(self.device)
         return
 
     # def process_image_observation_inference(self):
@@ -431,7 +478,9 @@ class LiDARNavigationTask(BaseTask):
             (torch.rand_like(euler_angles) - 0.5)
         self.task_obs["observations"][:, 4] = perturbed_euler_angles[:, 0]
         self.task_obs["observations"][:, 5] = perturbed_euler_angles[:, 1]
-        self.task_obs["observations"][:, 6] = 0.0
+        self.task_obs["observations"][:, 6] = ssa(
+            self.target_yaw - euler_angles[:, 2]
+        )
         self.task_obs["observations"][:,
                                       7:10] = self.obs_dict["robot_body_linvel"]
         self.task_obs["observations"][:,
@@ -452,10 +501,14 @@ class LiDARNavigationTask(BaseTask):
         self.pos_error_vehicle_frame[:] = quat_rotate_inverse(
             robot_vehicle_orientation, (target_position - robot_position)
         )
+        euler_angles = ssa(obs_dict["robot_euler_angles"])
+        yaw_error = ssa(self.target_yaw - euler_angles[:, 2])
         return compute_reward(
             self.pos_error_vehicle_frame,
             self.pos_error_vehicle_frame_prev,
             self.obs_dict["robot_vehicle_linvel"],
+            self.obs_dict["robot_body_angvel"],
+            yaw_error,
             obs_dict["crashes"],
             obs_dict["robot_actions"],
             obs_dict["robot_prev_actions"],
@@ -481,11 +534,16 @@ def exponential_penalty_function(
     return magnitude * (torch.exp(-(value * value) * exponent) - 1.0)
 
 
+erf = exponential_reward_function
+epf = exponential_penalty_function
+
 @torch.jit.script
 def compute_reward(
     pos_error,
     prev_pos_error,
     robot_vehicle_linvel,
+    robot_body_angvel,
+    yaw_error,
     crashes,
     action,
     prev_action,
@@ -493,7 +551,7 @@ def compute_reward(
     curriculum_progress_fraction,
     parameter_dict,
 ):
-    # type: (Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, float, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
+    # type: (Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, float, Dict[str, Tensor]) -> Tuple[Tensor, Tensor]
     MULTIPLICATION_FACTOR_REWARD = 1.0 + (2.0) * curriculum_progress_fraction
     dist = torch.norm(pos_error, dim=1)
     prev_dist_to_goal = torch.norm(prev_pos_error, dim=1)
@@ -513,7 +571,7 @@ def compute_reward(
         robot_vel_norm.unsqueeze(1) + 1e-6)
     unit_vec_to_goal = pos_error / (dist.unsqueeze(1) + 1e-6)
 
-    reasonable_vel_along_goal = exponential_reward_function(
+    reasonable_vel = exponential_reward_function(
         2.0,
         2.0,
         (robot_vel_norm - 2.0)
@@ -523,7 +581,7 @@ def compute_reward(
     vel_dir_component = torch.sum(robot_vel_dir * unit_vec_to_goal, dim=1)
 
     vel_dir_component_reward = torch.where(vel_dir_component > 0,
-                                           parameter_dict["vel_direction_component_reward_magnitude"] * vel_dir_component * reasonable_vel_along_goal,
+                                           parameter_dict["vel_direction_component_reward_magnitude"] * vel_dir_component * reasonable_vel,
                                            -0.2 * torch.ones_like(vel_dir_component)
                                            ) * torch.min((dist/3.0) , torch.ones_like(dist))
     
@@ -544,11 +602,18 @@ def compute_reward(
     vel_penalty_for_acc = vel_magnitude_penalty + negative_x_vel_penalty
 
     # stable at goal reward 
-    stable_at_goal_reward = exponential_reward_function(
-        2.0,
-        10.0,
-        robot_vel_norm,
-    ) * very_close_to_goal_reward
+    low_vel_reward = erf(1.5, 10.0, robot_vel_norm) + erf(1.5, 0.5, robot_vel_norm)
+
+    correct_yaw_reward = erf(1.0, 1.0, yaw_error) + erf(2.0, 15.0, yaw_error)
+
+    low_angvel_reward = erf(1.0, 8.0, robot_body_angvel[:, 2])
+
+    stable_at_goal_reward = torch.where(
+        dist < 1.0,
+        (low_vel_reward + correct_yaw_reward + low_angvel_reward),
+        torch.zeros_like(low_vel_reward),
+    )
+
 
     distance_from_goal_reward = (20.0 - dist) / 20.0
     action_diff = action - prev_action
@@ -598,10 +663,10 @@ def compute_reward(
         z_absolute_penalty + yawrate_absolute_penalty + y_absolute_penalty
     total_action_penalty = action_diff_penalty + absolute_action_penalty
 
-    time_to_collision_penalty = exponential_penalty_function(
-        3.0,
+    time_to_collision_penalty = exponential_reward_function(
+        -3.0,
         1.0,
-        time_to_collision
+        time_to_collision**2
     )
 
     # combined reward
@@ -610,23 +675,14 @@ def compute_reward(
         * (
             pos_reward
             + very_close_to_goal_reward
-            # + getting_closer_reward
             + vel_dir_component_reward
             + distance_from_goal_reward
-            # + lidar_data_penalty
             + stable_at_goal_reward
             + vel_penalty_for_acc
             + total_action_penalty
             + time_to_collision_penalty
-            # + lidar_data_penalty
         )
     )
-
-    # reward[:] = torch.where(
-    #     lidar_data_penalty < -2.0,
-    #     lidar_data_penalty,
-    #     reward
-    # )
 
     reward[:] = torch.where(
         crashes > 0,

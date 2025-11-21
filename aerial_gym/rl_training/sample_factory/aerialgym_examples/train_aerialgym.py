@@ -216,8 +216,8 @@ env_configs = dict(
         max_grad_norm=1.0,
         num_batches_per_epoch=4,
         exploration_loss_coeff=0.001,
-        with_wandb=False,
-        wandb_project="quad",
+        with_wandb=True,
+        wandb_project="lidar_nav_task",
         wandb_user="mihirkulkarni",
     ),
 

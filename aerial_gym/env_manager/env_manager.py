@@ -280,7 +280,18 @@ class EnvManager(BaseManager):
         # finally reset the robot manager that resets the robot state tensors and the sensors
         # logger.debug(f"Resetting environments {env_ids}.")
         self.IGE_env.reset_idx(env_ids)
-        self.asset_manager.reset_idx(env_ids, self.global_tensor_dict["num_obstacles_in_env"])
+        num_obstacles = self.global_tensor_dict["num_obstacles_in_env"]
+        self.asset_manager.reset_idx(env_ids, num_obstacles)
+        nk = self.asset_manager.num_keep_in_env
+        self.asset_manager.num_keep_in_env = self.asset_manager.num_keep_in_env // 2
+        
+        # Do a bernoulli sampling across indices such that each has a probability of 0.15 to be 1
+        samples = torch.bernoulli(0.15*torch.ones(len(env_ids), device=self.device))
+        selected_indices = torch.nonzero(samples)
+
+        self.asset_manager.reset_idx(env_ids[selected_indices], num_obstacles//2)
+        self.asset_manager.num_keep_in_env = nk
+
         if self.cfg.env.use_warp:
             self.warp_env.reset_idx(env_ids)
         self.robot_manager.reset_idx(env_ids)
