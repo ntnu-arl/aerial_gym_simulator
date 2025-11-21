@@ -17,7 +17,7 @@ class task_config:
     observation_space_dim = 13 + 4 + 16*20  # root_state + action_dim _+ latent_dims
     privileged_observation_space_dim = 0
     action_space_dim = 4
-    episode_len_steps = 100  # real physics time for simulation is this value multiplied by sim.dt
+    episode_len_steps = 110  # real physics time for simulation is this value multiplied by sim.dt
 
     return_state_before_reset = (
         False  # False as usually state is returned for next episode after reset

@@ -465,7 +465,7 @@ class LiDARNavigationTask(BaseTask):
             (self.target_position - self.obs_dict["robot_position"]),
         )
         perturbed_vec_to_tgt = vec_to_tgt + 0.1 * \
-            2 * (torch.rand_like(vec_to_tgt - 0.5))
+            2 * (torch.rand_like(vec_to_tgt) - 0.5)
         dist_to_tgt = torch.norm(vec_to_tgt, dim=-1)
         perturbed_unit_vec_to_tgt = perturbed_vec_to_tgt / \
             dist_to_tgt.unsqueeze(1)
@@ -481,6 +481,7 @@ class LiDARNavigationTask(BaseTask):
         self.task_obs["observations"][:, 6] = ssa(
             self.target_yaw - euler_angles[:, 2]
         )
+        # print("yaw error obs: ", self.task_obs["observations"][0, 6])
         self.task_obs["observations"][:,
                                       7:10] = self.obs_dict["robot_body_linvel"]
         self.task_obs["observations"][:,
@@ -536,6 +537,38 @@ def exponential_penalty_function(
 
 erf = exponential_reward_function
 epf = exponential_penalty_function
+
+@torch.jit.script
+def smooth_linear_reward(
+    magnitude: float, limit: float, error: torch.Tensor
+) -> torch.Tensor:
+    """
+    Smooth Linear Reward (Inverted Huber Loss).
+    Quadratic near 0 (stable), Linear far away (strong gradient).
+    
+    Args:
+        magnitude: Max reward value (at error=0).
+        limit: The error value where transition from quadratic to linear happens.
+        error: The error tensor.
+    """
+    abs_error = torch.abs(error)
+    
+    # R = M - scale * Huber(e)
+    # Huber(e) = 0.5*e^2 if |e|<d else d*(|e|-0.5d)
+    # We want R(pi) = 0.
+    # Huber(pi) = d*(pi - 0.5d).
+    # So scale = M / (d*(pi - 0.5d)).
+    
+    d = limit
+    huber = torch.where(
+        abs_error < d,
+        0.5 * abs_error * abs_error,
+        d * (abs_error - 0.5 * d)
+    )
+    max_huber = d * (torch.pi - 0.5 * d)
+    return magnitude * (1.0 - huber / max_huber)
+
+slr = smooth_linear_reward
 
 @torch.jit.script
 def compute_reward(
@@ -604,9 +637,16 @@ def compute_reward(
     # stable at goal reward 
     low_vel_reward = erf(1.5, 10.0, robot_vel_norm) + erf(1.5, 0.5, robot_vel_norm)
 
-    correct_yaw_reward = erf(1.0, 1.0, yaw_error) + erf(2.0, 15.0, yaw_error)
+    # correct_yaw_reward = erf(2.0, 0.5, yaw_error) + erf(4.0, 15.0, yaw_error)
+    # correct_yaw_reward = 6.0 * (1.0 - torch.abs(yaw_error) / torch.pi)
+    # correct_yaw_reward = smooth_linear_reward(8.0, 0.3, yaw_error)
+    correct_yaw_reward = erf(2.0, 0.2, yaw_error) + erf(4.0, 15.0, yaw_error)
 
-    low_angvel_reward = erf(1.0, 8.0, robot_body_angvel[:, 2])
+
+    # Gate the angular velocity reward so it only applies when aligned
+    # This prevents the robot from being penalized for turning when it needs to correct yaw
+    alignment_factor = erf(1.0, 2.0, yaw_error)
+    low_angvel_reward = erf(1.5, 5.0, robot_body_angvel[:, 2]) * alignment_factor
 
     stable_at_goal_reward = torch.where(
         dist < 1.0,
@@ -674,7 +714,7 @@ def compute_reward(
         MULTIPLICATION_FACTOR_REWARD
         * (
             pos_reward
-            + very_close_to_goal_reward
+            + very_close_to_goal_reward * alignment_factor
             + vel_dir_component_reward
             + distance_from_goal_reward
             + stable_at_goal_reward
