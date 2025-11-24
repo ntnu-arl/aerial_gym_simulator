@@ -8,7 +8,7 @@ class task_config:
     env_name = "env_with_obstacles"
     robot_name = "magpie"
     # controller_name = "lmf2_acceleration_control"
-    controller_name = "lmf2_velocity_control"
+    controller_name = "magpie_velocity_control"
     args = {}
     num_envs = 512
     use_warp = True
