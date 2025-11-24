@@ -69,7 +69,7 @@ class MagpieCfg:
         angular_quadratic_damping_coefficient = [0.0, 0.0, 0.0]  # along the body [x, y, z] axes
 
     class robot_asset:
-        asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/robots/lmf2"
+        asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/robots/magpie"
         file = "model.urdf"
         name = "base_quadrotor"  # actor name
         base_link_name = "base_link"
