@@ -10,19 +10,16 @@ from aerial_gym.config.sensor_config.lidar_config.base_lidar_config import (
 )
 from aerial_gym.config.sensor_config.lidar_config.osdome_64_config import OSDome_64_Config
 from aerial_gym.config.sensor_config.imu_config.base_imu_config import BaseImuConfig
-from aerial_gym.config.sensor_config.lidar_config.pmd_flexx2_config import pmd_flexx2_config
 
 
-
-
-class LMF2Cfg:
+class MagpieCfg:
 
     class init_config:
         # init_state tensor is of the format [ratio_x, ratio_y, ratio_z, roll_radians, pitch_radians, yaw_radians, 1.0 (for maintaining shape), vx, vy, vz, wx, wy, wz]
         min_init_state = [
             0.1,
-            0.1,
-            0.1,
+            0.15,
+            0.15,
             0,  # -np.pi / 6,
             0,  # -np.pi / 6,
             -np.pi,
@@ -35,7 +32,7 @@ class LMF2Cfg:
             -0.2,
         ]
         max_init_state = [
-            0.9,
+            0.2,
             0.85,
             0.85,
             0,  # np.pi / 6,
@@ -54,14 +51,14 @@ class LMF2Cfg:
         enable_camera = False
         camera_config = BaseDepthCameraConfig
 
-        enable_lidar = False
-        lidar_config = pmd_flexx2_config  # OSDome_64_Config
+        enable_lidar = True
+        lidar_config = OSDome_64_Config
 
         enable_imu = False
         imu_config = BaseImuConfig
 
     class disturbance:
-        enable_disturbance = False
+        enable_disturbance = True
         prob_apply_disturbance = 0.05
         max_force_and_torque_disturbance = [4.75, 4.75, 4.75, 0.03, 0.03, 0.03]
 
@@ -72,7 +69,7 @@ class LMF2Cfg:
         angular_quadratic_damping_coefficient = [0.0, 0.0, 0.0]  # along the body [x, y, z] axes
 
     class robot_asset:
-        asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/robots/lmf2"
+        asset_folder = f"{AERIAL_GYM_DIRECTORY}/resources/robots/magpie"
         file = "model.urdf"
         name = "base_quadrotor"  # actor name
         base_link_name = "base_link"

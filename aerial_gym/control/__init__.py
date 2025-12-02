@@ -33,70 +33,68 @@ from aerial_gym.config.controller_config.lmf2_controller_config import (
     control as lmf2_controller_config,
 )
 
+from aerial_gym.config.controller_config.magpie_controller_config import (
+    control as magpie_controller_config,
+)
 
 from aerial_gym.registry.controller_registry import controller_registry
 
 controller_registry.register_controller("no_control", NoControl, no_control_config)
+
+
 controller_registry.register_controller(
-    "lee_acceleration_control", LeeAccelerationController, lee_controller_config
-)
-controller_registry.register_controller(
-    "lee_attitude_control", LeeAttitudeController, lee_controller_config
+    "lee_position_control", LeePositionController, lee_controller_config
 )
 controller_registry.register_controller(
     "lee_velocity_control", LeeVelocityController, lee_controller_config
 )
 controller_registry.register_controller(
-    "lee_position_control", LeePositionController, lee_controller_config
+    "lee_attitude_control", LeeAttitudeController, lee_controller_config
 )
 controller_registry.register_controller(
     "lee_rates_control", LeeRatesController, lee_controller_config
 )
-
-
 controller_registry.register_controller(
-    "lee_acceleration_control_octarotor", LeeAccelerationController, lee_controller_config_octarotor
-)
-controller_registry.register_controller(
-    "lee_attitude_control_octarotor", LeeAttitudeController, lee_controller_config_octarotor
-)
-controller_registry.register_controller(
-    "lee_velocity_control_octarotor", LeeVelocityController, lee_controller_config_octarotor
-)
-controller_registry.register_controller(
-    "lee_position_control_octarotor", LeePositionController, lee_controller_config_octarotor
-)
-controller_registry.register_controller(
-    "lee_rates_control_octarotor", LeeRatesController, lee_controller_config_octarotor
+    "lee_acceleration_control", LeeAccelerationController, lee_controller_config
 )
 
+def register_robot_controllers(robot_name=None, controller_config=None):
+    controller_registry.register_controller(
+        f"{robot_name}_position_control",
+        LeePositionController,
+        controller_config,
+    )
+    controller_registry.register_controller(
+        f"{robot_name}_velocity_control",
+        LeeVelocityController,
+        controller_config,
+    )
+    controller_registry.register_controller(
+        f"{robot_name}_attitude_control",
+        LeeAttitudeController,
+        controller_config,
+    )
+    controller_registry.register_controller(
+        f"{robot_name}_rates_control",
+        LeeRatesController,
+        controller_config,
+    )
+    controller_registry.register_controller(
+        f"{robot_name}_acceleration_control",
+        LeeAccelerationController,
+        controller_config,
+    )
 
-controller_registry.register_controller(
-    "lee_velocity_steering_angle_control",
-    LeeVelocitySteeringAngleController,
-    lee_controller_config,
+register_robot_controllers(
+    "magpie", magpie_controller_config
 )
-
-controller_registry.register_controller(
-    "fully_actuated_control", FullyActuatedController, fully_actuated_controller_config
+register_robot_controllers(
+    "lmf2", lmf2_controller_config
 )
-
-controller_registry.register_controller(
-    "lmf2_position_control", LeePositionController, lmf2_controller_config
-)
-
-controller_registry.register_controller(
-    "lmf2_velocity_control", LeeVelocityController, lmf2_controller_config
-)
-
-controller_registry.register_controller(
-    "lmf2_attitude_control", LeeAttitudeController, lmf2_controller_config
-)
-
-controller_registry.register_controller(
-    "lmf2_rates_control", LeeRatesController, lmf2_controller_config
+register_robot_controllers(
+    "octarotor", lee_controller_config_octarotor
 )
 
 controller_registry.register_controller(
-    "lmf2_acceleration_control", LeeAccelerationController, lmf2_controller_config
+    "rov_fully_actuated_control", FullyActuatedController, fully_actuated_controller_config
 )

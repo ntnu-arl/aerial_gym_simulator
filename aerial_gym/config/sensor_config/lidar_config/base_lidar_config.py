@@ -30,7 +30,7 @@ class BaseLidarConfig(BaseSensorConfig):
         False  # Return a pointcloud instead of an image. Range image will be returned by default
     )
     pointcloud_in_world_frame = False
-    segmentation_camera = True  # Setting to true will return a segmentation image along with the range image or pointcloud
+    segmentation_camera = False  # Setting to true will return a segmentation image along with the range image or pointcloud
 
     # transform from sensor element coordinate frame to sensor_base_link frame
     euler_frame_rot_deg = [0.0, 0.0, 0.0]
