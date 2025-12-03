@@ -41,10 +41,10 @@ class EnvWithObstaclesCfg:
         write_to_sim_at_every_timestep = False  # write to sim at every timestep
 
         use_warp = True
-        lower_bound_min = [-2.0, -4.0, -3.0]  # lower bound for the environment space
-        lower_bound_max = [-1.0, -2.5, -2.0]  # lower bound for the environment space
-        upper_bound_min = [9.0, 2.5, 2.0]  # upper bound for the environment space
-        upper_bound_max = [10.0, 4.0, 3.0]  # upper bound for the environment space
+        lower_bound_min = [-7.50, -7.50, -5.0]  # lower bound for the environment space
+        lower_bound_max = [-5.0, -5.0, -3.0]  # lower bound for the environment space
+        upper_bound_min = [5.0, 5.0, 3.0]  # upper bound for the environment space
+        upper_bound_max = [7.5, 7.5, 5.0]  # upper bound for the environment space
 
     class env_config:
         include_asset_type = {

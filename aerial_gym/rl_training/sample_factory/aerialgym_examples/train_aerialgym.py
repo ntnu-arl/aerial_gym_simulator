@@ -15,6 +15,10 @@ import torch
 
 from torch import Tensor
 
+from sample_factory.algo.utils.context import global_model_factory
+from sample_factory.model.encoder import *
+
+
 from sample_factory.algo.utils.gymnasium_utils import convert_space
 from sample_factory.cfg.arguments import parse_full_cfg, parse_sf_args
 from sample_factory.envs.env_utils import register_env
@@ -22,6 +26,8 @@ from sample_factory.train import run_rl
 from sample_factory.utils.typing import Config, Env
 from sample_factory.utils.utils import str2bool
 
+
+from sample_factory.enjoy import enjoy
 
 class AerialGymVecEnv(gym.Env):
     """
@@ -140,7 +146,7 @@ def override_default_params_func(env, parser):
         value_bootstrap=True,  # assuming reward from the last step in the episode can generally be ignored
         normalize_input=True,
         normalize_returns=True,  # does not improve results on all envs, but with return normalization we don't need to tune reward scale
-        save_best_after=int(5e6),
+        save_best_after=int(1e5),
         serial_mode=True,  # it makes sense to run isaacgym envs in serial mode since most of the parallelism comes from the env itself (although async mode works!)
         async_rl=True,
         use_env_info_cache=False,  # speeds up startup
@@ -192,12 +198,105 @@ env_configs = dict(
         wandb_project="quad",
         wandb_user="mihirkulkarni",
     ),
+    lidar_navigation_task=dict(
+        train_for_env_steps=131000000000,
+        # encoder_conv_architecture="resnet_impala",
+        # encoder_conv_mlp_layers=[],
+        encoder_mlp_layers=[256, 128, 64],
+        use_rnn=True,
+        rnn_num_layers=1,
+        rnn_size=128,
+        rnn_type="gru",
+        gamma=0.98,
+        rollout=32,
+        learning_rate=1e-4,
+        lr_schedule_kl_threshold=0.016,
+        batch_size=1024,
+        num_epochs=4,
+        max_grad_norm=1.0,
+        num_batches_per_epoch=4,
+        exploration_loss_coeff=0.001,
+        with_wandb=True,
+        wandb_project="lidar_nav_task",
+        wandb_user="mihirkulkarni",
+    ),
+
 )
 
+class CustomEncoder(Encoder):
+    """Just an example of how to use a custom model component."""
+
+    def __init__(self, cfg, obs_space):
+        super().__init__(cfg)
+        # the observatiosn are in the following format:
+        # 17 dim state + actions
+        # 80 dim lidar readings
+        
+        # encode lidar readings using conv network and then combine with state vector and pass through MLP
+        # all are flattened into "observations" key
+        self.encoders = nn.ModuleDict()
+
+        state_action_input_size = 17
+        lidar_input_size = 16*20
+        out_size = 0
+        out_size_cnn = 0
+        out_size += obs_space["observations"].shape[0] - lidar_input_size
+
+        # self.encoders["obs_image"] = make_img_encoder(cfg, spaces.Box(low=-1, high=1.5, shape=(1, 16, 20)))
+        # out_size += self.encoders["obs_image"].get_out_size()
+        ###
+        # input is 16 x 20 dims lidar readings
+        self.encoders["obs_image"] = nn.Sequential(
+            nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1),  # (B, 16, 16, 20)
+            nn.ELU(),
+            nn.MaxPool2d(kernel_size=3, stride=2),  # (B, 16, 8, 10)
+            nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1), # (B, 32, 8, 10)
+            nn.ELU(),
+            nn.MaxPool2d(kernel_size=3, stride=2),  # (B, 32, 4, 5)
+            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),  # (B, 64, 4, 5)
+            nn.ELU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # (B, 64, 2, 2)
+            nn.Flatten(),  # (B, 64*2*2)
+        )
+        out_size_cnn += 128
+        out_size += out_size_cnn
+        ###
+
+        self.encoder_out_size = out_size
+        mlp_layers = [256, 128, 64]
+        mlp_input_size = out_size
+        mlp = []
+        for layer_size in mlp_layers:
+            mlp.append(nn.Linear(mlp_input_size, layer_size))
+            mlp.append(nn.ELU())
+            mlp_input_size = layer_size
+        self.mlp_head_custom = nn.Sequential(*mlp)
+        if len(mlp_layers) > 0:
+            self.encoder_out_size = mlp_layers[-1]
+        else:
+            self.encoder_out_size = out_size
+            self.mlp_head_custom = nn.Identity()
+
+
+    def forward(self, obs_dict):
+        x_state_action = obs_dict["observations"][:, :17]
+        x_lidar = obs_dict["observations"][:, 17:].unsqueeze(1).view(-1, 1, 16, 20)  # (B, 1, 8, 10)
+        x_lidar_encoding = self.encoders["obs_image"](x_lidar)
+        x = torch.cat([x_state_action, x_lidar_encoding], dim=-1)
+        x = self.mlp_head_custom(x)
+        return x
+
+    def get_out_size(self) -> int:
+        return self.encoder_out_size
+
+def make_custom_encoder(cfg, obs_space):
+    return CustomEncoder(cfg, obs_space)
 
 def register_aerialgym_custom_components():
     for env_name in env_configs:
         register_env(env_name, make_aerialgym_env)
+    
+    global_model_factory().register_encoder_factory(make_custom_encoder)
 
 
 def parse_aerialgym_cfg(evaluation=False):
@@ -208,13 +307,16 @@ def parse_aerialgym_cfg(evaluation=False):
     return final_cfg
 
 
+from sample_factory.model.actor_critic import create_actor_critic
+
+
 def main():
     """Script entry point."""
     register_aerialgym_custom_components()
     cfg = parse_aerialgym_cfg()
     status = run_rl(cfg)
     return status
-
+    
 
 if __name__ == "__main__":
     sys.exit(main())
