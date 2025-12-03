@@ -154,16 +154,6 @@ class ImgEncoder(nn.Module):
         return x
 
 
-class Lambda(nn.Module):
-    """Lambda function that accepts tensors as input."""
-
-    def __init__(self, func):
-        super(Lambda, self).__init__()
-        self.func = func
-
-    def forward(self, x):
-        return self.func(x)
-
 
 class VAE(nn.Module):
     """Variational Autoencoder for reconstruction of depth images."""
@@ -189,9 +179,6 @@ class VAE(nn.Module):
             input_dim=1, latent_dim=self.latent_dim, with_logits=self.with_logits
         )
 
-        self.mean_params = Lambda(lambda x: x[:, : self.latent_dim])  # mean parameters
-        self.logvar_params = Lambda(lambda x: x[:, self.latent_dim :])  # log variance parameters
-
     def forward(self, img):
         """Do a forward pass of the VAE. Generates a reconstructed image based on img
         Parameters
@@ -204,8 +191,8 @@ class VAE(nn.Module):
         z = self.encoder(img)
 
         # reparametrization trick
-        mean = self.mean_params(z)
-        logvar = self.logvar_params(z)
+        mean = z[:, : self.latent_dim]
+        logvar = z[:, self.latent_dim :]
         std = torch.exp(0.5 * logvar)
         eps = torch.randn_like(std)
         if self.inference_mode:
@@ -228,8 +215,8 @@ class VAE(nn.Module):
         z = self.encoder(img)
 
         # reparametrization trick
-        mean = self.mean_params(z)
-        logvar = self.logvar_params(z)
+        mean = z[:, : self.latent_dim]
+        logvar = z[:, self.latent_dim :]
         std = torch.exp(0.5 * logvar)
         eps = torch.randn_like(std)
         if self.inference_mode:
@@ -249,8 +236,8 @@ class VAE(nn.Module):
         """
         z = self.encoder(img)
 
-        means = self.mean_params(z)
-        logvars = self.logvar_params(z)
+        means = z[:, : self.latent_dim]
+        logvars = z[:, self.latent_dim :]
         std = torch.exp(0.5 * logvars)
         eps = torch.randn_like(logvars)
         if self.inference_mode:
