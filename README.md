@@ -52,15 +52,15 @@ The optimized code in this newer version allows training for motor-command polic
 When referencing the Aerial Gym Simulator in your research, please cite the following paper
 
 ```bibtex
-@ARTICLE{kulkarni2025@aerialgym,
+@ARTICLE{kulkarni2025aerial,
   author={Kulkarni, Mihir and Rehberg, Welf and Alexis, Kostas},
   journal={IEEE Robotics and Automation Letters}, 
   title={Aerial Gym Simulator: A Framework for Highly Parallelized Simulation of Aerial Robots}, 
   year={2025},
-  volume={},
-  number={},
-  pages={1-8},
-  keywords={Robots;Robot sensing systems;Rendering (computer graphics);Physics;Engines;Navigation;Training;Motors;Planning;Autonomous aerial vehicles;Aerial Systems: Perception and Autonomy;Machine Learning for Robot Control;Reinforcement Learning},
+  volume={10},
+  number={4},
+  pages={4093-4100},
+  keywords={Robots;Robot sensing systems;Rendering (computer graphics);Physics;Engines;Navigation;Training;Motors;Planning;Autonomous aerial vehicles;Aerial Systems: perception and autonomy;machine learning for robot control;reinforcement learning},
   doi={10.1109/LRA.2025.3548507}}
 ```
 
