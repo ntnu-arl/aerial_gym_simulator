@@ -64,9 +64,10 @@ class AssetLoader:
         filepath = os.path.join(asset_class_config.asset_folder, selected_file)
 
         # check if  it exists in the buffer
+        buffer_key = f"{asset_type}_{selected_file}"
 
-        if filepath in self.asset_buffer:
-            return self.asset_buffer[filepath]
+        if buffer_key in self.asset_buffer:
+            return self.asset_buffer[buffer_key]
 
         logger.info(
             f"Loading asset: {selected_file} for the first time. Next use of this asset will be via the asset buffer."
@@ -141,7 +142,7 @@ class AssetLoader:
                 logger.warning(msg_str)
         IGE_asset = IsaacGymAsset(self.gym, self.sim, asset_name, filepath, asset_class_dict)
         asset_class_dict["isaacgym_asset"] = IGE_asset
-        self.asset_buffer[filepath] = asset_class_dict
+        self.asset_buffer[buffer_key] = asset_class_dict
         return asset_class_dict
 
     def select_and_order_assets(self):
