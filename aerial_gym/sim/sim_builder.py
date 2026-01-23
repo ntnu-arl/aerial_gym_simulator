@@ -30,6 +30,7 @@ class SimBuilder:
         num_envs=None,
         use_warp=None,
         headless=None,
+        are_targets_visualized:bool=None
     ):
         self.sim_name = sim_name
         self.env_name = env_name
@@ -44,5 +45,6 @@ class SimBuilder:
             num_envs=num_envs,
             use_warp=use_warp,
             headless=headless,
+            are_targets_visualized=are_targets_visualized
         )
         return self.env
