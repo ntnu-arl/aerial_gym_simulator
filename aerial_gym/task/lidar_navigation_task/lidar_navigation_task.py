@@ -84,6 +84,9 @@ class LiDARNavigationTask(BaseTask):
             (self.sim_env.num_envs, 48, 120, 3), device=self.device
         )
 
+        self.current_action = torch.zeros((self.sim_env.num_envs, 4), device=self.device)
+        self.prev_action = torch.zeros((self.sim_env.num_envs, 4), device=self.device)
+
         self.time_to_collision = torch.zeros((self.sim_env.num_envs), device=self.device)
         self.target_yaw = torch.zeros((self.sim_env.num_envs), device=self.device)
 
@@ -357,32 +360,6 @@ class LiDARNavigationTask(BaseTask):
         # self.downsampled_lidar_data[:] = inv_image_obs_ds.reshape(
         #     (self.num_envs, -1)).to(self.device)
         return
-
-    # def process_image_observation_inference(self):
-    #     image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)/10.0
-
-    #     # the image obs are from 0 to 2pi azimuth and 0 to pi elevation
-    #     azimuth_bin_indices = torch.linspace(
-    #         0, image_obs.shape[2]-1, steps=240, device=self.device
-    #     ).long()
-    #     elevation_bin_indices = torch.linspace(
-    #         0, image_obs.shape[1]-1, steps=135, device=self.device
-    #     ).long()
-
-    #     # invalid pixels are set to max distance
-    #     image_obs[image_obs > 1.0] = 1.0
-    #     image_obs[image_obs < 0.02] = 1.0
-    #     # # downsample the image using max pooling
-    #     image_obs_ds = 1 - torch.nn.functional.max_pool2d(
-    #         1 - image_obs.unsqueeze(1), (3, 6)).squeeze(1)
-
-    #     self.downsampled_lidar_data[:] = image_obs_ds.reshape(
-    #         (self.num_envs, -1)).to(self.device)
-    #     # save both images for robot 0
-    #     # import matplotlib.pyplot as plt
-    #     # plt.imsave("full_image.png", image_obs[0].cpu().numpy(), cmap='plasma')
-    #     # plt.imsave("downsampled_image.png", image_obs_ds[0].cpu().numpy(), cmap='plasma')
-    #     return
         
 
     def step(self, actions):
@@ -391,8 +368,9 @@ class LiDARNavigationTask(BaseTask):
         # In this case, the episodes that are terminated need to be
         # first reset, and the first obseration of the new episode
         # needs to be returned.
-
+        self.prev_action[:] = self.current_action[:]
         transformed_action = self.action_transformation_function(actions)
+        self.current_action[:] = transformed_action[:]
         logger.debug(
             f"raw_action: {actions[0]}, transformed action: {transformed_action[0]}")
         self.sim_env.step(actions=transformed_action)
@@ -511,9 +489,11 @@ class LiDARNavigationTask(BaseTask):
             self.obs_dict["robot_body_angvel"],
             yaw_error,
             obs_dict["crashes"],
-            obs_dict["robot_actions"],
-            obs_dict["robot_prev_actions"],
-            self.time_to_collision,    
+            # obs_dict["robot_actions"],
+            # obs_dict["robot_prev_actions"],
+            self.current_action,
+            self.prev_action,
+            self.time_to_collision,
             self.curriculum_progress_fraction,
             self.task_config.reward_parameters,
         )
@@ -626,11 +606,18 @@ def compute_reward(
         torch.clamp(robot_vel_norm - 3.0, min=0.0),
     )
 
+    close_to_goal = 1.0 - exponential_reward_function(
+        1.0,
+        2.0,
+        dist
+    )
+
+    # relax the negative penalty when relatively close to goal
     negative_x_vel_penalty = exponential_penalty_function(
         2.0,
         8.0,
         torch.clamp(robot_vehicle_linvel[:, 0], min=0.0),
-    )
+    ) * close_to_goal
 
     vel_penalty_for_acc = vel_magnitude_penalty + negative_x_vel_penalty
 
@@ -705,7 +692,7 @@ def compute_reward(
 
     time_to_collision_penalty = exponential_reward_function(
         -3.0,
-        1.0,
+        2.0,
         time_to_collision**2
     )
 

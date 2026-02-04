@@ -281,16 +281,18 @@ class EnvManager(BaseManager):
         # logger.debug(f"Resetting environments {env_ids}.")
         self.IGE_env.reset_idx(env_ids)
         num_obstacles = self.global_tensor_dict["num_obstacles_in_env"]
-        self.asset_manager.reset_idx(env_ids, num_obstacles)
-        nk = self.asset_manager.num_keep_in_env
-        self.asset_manager.num_keep_in_env = self.asset_manager.num_keep_in_env // 2
-        
-        # Do a bernoulli sampling across indices such that each has a probability of 0.15 to be 1
-        samples = torch.bernoulli(0.15*torch.ones(len(env_ids), device=self.device))
-        selected_indices = torch.nonzero(samples)
+        if num_obstacles > 0:
+            self.asset_manager.reset_idx(env_ids, num_obstacles)
+            nk = self.asset_manager.num_keep_in_env
+            self.asset_manager.num_keep_in_env = self.asset_manager.num_keep_in_env // 2
+            
+            # Do a bernoulli sampling across indices such that each has a probability of 0.15 to be 1
+            samples = torch.bernoulli(0.15*torch.ones(len(env_ids), device=self.device))
+            selected_indices = torch.nonzero(samples).squeeze(-1)
 
-        self.asset_manager.reset_idx(env_ids[selected_indices], num_obstacles//2)
-        self.asset_manager.num_keep_in_env = nk
+            if len(selected_indices) > 0:
+                self.asset_manager.reset_idx(env_ids[selected_indices], num_obstacles//2)
+            self.asset_manager.num_keep_in_env = nk
 
         if self.cfg.env.use_warp:
             self.warp_env.reset_idx(env_ids)
@@ -321,7 +323,7 @@ class EnvManager(BaseManager):
         )
 
     def reset(self):
-        self.reset_idx(env_ids=torch.arange(self.cfg.env.num_envs))
+        self.reset_idx(env_ids=torch.arange(self.cfg.env.num_envs, device=self.device))
 
     def pre_physics_step(self, actions, env_actions):
         # first let the robot compute the actions

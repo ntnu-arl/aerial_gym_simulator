@@ -8,7 +8,7 @@ class task_config:
     env_name = "env_with_obstacles"
     robot_name = "magpie"
     # controller_name = "lmf2_acceleration_control"
-    controller_name = "magpie_velocity_control"
+    controller_name = "magpie_acceleration_control"
     args = {}
     num_envs = 512
     use_warp = True
@@ -33,13 +33,13 @@ class task_config:
         "very_close_to_goal_reward_magnitude": 5.0,
         "very_close_to_goal_reward_exponent": 8.0,
         "vel_direction_component_reward_magnitude": 1.0,
-        "x_action_diff_penalty_magnitude": 0.1,
+        "x_action_diff_penalty_magnitude": 0.3,
         "x_action_diff_penalty_exponent": 5.0,
-        "y_action_diff_penalty_magnitude": 0.1,
+        "y_action_diff_penalty_magnitude": 0.3,
         "y_action_diff_penalty_exponent": 5.0,
-        "z_action_diff_penalty_magnitude": 0.1,
+        "z_action_diff_penalty_magnitude": 0.3,
         "z_action_diff_penalty_exponent": 5.0,
-        "yawrate_action_diff_penalty_magnitude": 0.1,
+        "yawrate_action_diff_penalty_magnitude": 0.3,
         "yawrate_action_diff_penalty_exponent": 5.0,
         "x_absolute_action_penalty_magnitude": 0.1,
         "x_absolute_action_penalty_exponent": 0.3,
@@ -82,20 +82,6 @@ class task_config:
 
 
 
-    def action_transformation_function(action):
-        clamped_action = torch.clamp(action, -1.0, 1.0)
-        max_yawrate = torch.pi / 3  # [rad/s]
-
-        processed_action = torch.zeros(
-            (clamped_action.shape[0], 4), device=task_config.device, requires_grad=False
-        )
-
-        processed_action[:, 0] = -(clamped_action[:, 0]+1.0)
-        processed_action[:, 1] = clamped_action[:, 1]
-        processed_action[:, 2] = clamped_action[:, 2]
-        processed_action[:, 3] = clamped_action[:, 3] * max_yawrate
-        return processed_action
-
     # def action_transformation_function(action):
     #     clamped_action = torch.clamp(action, -1.0, 1.0)
     #     max_yawrate = torch.pi / 3  # [rad/s]
@@ -104,8 +90,20 @@ class task_config:
     #         (clamped_action.shape[0], 4), device=task_config.device, requires_grad=False
     #     )
 
-    #     processed_action[:, 0:3] = 2 * (clamped_action[:, 0:3])
-    #     # processed_action[:, 1] = clamped_action[:, 1]
-    #     # processed_action[:, 2] = clamped_action[:, 2]
+    #     processed_action[:, 0] = -(clamped_action[:, 0]+1.0)
+    #     processed_action[:, 1] = clamped_action[:, 1]
+    #     processed_action[:, 2] = clamped_action[:, 2]
     #     processed_action[:, 3] = clamped_action[:, 3] * max_yawrate
     #     return processed_action
+
+    def action_transformation_function(action):
+        clamped_action = torch.clamp(action, -1.0, 1.0)
+        max_yawrate = torch.pi / 3  # [rad/s]
+
+        processed_action = torch.zeros(
+            (clamped_action.shape[0], 4), device=task_config.device, requires_grad=False
+        )
+
+        processed_action[:, 0:3] = 2 * (clamped_action[:, 0:3])
+        processed_action[:, 3] = clamped_action[:, 3] * max_yawrate
+        return processed_action
