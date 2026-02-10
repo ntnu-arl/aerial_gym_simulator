@@ -29,15 +29,15 @@ class control:
     K_vel_tensor_min = [2.7, 2.7, 2.3]
 
     K_rot_tensor_max = [
-        10.9453125, 10.9453125, 0.32499998807907104
+        12.9453125, 12.9453125, 0.32499998807907104
     ]  # used for lee_position_control, lee_velocity_control and lee_attitude_control
-    K_rot_tensor_min = [10.9453125, 10.9453125, 0.32499998807907104]
+    K_rot_tensor_min = [8.9453125, 8.9453125, 0.32499998807907104]
 
     
 
     K_angvel_tensor_max = [
-        0.7910937666893005, 0.7910937666893005, 0.038818358927965164
+        0.8910937666893005, 0.8910937666893005, 0.048818358927965164
     ]  # used for lee_position_control, lee_velocity_control and lee_attitude_control
-    K_angvel_tensor_min = [0.7910937666893005, 0.7910937666893005, 0.038818358927965164]
+    K_angvel_tensor_min = [0.65910937666893005, 0.65910937666893005, 0.028818358927965164]
 
-    randomize_params = False
+    randomize_params = True

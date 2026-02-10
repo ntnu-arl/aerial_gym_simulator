@@ -158,19 +158,19 @@ class MagpieCfg:
             [1.0, 1.0, 1.0, 1.0],
             [-0.13, -0.13, 0.13, 0.13],
             [-0.13, 0.13, 0.13, -0.13],
-            [-0.07, 0.07, -0.07, 0.07],
+            [-0.02, 0.02, -0.02, 0.02],
         ]
 
         class motor_model_config:
             use_rps = True
             motor_thrust_constant_min = 0.00000926312
             motor_thrust_constant_max = 0.00001826312
-            motor_time_constant_increasing_min = 0.05
-            motor_time_constant_increasing_max = 0.08
+            motor_time_constant_increasing_min = 0.01
+            motor_time_constant_increasing_max = 0.02
             motor_time_constant_decreasing_min = 0.005
             motor_time_constant_decreasing_max = 0.015
             max_thrust = 12.0
             min_thrust = 0.1
             max_thrust_rate = 1000000.0
-            thrust_to_torque_ratio = 0.07
+            thrust_to_torque_ratio = 0.02
             use_discrete_approximation = True  # use discrete approximation for motor dynamics
