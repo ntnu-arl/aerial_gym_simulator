@@ -119,6 +119,18 @@ task_registry.register_task(
 )
 
 
+from aerial_gym.task.radar_navigation_task.radar_navigation_task import (
+    RadarNavigationTask,
+)
+from aerial_gym.config.task_config.radar_navigation_task_config import (
+    task_config as radar_navigation_task_config,
+)
+task_registry.register_task(
+    "radar_navigation_task",
+    RadarNavigationTask,
+    radar_navigation_task_config,
+)
+
 ## Uncomment this to use custom tasks
 
 # from aerial_gym.task.custom_task.custom_task import CustomTask

@@ -220,6 +220,28 @@ env_configs = dict(
         wandb_project="lidar_nav_task",
         wandb_user="mihirkulkarni",
     ),
+    radar_navigation_task=dict(
+        train_for_env_steps=131000000000,
+        # encoder_conv_architecture="resnet_impala",
+        # encoder_conv_mlp_layers=[],
+        encoder_mlp_layers=[256, 128, 64],
+        use_rnn=True,
+        rnn_num_layers=1,
+        rnn_size=128,
+        rnn_type="gru",
+        gamma=0.98,
+        rollout=32,
+        learning_rate=1e-4,
+        lr_schedule_kl_threshold=0.016,
+        batch_size=1024,
+        num_epochs=4,
+        max_grad_norm=1.0,
+        num_batches_per_epoch=4,
+        exploration_loss_coeff=0.001,
+        with_wandb=True,
+        wandb_project="radar_nav_task",
+        wandb_user="mihirkulkarni",
+    ),
 
 )
 

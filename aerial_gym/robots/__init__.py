@@ -18,6 +18,7 @@ from aerial_gym.config.robot_config.snakey6_config import Snakey6Cfg
 from aerial_gym.config.robot_config.tinyprop_config import TinyPropCfg
 
 from aerial_gym.config.robot_config.lmf2_config import LMF2Cfg
+from aerial_gym.config.robot_config.lmf2_radar_config import LMF2RadarCfg
 
 # import robot classes here
 from aerial_gym.robots.base_multirotor import BaseMultirotor
@@ -48,6 +49,7 @@ robot_registry.register("snakey6", BaseReconfigurable, Snakey6Cfg)
 robot_registry.register("base_rov", BaseROV, BaseROVCfg)
 robot_registry.register("lmf1", BaseMultirotor, LMF1Cfg)
 robot_registry.register("lmf2", BaseMultirotor, LMF2Cfg)
+robot_registry.register("lmf2_radar", BaseMultirotor, LMF2RadarCfg)
 robot_registry.register("x500", BaseMultirotor, X500Cfg)
 robot_registry.register("magpie", BaseMultirotor, MagpieCfg)
 
