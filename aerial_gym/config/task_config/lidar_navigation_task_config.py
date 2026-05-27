@@ -5,9 +5,8 @@ from aerial_gym import AERIAL_GYM_DIRECTORY
 class task_config:
     seed = -1
     sim_name = "base_sim"
-    env_name = "env_with_obstacles"
+    env_name = "env_with_lidar_nav_obstacles"
     robot_name = "magpie"
-    # controller_name = "lmf2_acceleration_control"
     controller_name = "magpie_acceleration_control"
     args = {}
     num_envs = 512

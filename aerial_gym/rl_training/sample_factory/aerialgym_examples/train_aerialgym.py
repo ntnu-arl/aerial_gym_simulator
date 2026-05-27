@@ -311,8 +311,14 @@ class CustomEncoder(Encoder):
     def get_out_size(self) -> int:
         return self.encoder_out_size
 
+CUSTOM_ENCODER_ENVS = {"lidar_navigation_task"}
+
 def make_custom_encoder(cfg, obs_space):
-    return CustomEncoder(cfg, obs_space)
+    """Return a CustomEncoder only for envs in CUSTOM_ENCODER_ENVS.
+    Returning None tells Sample Factory to fall back to its default encoder."""
+    if cfg.env in CUSTOM_ENCODER_ENVS:
+        return CustomEncoder(cfg, obs_space)
+    return None
 
 def register_aerialgym_custom_components():
     for env_name in env_configs:
