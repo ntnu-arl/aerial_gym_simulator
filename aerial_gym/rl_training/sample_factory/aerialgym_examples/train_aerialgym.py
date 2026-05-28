@@ -311,20 +311,17 @@ class CustomEncoder(Encoder):
     def get_out_size(self) -> int:
         return self.encoder_out_size
 
+def make_custom_encoder(cfg, obs_space):
+    return CustomEncoder(cfg, obs_space)
+
 CUSTOM_ENCODER_ENVS = {"lidar_navigation_task"}
 
-def make_custom_encoder(cfg, obs_space):
-    """Return a CustomEncoder only for envs in CUSTOM_ENCODER_ENVS.
-    Returning None tells Sample Factory to fall back to its default encoder."""
-    if cfg.env in CUSTOM_ENCODER_ENVS:
-        return CustomEncoder(cfg, obs_space)
-    return None
-
-def register_aerialgym_custom_components():
+def register_aerialgym_custom_components(env=None):
     for env_name in env_configs:
         register_env(env_name, make_aerialgym_env)
-    
-    global_model_factory().register_encoder_factory(make_custom_encoder)
+
+    if env in CUSTOM_ENCODER_ENVS:
+        global_model_factory().register_encoder_factory(make_custom_encoder)
 
 
 def parse_aerialgym_cfg(evaluation=False):
@@ -340,8 +337,11 @@ from sample_factory.model.actor_critic import create_actor_critic
 
 def main():
     """Script entry point."""
-    register_aerialgym_custom_components()
+    # Parse cfg first so we know the env name, then conditionally register
+    # the custom encoder only for envs that need it.  run_rl() only requires
+    # envs/encoders to be registered, not the cfg parse, so this order is safe.
     cfg = parse_aerialgym_cfg()
+    register_aerialgym_custom_components(env=cfg.env)
     status = run_rl(cfg)
     return status
     
