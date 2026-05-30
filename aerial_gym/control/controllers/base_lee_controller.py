@@ -75,6 +75,15 @@ class BaseLeeController(BaseController):
         # buffer tensor to be used by torch.jit functions for various purposes
         self.buffer_tensor = torch.zeros((self.num_envs, 3, 3), device=self.device)
 
+    def set_controller_gains(self, K_pos, K_vel, K_rot, K_angvel):
+        """
+        Set the current controller gains.
+        """
+        self.K_pos_tensor_current[:] = K_pos
+        self.K_linvel_tensor_current[:] = K_vel
+        self.K_rot_tensor_current[:] = K_rot
+        self.K_angvel_tensor_current[:] = K_angvel
+
     def __call__(self, *args, **kwargs):
         return self.update(*args, **kwargs)
 

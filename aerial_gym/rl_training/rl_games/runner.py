@@ -126,6 +126,14 @@ env_configurations.register(
 )
 
 env_configurations.register(
+    "lidar_navigation_task",
+    {
+        "env_creator": lambda **kwargs: task_registry.make_task("lidar_navigation_task", **kwargs),
+        "vecenv_type": "AERIAL-RLGPU",
+    },
+)
+
+env_configurations.register(
     "position_setpoint_task_reconfigurable",
     {
         "env_creator": lambda **kwargs: task_registry.make_task(

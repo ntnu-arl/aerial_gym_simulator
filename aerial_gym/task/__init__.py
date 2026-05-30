@@ -44,6 +44,11 @@ from aerial_gym.config.task_config.navigation_task_config import (
     task_config as navigation_task_config,
 )
 
+from aerial_gym.task.lidar_navigation_task.lidar_navigation_task import LiDARNavigationTask
+from aerial_gym.config.task_config.lidar_navigation_task_config import (
+    task_config as lidar_navigation_task_config,
+)
+
 from aerial_gym.registry.task_registry import task_registry
 
 
@@ -106,6 +111,25 @@ task_registry.register_task(
     position_setpoint_task_config_morphy,
 )
 
+
+task_registry.register_task(
+    "lidar_navigation_task",
+    LiDARNavigationTask,
+    lidar_navigation_task_config,
+)
+
+
+from aerial_gym.task.radar_navigation_task.radar_navigation_task import (
+    RadarNavigationTask,
+)
+from aerial_gym.config.task_config.radar_navigation_task_config import (
+    task_config as radar_navigation_task_config,
+)
+task_registry.register_task(
+    "radar_navigation_task",
+    RadarNavigationTask,
+    radar_navigation_task_config,
+)
 
 ## Uncomment this to use custom tasks
 

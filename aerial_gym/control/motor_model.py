@@ -163,12 +163,39 @@ def motor_model_rate(error, mixing_factor, max_rate):
 
 
 @torch.jit.script
-def rk4_integration(error, mixing_factor, max_rate, dt):
-    # type: (Tensor, Tensor, Tensor, float) -> Tensor
-    k1 = motor_model_rate(error, mixing_factor, max_rate)
-    k2 = motor_model_rate(error + 0.5 * dt * k1, mixing_factor, max_rate)
-    k3 = motor_model_rate(error + 0.5 * dt * k2, mixing_factor, max_rate)
-    k4 = motor_model_rate(error + dt * k3, mixing_factor, max_rate)
+def rk4_integration(ref_value, current_value, mixing_factor, max_rate, dt):
+    # type: (Tensor, Tensor, Tensor, Tensor, float) -> Tensor
+    """
+    RK4 integration for motor dynamics.
+    Properly computes intermediate steps by updating state and recalculating error.
+    
+    Args:
+        ref_value: Reference/desired value (rpm or thrust)
+        current_value: Current state value (rpm or thrust)
+        mixing_factor: Time constant mixing factor
+        max_rate: Maximum rate of change
+        dt: Time step
+    
+    Returns:
+        Change in state value (delta to be added to current_value)
+    """
+    # k1: rate at current state
+    error1 = ref_value - current_value
+    k1 = motor_model_rate(error1, mixing_factor, max_rate)
+    
+    # k2: rate at midpoint using k1
+    error2 = ref_value - (current_value + 0.5 * dt * k1)
+    k2 = motor_model_rate(error2, mixing_factor, max_rate)
+    
+    # k3: rate at midpoint using k2
+    error3 = ref_value - (current_value + 0.5 * dt * k2)
+    k3 = motor_model_rate(error3, mixing_factor, max_rate)
+    
+    # k4: rate at endpoint using k3
+    error4 = ref_value - (current_value + dt * k3)
+    k4 = motor_model_rate(error4, mixing_factor, max_rate)
+    
+    # Weighted average of slopes
     return (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
 
 @torch.jit.script
@@ -211,8 +238,7 @@ def compute_thrust_with_rpm_time_constant_rk4(
     # type: (Tensor, Tensor, Tensor, Tensor, Tensor, float) -> Tensor
     current_rpm = torch.sqrt(current_thrust / thrust_constant)
     desired_rpm = torch.sqrt(ref_thrust / thrust_constant)
-    rpm_error = desired_rpm - current_rpm
-    current_rpm += rk4_integration(rpm_error, mixing_factor, max_rate, dt)
+    current_rpm += rk4_integration(desired_rpm, current_rpm, mixing_factor, max_rate, dt)
     return thrust_constant * current_rpm**2
 
 
@@ -221,6 +247,5 @@ def compute_thrust_with_force_time_constant_rk4(
     ref_thrust, current_thrust, mixing_factor, max_rate, dt
 ):
     # type: (Tensor, Tensor, Tensor, Tensor, float) -> Tensor
-    thrust_error = ref_thrust - current_thrust
-    current_thrust[:] += rk4_integration(thrust_error, mixing_factor, max_rate, dt)
+    current_thrust[:] += rk4_integration(ref_thrust, current_thrust, mixing_factor, max_rate, dt)
     return current_thrust

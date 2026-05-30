@@ -28,12 +28,12 @@ params:
       initializer:
         name: default
         scale: 2
-    # rnn:
-    #     name: gru
-    #     units: 32
-    #     layers: 1
-    #     before_mlp: False
-    #     layer_norm: True
+    rnn:
+        name: gru
+        units: 32
+        layers: 1
+        before_mlp: False
+        layer_norm: True
   config:
     env_name: quad
     env_config:

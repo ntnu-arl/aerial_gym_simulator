@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import os
 from aerial_gym.utils.vae.VAE import VAE
 
@@ -14,12 +15,13 @@ def clean_state_dict(state_dict):
     return clean_dict
 
 
-class VAEImageEncoder:
+class VAEImageEncoder(nn.Module):
     """
     Class that wraps around the VAE class for efficient inference for the aerial_gym class
     """
 
     def __init__(self, config, device="cuda:0"):
+        super(VAEImageEncoder, self).__init__()
         self.config = config
         self.vae_model = VAE(input_dim=1, latent_dim=self.config.latent_dims).to(device)
         # combine module path with model file name
@@ -52,6 +54,9 @@ class VAEImageEncoder:
         else:
             returned_val = means
         return returned_val
+
+    def forward(self, image_tensors):
+        return self.encode(image_tensors)
 
     def decode(self, latent_spaces):
         """
