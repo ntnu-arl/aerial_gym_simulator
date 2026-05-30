@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![arXiv](https://img.shields.io/badge/arXiv-2503.01471-b31b1b.svg)](https://arxiv.org/abs/2503.01471)
 
 # [:arl-arl-logo: Aerial Gym Simulator](index.md)
 
@@ -8,45 +8,56 @@ The Aerial Gym Simulator is a high-fidelity physics-based simulator for training
 
 This is the *second release* of the simulator and includes a variety of new features and improvements. Task definition and environment configuration allow for fine-grained customization of all the environment entities without having to deal with large monolithic environment files. A custom rendering framework allows obtaining depth, and segmentation images at high speeds and can be used to simulate custom sensors such as LiDARs with varying properties. The simulator is open-source and is released under the [BSD-3-Clause License](https://opensource.org/licenses/BSD-3-Clause).
 
+!!! success "**Support for Unified Autonomy Stack**"
+      Support for the [Unified Autonomy Stack](https://ntnu-arl.github.io/unified_autonomy_stack/) is now available! Training instructions can be found in the [RL Training](./6_rl_training.md#rl-training-for-the-unified-autonomy-stack) page.
 
-Aerial Gym Simulator allows you to train state-based control policies in under a minute,
 
-![Aerial Gym Simulator](./gifs/Aerial%20Gym%20Position%20Control.gif)
-
-And train vision-based navigation policies in under an hour:
-
-![RL for Navigation](./gifs/rl_for_navigation_example.gif)
-
-Equipped with GPU-accelerated and customizable ray-casting based LiDAR and Camera sensors with depth and segmentation capabilities:
-
-![Depth Frames 1](./gifs/camera_depth_frames.gif) ![Lidar Depth Frames 1](./gifs/lidar_depth_frames.gif)
-
-![Seg Frames 1](./gifs/camera_seg_frames.gif) ![Lidar Seg Frames 1](./gifs/lidar_seg_frames.gif)
-
+<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:0.5rem; margin-bottom:1rem;">
+  <figure style="margin:0; text-align:center;">
+    <img src="./gifs/Aerial%20Gym%20Position%20Control.gif" alt="Position Control" style="width:100%;">
+    <figcaption>State-based control in under a minute</figcaption>
+  </figure>
+  <figure style="margin:0; text-align:center;">
+    <img src="./gifs/rl_for_navigation_example.gif" alt="RL Navigation" style="width:100%;">
+    <figcaption>Vision-based navigation in under an hour</figcaption>
+  </figure>
+</div>
 
 ## Features
 
-- ??? note "**Modular and Extendable Design**"
-      allowing users to easily create custom environments, robots, sensors, tasks, and controllers, and changing parameters programmatically on-the-fly by modifying the [Simulation Components](./4_simulation_components.md).
-- ??? note "**Rewritten from the Ground-Up**"
-      to offer very high control over each of the simulation components and capability to extensively [customize](./5_customization.md) the simulator to your needs.
-- ??? note "**High-Fidelity Physics Engine**"
-      leveraging [NVIDIA Isaac Gym](https://developer.nvidia.com/isaac-gym/download), which provides a high-fidelity physics engine for simulating multirotor platforms, with the possibility of adding support for custom physics engine backends and rendering pipelines.
-- ??? note "**Parallelized Geometric Controllers**"
-      that reside on the GPU and provide parallelization for the [simultaneous control of thousands of multirotor](./3_robots_and_controllers.md/#controllers) vehicles.
-- ??? note "**Custom Rendering Framework**"
-      (based on [NVIDIA Warp](https://nvidia.github.io/warp/)) used to design [custom sensors](./8_sensors_and_rendering.md/#warp-sensors) and perform parallelized kernel-based operations.
-- ??? note "**Modular and Extendable**"
-      allowing users to easily create [custom environments](./5_customization.md/#custom-environments), [robots](./5_customization.md/#custom-robots), [sensors](./5_customization.md/#custom-sensors), [tasks](./5_customization.md/#custom-tasks), and [controllers](./5_customization.md/#custom-controllers).
-- ??? note "**RL-based control and navigation policies**"
-      of your choice can be added for robot learning tasks. [Includes scripts to get started with training your own robots.](./6_rl_training.md).
+!!! note ""
+    - **Modular and Extendable Design** — easily create custom environments, robots, sensors, tasks, and controllers, and change parameters programmatically on-the-fly via the [Simulation Components](./4_simulation_components.md).
+    - **Rewritten from the Ground-Up** — very high control over each simulation component with extensive [customization](./5_customization.md) capabilities.
+    - **High-Fidelity Physics Engine** — leverages [NVIDIA Isaac Gym](https://developer.nvidia.com/isaac-gym/download) for simulating multirotor platforms, with support for custom physics backends and rendering pipelines.
+    - **Parallelized Geometric Controllers** — reside on the GPU and provide parallelization for the [simultaneous control of thousands of multirotors](./3_robots_and_controllers.md/#controllers).
+    - **Custom Rendering Framework** — based on [NVIDIA Warp](https://nvidia.github.io/warp/), used to design [custom sensors](./8_sensors_and_rendering.md/#warp-sensors) and perform parallelized kernel-based operations.
+    - **Fully Customizable** — create [custom environments](./5_customization.md/#custom-environments), [robots](./5_customization.md/#custom-robots), [sensors](./5_customization.md/#custom-sensors), [tasks](./5_customization.md/#custom-tasks), and [controllers](./5_customization.md/#custom-controllers).
+    - **RL-based control and navigation policies** — [includes scripts to get started with training your own robots](./6_rl_training.md).
 
 
-!!! warning "**Support for Isaac Lab**"
-      Support for [Isaac Lab](https://isaac-sim.github.io/IsaacLab/) and [Isaac Sim](https://developer.nvidia.com/isaac/sim) is currently under development. We anticipate releasing this feature in the near future.
+!!! success "**Support for Isaac Lab**"
+      Support for [Isaac Lab](https://isaac-sim.github.io/IsaacLab/) and [Isaac Sim](https://developer.nvidia.com/isaac/sim) is now available! Multirotor/thruster actuator, multirotor asset, and manager-based ARL drone task have been added in [Isaac Lab v2.3.2](https://isaac-sim.github.io/IsaacLab/main/source/refs/release_notes.html#v2-3-2).
+
+## Results using the Aerial Gym Simulator
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/l8Su8OXsM-E?si=ob8saIRWcnYyUU9a&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/bleQPb1kVI8?si=K5ekAv5vaXvLPq0A&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/MFGoRqg4TPU?si=qkGHqMBvtmcHXQhp&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/qC_XuFj7prY?si=rnl34Dw-OM3A4Lg8&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/V6w_DTKWvtc?si=T7qzIRDWdVjtSI_q&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/vAXLmalLo80?si=ohrgq1XZRkeFKGRN&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  
+
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/OO2P4N0drGc?si=zZWTwY8_YOvLNkme&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/gPrT21sbpTY?si=nwxICvoI0Jq4d3zX&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/Ni4VywUQCPw?si=PD3bUpQ4kHMD8-76" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+  <iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/lY1OKz_UOqM?si=n19tW4ei5wDB8Gm6&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 
 
-Please refer to the paper detailing the previous version of our simulator to get insights into the motivation and the design principles involved in creating the Aerial Gym Simulator: [https://arxiv.org/abs/2305.16510](https://arxiv.org/abs/2305.16510) (link will be updated to reflect the newer version soon!).
 
 ## Why Aerial Gym Simulator?
 
@@ -56,19 +67,16 @@ The optimized code in this newer version allows training for motor-command polic
 
 
 ## Citing
-When referencing the Aerial Gym Simulator in your research, please cite the following paper
+The paper for this simulator is available on [arXiv:2503.01471](https://arxiv.org/abs/2503.01471) and [IEEE Xplore](https://ieeexplore.ieee.org/abstract/document/10910148/). When referencing the Aerial Gym Simulator in your research, please cite:
 
 ```bibtex
-@ARTICLE{kulkarni2025aerial,
+@article{kulkarni2025aerial,
+  title={Aerial gym simulator: A framework for highly parallelized simulation of aerial robots},
   author={Kulkarni, Mihir and Rehberg, Welf and Alexis, Kostas},
-  journal={IEEE Robotics and Automation Letters}, 
-  title={Aerial Gym Simulator: A Framework for Highly Parallelized Simulation of Aerial Robots}, 
+  journal={IEEE Robotics and Automation Letters},
   year={2025},
-  volume={10},
-  number={4},
-  pages={4093-4100},
-  keywords={Robots;Robot sensing systems;Rendering (computer graphics);Physics;Engines;Navigation;Training;Motors;Planning;Autonomous aerial vehicles;Aerial Systems: perception and autonomy;machine learning for robot control;reinforcement learning},
-  doi={10.1109/LRA.2025.3548507}}
+  publisher={IEEE}
+}
 ```
 
 If you use the reinforcement learning policy provided alongside this simulator for navigation tasks, please cite the following paper:
@@ -97,7 +105,6 @@ For your convenience, here are some quick links to the most important sections o
 - [Customization](./5_customization.md)
 - [Sim2Real Deployment](./9_sim2real.md)
 - [FAQs and Troubleshooting](./7_FAQ_and_troubleshooting.md)
-
 
 
 ## Contact

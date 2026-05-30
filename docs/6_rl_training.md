@@ -1,6 +1,35 @@
 # Reinforcement Learning
 
 
+## RL Training for the Unified Autonomy Stack
+
+The Aerial Gym provides a ready-to-use framework for training policies for exteroceptive DRL module for the [Unified Autonomy Stack](https://github.com/ntnu-arl/unified_autonomy_stack).
+
+### Training Instructions
+
+To train the policy for the exteroceptive DRL module:
+
+```bash
+cd aerial_gym/rl_training/sample_factory/aerialgym_examples
+python3 train_aerialgym.py --env=lidar_navigation_task --experiment="<experiment_name>" --with_wandb=false
+```
+
+The training takes approximately an hour on a single laptop-grade NVIDIA RTX 3080-Ti GPU. The corresponding task definition, configuration, robot configuration and task setup are stored as linked below:
+
+- [Task Definition](https://github.com/ntnu-arl/aerial_gym_simulator/blob/main/aerial_gym/task/lidar_navigation_task/lidar_navigation_task.py)
+- [Task Config](https://github.com/ntnu-arl/aerial_gym_simulator/blob/main/aerial_gym/config/task_config/lidar_navigation_task_config.py)
+- [Robot Config](https://github.com/ntnu-arl/aerial_gym_simulator/blob/main/aerial_gym/config/robot_config/magpie_config.py)
+- [Controller Config](https://github.com/ntnu-arl/aerial_gym_simulator/blob/main/aerial_gym/config/controller_config/magpie_controller_config.py)
+- [Environment Config](https://github.com/ntnu-arl/aerial_gym_simulator/blob/main/aerial_gym/config/env_config/env_with_lidar_nav_obstacles.py)
+
+
+These can be changed appropriately to train policies for different robots, environments and tasks.
+
+### Deployment
+
+The inference scripts that run onboard the robot are stored as a separate package [https://github.com/ntnu-arl/rl_nav](https://github.com/ntnu-arl/rl_nav). To run the inference on the trained policy, please follow the instructions in the repository. The trained policy can be deployed on the real robot using the same scripts and the same package.
+
+
 
 
 ## Reinforcement Learning for Navigation Tasks using Depth Images

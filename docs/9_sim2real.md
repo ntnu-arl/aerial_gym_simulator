@@ -24,6 +24,8 @@ If you want to customize the simulator to your own platform or research please c
 
 In the task you can change the actions, inputs, reward functions, which robot to use etc. Make sure the x500 robot is chosen in the task config if you want to use that as a starting point.
 
+<iframe style="width:100%; aspect-ratio:16/9;" src="https://www.youtube.com/embed/lY1OKz_UOqM?si=n19tW4ei5wDB8Gm6&rel=0&iv_load_policy=3&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Optimizing for your platform
 
 To train a optimal position setpoint controller for your own platform you should change the robot files. These are the most important changes to make sure the platform in sim is close to the real platform:
