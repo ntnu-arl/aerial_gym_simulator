@@ -1,0 +1,27 @@
+services:
+  aerialgym:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: aerialgym:latest
+    container_name: aerialgym
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=/root/.Xauthority
+      - QT_X11_NO_MITSHM=1
+      - CUDA_VISIBLE_DEVICES=0
+      - LD_LIBRARY_PATH=/opt/conda/envs/aerialgym/lib
+      # The NVIDIA Vulkan ICD is injected by the container runtime at this path.
+      - VK_ICD_FILENAMES=/etc/vulkan/icd.d/nvidia_icd.json
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      # Mount the host Xauthority file so the container can authenticate to the
+      # forwarded X11 display (required for Wayland/Xwayland hosts).
+      - ${XAUTHORITY:-/dev/null}:/root/.Xauthority:ro
+      - ..:/opt/aerialgym
+    working_dir: /opt/aerialgym
+    stdin_open: true
+    tty: true

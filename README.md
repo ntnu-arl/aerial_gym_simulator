@@ -80,6 +80,8 @@ If you use the reinforcement learning policy provided alongside this simulator f
 
 ```
 
+---
+
 ## Quick Links
 For your convenience, here are some quick links to the most important sections of the documentation:
 
