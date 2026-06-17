@@ -11,7 +11,9 @@ from aerial_gym.utils.vae.vae_image_encoder import VAEImageEncoder
 
 import gymnasium as gym
 from gym.spaces import Dict, Box
-
+import os
+import matplotlib.pyplot as plt
+import shutil
 logger = CustomLogger("navigation_task")
 
 
@@ -21,7 +23,8 @@ def dict_to_class(dict):
 
 class NavigationTask(BaseTask):
     def __init__(
-        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None
+        self, task_config, seed=None, num_envs=None, headless=None, device=None, use_warp=None, observation_save_path:str=None,
+        is_showing_live_observations: bool = False,
     ):
         # overwrite the params if user has provided them
         if seed is not None:
@@ -73,11 +76,23 @@ class NavigationTask(BaseTask):
         self.target_max_ratio = torch.tensor(
             self.task_config.target_max_ratio, device=self.device, requires_grad=False
         ).expand(self.sim_env.num_envs, -1)
-
+        
+        # If observation_save_path is specified - the observations and VAE 
+        # reconstructions images will be saved in this directory
+        self.is_showing_live_observations = is_showing_live_observations
+         
+        self.observation_save_path = observation_save_path
+        if observation_save_path is not None:
+            self._init_observation_dirs()
+        
         self.success_aggregate = 0
         self.crashes_aggregate = 0
         self.timeouts_aggregate = 0
 
+        # Setup tracker of current run_id and frame_id for each environment
+        self.env_run_counters = {i: 0 for i in range(self.task_config.num_envs)}
+        self.env_frame_counters = {i: 0 for i in range(self.task_config.num_envs)}
+        
         self.pos_error_vehicle_frame_prev = torch.zeros_like(self.target_position)
         self.pos_error_vehicle_frame = torch.zeros_like(self.target_position)
 
@@ -156,6 +171,22 @@ class NavigationTask(BaseTask):
 
         self.num_task_steps = 0
 
+    def _init_observation_dirs(self):
+        """Create env_x directories if not already present."""
+        os.makedirs(self.observation_save_path, exist_ok=True)
+        for i in range(self.task_config.num_envs):
+            os.makedirs(os.path.join(self.observation_save_path, f"env_{i}"), exist_ok=True)
+    
+    
+    def clear_env_dir(self, env_id:int):
+        """Remove all run_x folders in env_x and reset counters."""
+        env_path = os.path.join(self.observation_save_path, f"env_{env_id}")
+        if os.path.exists(env_path):
+            shutil.rmtree(env_path)
+        os.makedirs(env_path)
+        self.env_run_counters[env_id] = 0
+        self.env_frame_counters[env_id] = 0
+        
     def close(self):
         self.sim_env.delete_env()
 
@@ -170,7 +201,13 @@ class NavigationTask(BaseTask):
             max=self.obs_dict["env_bounds_max"][env_ids],
             ratio=target_ratio[env_ids],
         )
-        # logger.warning(f"reset envs: {env_ids}")
+        
+        for env_id in env_ids:
+            env_id_int = int(env_id)
+            # Increase the run_id for the restarted environment
+            self.env_run_counters[env_id_int] += 1
+            # Reset frame counter for new run
+            self.env_frame_counters[env_id_int] = 0
         self.infos = {}
         return
 
@@ -272,21 +309,94 @@ class NavigationTask(BaseTask):
             self.crashes_aggregate = 0
             self.timeouts_aggregate = 0
 
-    def process_image_observation(self):
+    def process_image_observation(self) -> None:
+        """
+        Process the current observation:
+        - Encode and decode the observation using VAE (if enabled).
+        - Optionally save or show the original and decoded images.
+        """
+        
         image_obs = self.obs_dict["depth_range_pixels"].squeeze(1)
         if self.task_config.vae_config.use_vae:
             self.image_latents[:] = self.vae_model.encode(image_obs)
-        # # comments to make sure the VAE does as expected
-        # decoded_image = self.vae_model.decode(self.image_latents[0].unsqueeze(0))
-        # image0 = image_obs[0].cpu().numpy()
-        # decoded_image0 = decoded_image[0].squeeze(0).cpu().numpy()
-        # # save as .png with timestep
-        # if not hasattr(self, "img_ctr"):
-        #     self.img_ctr = 0
-        # self.img_ctr += 1
-        # import matplotlib.pyplot as plt
-        # plt.imsave(f"image0{self.img_ctr}.png", image0, vmin=0, vmax=1)
-        # plt.imsave(f"decoded_image0{self.img_ctr}.png", decoded_image0, vmin=0, vmax=1)
+
+        if self.observation_save_path is None and self.is_showing_live_observations == False:
+            return 
+        
+        # Decode VAE 
+        decoded_images = self.vae_model.decode(self.image_latents)
+        
+        # Show or save observations
+        for env_id in range(self.sim_env.num_envs):
+            img_orig = image_obs[env_id].cpu().numpy()
+            img_dec = decoded_images[env_id].squeeze(0).cpu().numpy()
+            
+            if self.observation_save_path is not None: 
+                self._save_observation_data(env_id, img_orig, img_dec)
+            if self.is_showing_live_observations:
+                self._show_live_observations(env_id, img_orig, img_dec)
+                
+    def _save_observation_data(self, env_id: int, img_orig: np.ndarray, img_dec: np.ndarray) -> None:
+        """
+        Save original and decoded image observations for the given environment and current run.
+
+        Args:
+            env_id (int): Environment ID.
+            img_orig (np.ndarray): Original image.
+            img_dec (np.ndarray): Decoded image.
+        """
+        
+        run_id = self.env_run_counters[env_id]
+        frame_id = self.env_frame_counters[env_id]
+        
+        # Setup folders and paths 
+        path = os.path.join(self.observation_save_path, f"env_{env_id}", f"run_{run_id}")
+        os.makedirs(path, exist_ok=True)
+        
+        # Save observations
+        plt.imsave(os.path.join(path, f"image{frame_id:04d}.png"), img_orig, vmin=0, vmax=1)
+        plt.imsave(os.path.join(path, f"decoded_image{frame_id:04d}.png"), img_dec, vmin=0, vmax=1)
+        
+        # Increment frame counter
+        self.env_frame_counters[env_id] +=1
+          
+    def _show_live_observations(self, env_id: int, img_orig: np.ndarray, img_dec: np.ndarray) -> None:
+        """
+        Display original and decoded images in a persistent live matplotlib window per environment.
+
+        Args:
+            env_id (int): Environment ID.
+            img_orig (np.ndarray): Original image.
+            img_dec (np.ndarray): Decoded image.
+        """
+        if not hasattr(self, "live_figs"):
+            self.live_figs = {}
+
+        if env_id not in self.live_figs:
+            fig, axs = plt.subplots(1, 2, figsize=(8, 4))
+            im_orig = axs[0].imshow(img_orig, vmin=0, vmax=1)
+            axs[0].set_title(f"Env {env_id} - Original")
+            axs[0].axis('off')
+
+            im_dec = axs[1].imshow(img_dec, vmin=0, vmax=1)
+            axs[1].set_title(f"Env {env_id} - Decoded")
+            axs[1].axis('off')
+
+            fig.canvas.manager.set_window_title(f"Env {env_id}")
+            plt.tight_layout()
+            plt.show(block=False)
+
+            self.live_figs[env_id] = {
+                "fig": fig,
+                "im_orig": im_orig,
+                "im_dec": im_dec,
+            }
+        else:
+            fig_data = self.live_figs[env_id]
+            fig_data["im_orig"].set_data(img_orig)
+            fig_data["im_dec"].set_data(img_dec)
+            fig_data["fig"].canvas.draw()
+            fig_data["fig"].canvas.flush_events()
 
     def step(self, actions):
         # this uses the action, gets observations
