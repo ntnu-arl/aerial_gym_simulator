@@ -12,6 +12,7 @@ class task_config:
     num_envs = 1024
     use_warp = True
     headless = True
+    are_targets_visualized = True
     device = "cuda:0"
     observation_space_dim = 13 + 4 + 64  # root_state + action_dim _+ latent_dims
     privileged_observation_space_dim = 0

@@ -19,7 +19,11 @@ from aerial_gym.utils.helpers import (
     class_to_dict,
     parse_sim_params,
 )
+
+import math
 import numpy as np
+from typing import List, Optional
+
 from aerial_gym.utils.logging import CustomLogger
 
 logger = CustomLogger("IsaacGymEnvManager")
@@ -498,11 +502,37 @@ class IsaacGymEnv(BaseManager):
         if not self.graphics_are_stepped:
             self.gym.step_graphics(self.sim)
             self.graphics_are_stepped = True
+            
+    def _add_visual_markers(self, postitions: Optional[List[List[float]]]=None):
+        """
+        Adds visual markers at the specified 3D positions for each environment.
+        
+        Each element in `positions` corresponds to the (x, y, z) position of the target 
+        for a single environment. For example:
+            positions = [[x1, y1, z1], [x2, y2, z2], ...]
+        """
+        
+        if not postitions:
+            return
+        
+        self.gym.clear_lines(self.viewer.viewer)
+        axes_geom = gymutil.AxesGeometry(0.1)
+        
+        # Create a wireframe sphere
+        
+        sphere_geom = gymutil.WireframeSphereGeometry(0.05, 12, 12, color=(1, 1, 0))
+        pose = gymapi.Transform()
+        for env_id, target_pos in enumerate(postitions):
+            x, y, z = target_pos
+            pose.p = gymapi.Vec3(x, y, z)
+            
+            gymutil.draw_lines(sphere_geom, self.gym, self.viewer.viewer, self.env_handles[env_id], pose)
 
-    def render_viewer(self):
+    def render_viewer(self, visual_marker_positions: Optional[List[List[float]]]=None):
         if self.viewer is not None:
             # do not waste time stepping graphics if the viewer is not going to update anyways
             if not self.graphics_are_stepped and self.viewer.enable_viewer_sync:
+                self._add_visual_markers(visual_marker_positions)
                 self.step_graphics()
             self.viewer.render()
         return
