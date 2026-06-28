@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name="aerial_gym",
-    version="2.0.0",
+    version="2.0.1",
     author="Mihir Kulkarni",
     license="BSD-3-Clause",
     packages=find_packages(),
