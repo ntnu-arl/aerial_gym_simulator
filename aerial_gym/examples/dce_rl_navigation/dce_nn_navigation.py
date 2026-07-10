@@ -21,6 +21,8 @@ from PIL import Image
 def sample_command(args):
     use_warp = True
     headless = args.headless
+
+    # Uncomment when saving the frames from an episode as a GIF
     # seg_frames = []
     # depth_frames = []
     # merged_image_frames = []
@@ -57,7 +59,7 @@ def sample_command(args):
             print(f"Resetting environments {truncated_envs} due to Timeout")
         nn_model.reset(reset_ids)
 
-    # # Uncomment the below lines to save the frames from an episode as a GIF
+    # # Uncomment the below lines to save the frames from an episode as a GIF (also uncomment the list declarations above)
     #     # save obs to file as a .gif
     #     image1 = (
     #         255.0 * rl_task.obs_dict["depth_range_pixels"][0, 0].cpu().numpy()
@@ -83,34 +85,34 @@ def sample_command(args):
     #     seg_frames.append(seg_image1)
     #     depth_frames.append(depth_image1)
     #     merged_image_frames.append(Image.fromarray(merged_image.astype(np.uint8)))
-    # if termination[0] or truncation[0]:
-    #     print("i", i)
-    #     rl_task.reset()
-    #     # save frames as a gif:
-    #     seg_frames[0].save(
-    #         f"seg_frames_{i}.gif",
-    #         save_all=True,
-    #         append_images=seg_frames[1:],
-    #         duration=100,
-    #         loop=0,
-    #     )
-    #     depth_frames[0].save(
-    #         f"depth_frames_{i}.gif",
-    #         save_all=True,
-    #         append_images=depth_frames[1:],
-    #         duration=100,
-    #         loop=0,
-    #     )
-    #     merged_image_frames[0].save(
-    #         f"merged_image_frames_{i}.gif",
-    #         save_all=True,
-    #         append_images=merged_image_frames[1:],
-    #         duration=100,
-    #         loop=0,
-    #     )
-    #     seg_frames = []
-    #     depth_frames = []
-    #     merged_image_frames = []
+    #     if termination[0] or truncation[0]:
+    #         print("i", i)
+    #         rl_task.reset()
+    #         # save frames as a gif:
+    #         seg_frames[0].save(
+    #             f"seg_frames_{i}.gif",
+    #             save_all=True,
+    #             append_images=seg_frames[1:],
+    #             duration=100,
+    #             loop=0,
+    #         )
+    #         depth_frames[0].save(
+    #             f"depth_frames_{i}.gif",
+    #             save_all=True,
+    #             append_images=depth_frames[1:],
+    #             duration=100,
+    #             loop=0,
+    #         )
+    #         merged_image_frames[0].save(
+    #             f"merged_image_frames_{i}.gif",
+    #             save_all=True,
+    #             append_images=merged_image_frames[1:],
+    #             duration=100,
+    #             loop=0,
+    #         )
+    #         seg_frames = []
+    #         depth_frames = []
+    #         merged_image_frames = []
 
 
 def get_network(num_envs):
