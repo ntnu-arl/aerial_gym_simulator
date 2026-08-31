@@ -30,7 +30,15 @@ class WarpSensor(BaseSensor):
         self.device = device
         self.num_sensors = self.cfg.num_sensors
 
-        self.mesh_ids_array = wp.array(mesh_id_list, dtype=wp.uint64)
+        # Accept either a plain list of ids or an already-built wp.array. WarpEnv now
+        # publishes a shared array (CONST_WARP_MESH_ID_ARRAY) so that it can update mesh
+        # ids IN PLACE after rebuilding a BVH -- the render graph below captures whatever
+        # array it is handed, so a rebind would leave it reading a stale one. Falling back
+        # to constructing our own keeps older callers working.
+        if isinstance(mesh_id_list, wp.array):
+            self.mesh_ids_array = mesh_id_list
+        else:
+            self.mesh_ids_array = wp.array(mesh_id_list, dtype=wp.uint64)
 
         if self.cfg.sensor_type == "lidar":
             self.sensor = WarpLidar(

@@ -281,8 +281,15 @@ class EnvManager(BaseManager):
         # logger.debug(f"Resetting environments {env_ids}.")
         self.IGE_env.reset_idx(env_ids)
         num_obstacles = self.global_tensor_dict["num_obstacles_in_env"]
+        # Unconditional. Placement is also what PARKS unused assets at -1000, so skipping
+        # it at num_obstacles == 0 does not give an empty environment: it leaves every
+        # preallocated asset stacked at its spawn position, the world origin. With a task
+        # that publishes num_obstacles_in_env = curriculum_level, level 0 therefore puts
+        # the entire asset pool in one pile inside the arena -- measured at 99% of scene
+        # geometry within x in [-2, 2] while the robot spawned at x in [3, 5], making one
+        # travel direction unreachable and deadlocking any curriculum gated on it.
+        self.asset_manager.reset_idx(env_ids, num_obstacles)
         if num_obstacles > 0:
-            self.asset_manager.reset_idx(env_ids, num_obstacles)
             nk = self.asset_manager.num_keep_in_env
             self.asset_manager.num_keep_in_env = self.asset_manager.num_keep_in_env // 2
             

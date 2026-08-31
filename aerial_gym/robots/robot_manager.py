@@ -241,10 +241,15 @@ class RobotManagerIGE(BaseManager):
                             requires_grad=False,
                         )
                         self.global_tensor_dict["segmentation_pixels"] = self.segmentation_tensor
+                    # Prefer the shared, mutable id array so WarpEnv can publish new mesh
+                    # ids in place after a BVH rebuild; fall back to the plain list.
+                    mesh_ids = self.global_tensor_dict.get(
+                        "CONST_WARP_MESH_ID_ARRAY"
+                    ) or self.global_tensor_dict["CONST_WARP_MESH_ID_LIST"]
                     self.warp_sensor = self.warp_sensor_class(
                         self.warp_sensor_config,
                         self.num_envs,
-                        self.global_tensor_dict["CONST_WARP_MESH_ID_LIST"],
+                        mesh_ids,
                         self.device,
                     )
                     self.warp_sensor.init_tensors(global_tensor_dict=self.global_tensor_dict)
