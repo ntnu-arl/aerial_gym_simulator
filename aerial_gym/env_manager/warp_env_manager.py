@@ -32,6 +32,7 @@ class WarpEnv(BaseManager):
         self.global_vertex_to_asset_index_map = []
 
         self.CONST_WARP_MESH_ID_LIST = None
+        self.CONST_WARP_MESH_ID_ARRAY = None
         self.CONST_WARP_MESH_PER_ENV = None
         self.CONST_GLOBAL_VERTEX_TO_ASSET_INDEX_TENSOR = None
         self.VERTEX_MAPS_PER_ENV_ORIGINAL = None
@@ -48,10 +49,37 @@ class WarpEnv(BaseManager):
         )
         # logger.debug("[DONE] Updating vertex maps per env")
 
-        # logger.debug("Refitting warp meshes")
+        # Rebuild, do not refit. refit() updates node bounds but never the topology, and
+        # obstacles are re-placed at random positions on every reset, so a refit-only tree
+        # stops partitioning space and render cost becomes LINEAR in obstacle count -- the
+        # acceleration structure stops accelerating. Measured at 256 envs:
+        #
+        #     obstacles/env    refit render    rebuild render
+        #            0             4.2 ms           --
+        #           ~5           914.4 ms          5.3 ms   (173x)
+        #          ~27          5126.9 ms         15.0 ms   (342x)
+        #
+        # and scaling 5 -> 27 obstacles: refit 5.6x (linear), rebuild 2.8x (sub-linear).
+        # Rebuilding constructs a fresh tree over the same (already world-space) arrays.
+        # The new ids must be written into the SHARED id array in place, because the
+        # camera's CUDA render graph captured it.
+        rebuilt = False
         for i in env_ids:
-            self.warp_mesh_per_env[i].refit()
-        # logger.debug("[DONE] Refitting warp meshes")
+            idx = int(i)
+            old_mesh = self.warp_mesh_per_env[idx]
+            new_mesh = wp.Mesh(
+                points=old_mesh.points,
+                indices=old_mesh.indices,
+                velocities=old_mesh.velocities,
+            )
+            self.warp_mesh_per_env[idx] = new_mesh
+            self.warp_mesh_id_list[idx] = new_mesh.id
+            rebuilt = True
+        if rebuilt and self.CONST_WARP_MESH_ID_ARRAY is not None:
+            wp.copy(
+                self.CONST_WARP_MESH_ID_ARRAY,
+                wp.array(self.warp_mesh_id_list, dtype=wp.uint64),
+            )
 
     def pre_physics_step(self, action):
         pass
@@ -131,6 +159,19 @@ class WarpEnv(BaseManager):
             self.vertex_maps_per_env_original[
                 vertex_iterator : vertex_iterator + len(env_mesh.vertices)
             ] = torch.tensor(env_mesh.vertices, device=self.device, requires_grad=False)
+            # Seed the buffer that is handed to wp.Mesh below. Without this it is still
+            # the zero-filled clone made above, so warp builds every BVH over a mesh
+            # collapsed to the origin -- all centroids identical, so the split heuristic
+            # yields an arbitrary, badly unbalanced tree. reset_idx() later writes real
+            # world-space positions into this same (shared) storage, but refit() only
+            # updates node BOUNDS, never the topology, so the tree stays degenerate for
+            # the whole run. Nothing errors and the depth images are correct; the cost is
+            # purely speed (measured ~95x on a 64-env navigation task).
+            self.vertex_maps_per_env_updated[
+                vertex_iterator : vertex_iterator + len(env_mesh.vertices)
+            ] = self.vertex_maps_per_env_original[
+                vertex_iterator : vertex_iterator + len(env_mesh.vertices)
+            ]
             faces_tensor = torch.tensor(
                 env_mesh.faces,
                 device=self.device,
@@ -176,6 +217,12 @@ class WarpEnv(BaseManager):
         self.CONST_GLOBAL_VERTEX_TO_ASSET_INDEX_TENSOR = self.global_vertex_to_asset_index_tensor
         self.VERTEX_MAPS_PER_ENV_ORIGINAL = self.vertex_maps_per_env_original
 
+        # Shared, mutable mesh-id array. The camera's CUDA render graph captures whatever
+        # wp.array it is given, so rebuilding meshes (see reset_idx) requires writing the
+        # new ids into THIS array in place rather than rebinding a new one. Sensors take
+        # it from here instead of constructing their own.
+        self.CONST_WARP_MESH_ID_ARRAY = wp.array(self.warp_mesh_id_list, dtype=wp.uint64)
+        self.global_tensor_dict["CONST_WARP_MESH_ID_ARRAY"] = self.CONST_WARP_MESH_ID_ARRAY
         self.global_tensor_dict["CONST_WARP_MESH_ID_LIST"] = self.CONST_WARP_MESH_ID_LIST
         self.global_tensor_dict["CONST_WARP_MESH_PER_ENV"] = self.CONST_WARP_MESH_PER_ENV
         self.global_tensor_dict["CONST_GLOBAL_VERTEX_TO_ASSET_INDEX_TENSOR"] = (
