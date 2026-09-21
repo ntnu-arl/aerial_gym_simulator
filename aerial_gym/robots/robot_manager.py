@@ -476,6 +476,8 @@ class RobotManagerIGE(BaseManager):
 
     def reset_idx(self, env_ids):
         self.robot.reset_idx(env_ids)
+        self.actions[env_ids] = 0.0
+        self.prev_actions[env_ids] = 0.0
         if self.warp_sensor is not None:
             self.warp_sensor.reset_idx(env_ids)
         if self.imu_sensor is not None:
@@ -483,9 +485,11 @@ class RobotManagerIGE(BaseManager):
         if self.camera_sensor is not None:
             self.camera_sensor.reset_idx(env_ids)
 
-    def pre_physics_step(self, actions):
+    def update_actions(self, actions):
         self.prev_actions[:] = self.actions[:]
         self.actions[:] = actions
+
+    def pre_physics_step(self):
         self.robot.step(self.actions)
 
     def post_physics_step(self):
