@@ -327,7 +327,7 @@ class EnvManager(BaseManager):
 
     def pre_physics_step(self, actions, env_actions):
         # first let the robot compute the actions
-        self.robot_manager.pre_physics_step(actions)
+        self.robot_manager.pre_physics_step()
         # then the asset manager applies the actions here
         self.asset_manager.pre_physics_step(env_actions)
         # apply actions to obstacle manager
@@ -403,6 +403,7 @@ class EnvManager(BaseManager):
         env_actions: The actions that are sent to the environment entities.
         """
         self.reset_tensors()
+        self.robot_manager.update_actions(actions)
         if env_actions is not None:
             if self.global_tensor_dict["env_actions"] is None:
                 self.global_tensor_dict["env_actions"] = env_actions
